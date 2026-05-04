@@ -25,8 +25,8 @@
   --text-dim: #8ab0c4;
   --border:   #2e5070;
   --yellow:   #f5c518;
-  --btn-num:  #1e3a52;
-  --btn-res:  #2ecc71;
+  --btn-plq:  #27ae60;
+  --btn-plq-sel: #1e8449;
   --btn-used: #2e5070;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,32 +56,32 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 .plq-title { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
 .plq-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 6px;
 }
 .plq-btn-ghost {
   background: transparent;
   border: 2px dashed var(--border);
-  border-radius: 8px;
-  height: 52px;
-  opacity: .4;
+  border-radius: 6px;
+  height: 48px;
+  opacity: .35;
   pointer-events: none;
 }
 .plq-btn {
   font-family: inherit; font-size: 1.1rem; font-weight: 700;
-  background: var(--btn-num); color: var(--text);
-  border: none; border-radius: 8px;
-  height: 52px; width: 100%; cursor: pointer;
-  transition: transform .1s, background .15s;
+  background: var(--btn-plq); color: #fff;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  height: 48px; width: 100%; cursor: pointer;
+  transition: transform .1s, background .15s, border-color .1s;
 }
-.plq-btn:hover:not(:disabled) { background: #2a5070; transform: scale(1.04); }
-.plq-btn.selected { outline: 3px solid var(--yellow); }
-.plq-btn.used { background: var(--btn-used); color: var(--text-dim); cursor: default; }
-.plq-btn.result { background: var(--btn-res); color: #1a1a2e; }
+.plq-btn:hover:not(:disabled) { background: var(--btn-plq-sel); transform: scale(1.04); }
+.plq-btn.selected { border-color: var(--yellow); background: var(--btn-plq-sel); }
+.plq-btn.used { background: var(--btn-used); color: var(--text-dim); cursor: default; border-color: transparent; }
 .plq-btn:disabled { opacity: .5; cursor: default; }
 
 /* CALCUL EN COURS */
-.cur-op { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; min-height: 44px; font-size: 1.1rem; font-weight: 700; color: var(--accent2); text-align: center; }
+.cur-op { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; min-height: 48px; font-size: 1.4rem; font-weight: 700; color: var(--accent2); text-align: center; }
 
 /* OPERATEURS */
 .op-row { display: flex; justify-content: center; gap: 10px; }
@@ -117,7 +117,7 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 /* SOLUTION AUTO */
 .sol-box { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; }
 .sol-title { font-size: 0.8rem; color: var(--text-med); margin-bottom: 4px; }
-.sol-line { font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--text-med); min-height: 18px; }
+.sol-line { font-family: 'Courier New', monospace; font-size: 1.05rem; font-weight: 700; color: #fff; min-height: 20px; }
 .sol-line.exact { color: var(--green); }
 
 /* STATUS */
@@ -214,7 +214,7 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 
   <div class="actions">
     <button class="act-btn green" onclick="onValider()">Valider</button>
-    <button class="act-btn blue"  onclick="onResoudre()" id="btn-resoudre" disabled>Résoudre</button>
+    <button class="act-btn blue"  onclick="onResoudre()" id="btn-resoudre" disabled style="font-size:1.05rem;font-weight:700;color:#fff;">Résoudre</button>
     <button class="act-btn grey"  onclick="openDetail()" id="btn-detail" disabled>Détail…</button>
   </div>
 
@@ -256,7 +256,7 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
     <div class="row"><label>Reprise auto résultat précédent</label>
       <input type="checkbox" id="opt-reprise" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
     </div>
-    <div class="row"><label>Mode entraînement (plaques + cible libres)</label>
+    <div class="row"><label>Mode Solveur (plaques + cible libres)</label>
       <input type="checkbox" id="opt-entrainement" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
     </div>
     <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Solveur —</div>
@@ -266,6 +266,11 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
         <option value="stop">Première exacte</option>
         <option value="all">Toutes (jusqu'à récur 3)</option>
       </select>
+    </div>
+    <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Raccourcis —</div>
+    <div class="row" style="gap:8px;">
+      <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:8px 12px;font-size:.85rem;">🌸 Mode Sylvie</button>
+      <button class="act-btn grey" onclick="resetDefaut()" style="padding:8px 12px;font-size:.85rem;">↺ Reset défaut</button>
     </div>
     <div class="modal-actions">
       <button class="act-btn green" onclick="saveOptions()">Appliquer</button>
@@ -666,7 +671,7 @@ function renderPlaques() {
 
 function _makePlaqueBtn(idx, val, active, isResult) {
   const btn = document.createElement('button');
-  btn.className = 'plq-btn' + (isResult ? ' result' : '') + (!active ? ' used' : '');
+  btn.className = 'plq-btn' + (!active ? ' used' : '');
   btn.textContent = val;
   btn.disabled = !active;
   btn.onclick = () => onPlaque(idx);
@@ -839,13 +844,19 @@ function resetPhase() {
 
 function onEffacer() {
   if (phase === 2) {
+    // Annule sélection op1
     plaqueBtns[currentOp1.idx].classList.remove('selected');
     resetPhase();
   } else if (phase === 3) {
-    resetPhase();
+    // Annule opérateur seulement → retour sélection 2e opérande (garde op1)
+    currentOper = null;
+    document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+    phase = 2;
+    setCurOp(`${currentOp1.val}  ?  ...`);
+    setStatus(`${currentOp1.val} sélectionné — choisis un opérateur.`);
   } else if (calcSteps.length > 0) {
+    // Annule le dernier calcul
     const {op1, op2, res} = calcSteps.pop();
-    // Réactive les 2 plaques sources (cherche par valeur + inactive)
     for (const search of [op1, op2]) {
       for (let i = 0; i < plaqueVals.length; i++) {
         if (plaqueVals[i] === search && !plaqueActive[i] && i < plaqueBtns.length) {
@@ -856,7 +867,6 @@ function onEffacer() {
         }
       }
     }
-    // Supprime le bouton résultat et remet un ghost
     if (plaqueVals.length > state.plaques.length) {
       _removeLastResultBtn();
       plaqueActive.pop();
@@ -864,6 +874,7 @@ function onEffacer() {
     }
     refreshHist();
     resetPhase();
+    saveSession();
   }
 }
 
@@ -1085,7 +1096,32 @@ function updateNouveauBtn() {
 // ══════════════════════════════════════════════════════
 //  FIN DE PARTIE
 // ══════════════════════════════════════════════════════
-function openFinPartie() {
+function modeSylvie() {
+  document.getElementById('opt-tirage').value    = 'alea20';
+  document.getElementById('opt-nbplq').value     = '5';
+  document.getElementById('opt-tmin').value      = '11';
+  document.getElementById('opt-tmax').value      = '100';
+  document.getElementById('opt-nbtirages').value = '10';
+  document.getElementById('opt-time').value      = '60';
+  document.getElementById('opt-exact').checked   = true;
+  document.getElementById('opt-reprise').checked = true;
+  document.getElementById('opt-entrainement').checked = false;
+  document.getElementById('opt-solve').value     = 'complete';
+}
+
+function resetDefaut() {
+  document.getElementById('opt-tirage').value    = 'ceb24';
+  document.getElementById('opt-nbplq').value     = '6';
+  document.getElementById('opt-tmin').value      = '101';
+  document.getElementById('opt-tmax').value      = '999';
+  document.getElementById('opt-nbtirages').value = '50';
+  document.getElementById('opt-time').value      = '45';
+  document.getElementById('opt-exact').checked   = true;
+  document.getElementById('opt-reprise').checked = true;
+  document.getElementById('opt-entrainement').checked = false;
+  document.getElementById('opt-solve').value     = 'complete';
+  document.getElementById('opt-partie').value    = '0';
+}
   stopTimer();
   recordPartie();   // sauvegarde dans localStorage
   const h    = state.history;
