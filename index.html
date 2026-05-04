@@ -228,7 +228,7 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 
 <!-- OPTIONS MODAL -->
 <div class="modal-overlay" id="modal-options">
-  <div class="modal">
+  <div class="modal" style="max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;">
     <h2>Options du jeu</h2>
     <div style="font-size:.8rem;color:var(--accent2);margin-bottom:6px;font-weight:700;">— Partie —</div>
     <div class="row">
@@ -1122,6 +1122,8 @@ function resetDefaut() {
   document.getElementById('opt-solve').value     = 'complete';
   document.getElementById('opt-partie').value    = '0';
 }
+
+function openFinPartie() {
   stopTimer();
   recordPartie();   // sauvegarde dans localStorage
   const h    = state.history;
@@ -1311,26 +1313,29 @@ function showTab(id) {
 //  PWA — manifest inline + service worker
 // ══════════════════════════════════════════════════════
 function initPWA() {
-  // Manifest injecté en data-URI pour rester monofichier
-  const manifest = {
-    name: 'Le Compte Est Bon',
-    short_name: 'CEB',
-    description: 'Le célèbre jeu de calcul mental',
-    start_url: './',
-    display: 'standalone',
-    background_color: '#1e3a52',
-    theme_color: '#1e3a52',
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a52'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' font-family='serif' fill='%23f5a623'%3E%3D%3C/text%3E%3C/svg%3E",
-      sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable',
-    }],
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+  // Pas de PWA en file:// (pas de HTTPS, service worker interdit)
+  if (location.protocol === 'file:') return;
+  try {
+    const manifest = {
+      name: 'Le Compte Est Bon',
+      short_name: 'CEB',
+      description: 'Le célèbre jeu de calcul mental',
+      start_url: './',
+      display: 'standalone',
+      background_color: '#1e3a52',
+      theme_color: '#1e3a52',
+      icons: [{
+        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a52'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' font-family='serif' fill='%23f5a623'%3E%3D%3C/text%3E%3C/svg%3E",
+        sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable',
+      }],
+    };
+    const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+    document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+  } catch {}
 
-  // Service Worker inline (cache-first)
-  if ('serviceWorker' in navigator) {
-    const swCode = `
+  try {
+    if ('serviceWorker' in navigator) {
+      const swCode = `
 const CACHE = 'ceb-v1';
 self.addEventListener('install', e =>
   e.waitUntil(caches.open(CACHE).then(c => c.add('/')))
@@ -1338,11 +1343,11 @@ self.addEventListener('install', e =>
 self.addEventListener('fetch', e =>
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)))
 );
-    `;
-    const swBlob = new Blob([swCode], {type: 'application/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-      .catch(() => {}); // silencieux si file:// ou CSP bloque
-  }
+      `;
+      const swBlob = new Blob([swCode], {type: 'application/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+    }
+  } catch {}
 }
 
 // ══════════════════════════════════════════════════════
