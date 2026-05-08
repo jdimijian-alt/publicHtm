@@ -10,146 +10,86 @@
 <meta name="apple-mobile-web-app-title" content="CEB">
 <link rel="manifest" id="pwa-manifest">
 <style>
-:root {
-  --bg:       #3a6186;
-  --bg-card:  #4a7399;
-  --bg-hdr:   #1e3a52;
-  --bg-sub:   #2e5070;
-  --accent:   #e05c6e;
-  --accent2:  #f5a623;
-  --green:    #2ecc71;
-  --blue:     #5dade2;
-  --grey:     #5a7a8a;
-  --text:     #ffffff;
-  --text-med: #c8dde8;
-  --text-dim: #8ab0c4;
-  --border:   #2e5070;
-  --yellow:   #f5c518;
-  --btn-plq:  #27ae60;
-  --btn-plq-sel: #1e8449;
-  --btn-used: #2e5070;
+:root{
+  --bg:#3a6186;--bg-card:#4a7399;--bg-hdr:#1e3a52;--bg-sub:#2e5070;
+  --accent:#e05c6e;--accent2:#f5a623;--green:#2ecc71;--blue:#5dade2;
+  --grey:#5a7a8a;--text:#ffffff;--text-med:#c8dde8;--text-dim:#8ab0c4;
+  --border:#2e5070;--yellow:#f5c518;--btn-plq:#27ae60;--btn-plq-sel:#1e8449;--btn-used:#2e5070;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-button, input, select { touch-action: manipulation; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-/* HEADER */
-header { background: var(--bg-hdr); display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; }
-header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; }
-header .hdr-right { display: flex; gap: 8px; }
-
-/* INFO BAR */
-.info-bar { background: var(--bg-sub); display: flex; align-items: center; gap: 20px; padding: 6px 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-.info-bar .timer { font-size: 1.1rem; font-weight: 700; color: var(--accent2); min-width: 60px; }
-.info-bar .score { margin-left: auto; font-weight: 700; }
-
-/* MAIN */
-main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-/* CIBLE */
-.cible-wrap { text-align: center; }
-.cible-label { font-size: 0.85rem; color: var(--text-med); }
-.cible-val { font-size: 3rem; font-weight: 700; color: var(--accent2); line-height: 1.1; }
-
-/* PLAQUES */
-.plq-section { }
-.plq-title { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
-.plq-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
-  gap: 6px;
-}
-.plq-btn-ghost {
-  background: transparent;
-  border: 2px dashed var(--border);
-  border-radius: 6px;
-  height: 48px;
-  opacity: .35;
-  pointer-events: none;
-}
-.plq-btn {
-  font-family: inherit; font-size: 1.1rem; font-weight: 700;
-  background: var(--btn-plq); color: #fff;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  height: 48px; width: 100%; cursor: pointer;
-  transition: transform .1s, background .15s, border-color .1s;
-}
-.plq-btn:hover:not(:disabled) { background: var(--btn-plq-sel); transform: scale(1.04); }
-.plq-btn.selected { border-color: var(--yellow); background: var(--btn-plq-sel); }
-.plq-btn.used { background: var(--btn-used); color: var(--text-dim); cursor: default; border-color: transparent; }
-.plq-btn:disabled { opacity: .5; cursor: default; }
-
-/* CALCUL EN COURS */
-.cur-op { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; min-height: 48px; font-size: 1.4rem; font-weight: 700; color: var(--accent2); text-align: center; }
-
-/* OPERATEURS */
-.op-row { display: flex; justify-content: center; gap: 10px; }
-.op-btn {
-  font-family: inherit; font-size: 1.2rem; font-weight: 700;
-  background: var(--accent); color: #fff;
-  border: none; border-radius: 8px;
-  width: 52px; height: 44px; cursor: pointer;
-  transition: transform .1s;
-}
-.op-btn:hover { transform: scale(1.06); }
-.op-btn.active { outline: 3px solid var(--yellow); }
-
-/* HISTORIQUE */
-.hist { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; }
-.hist-title { font-size: 0.8rem; color: var(--text-med); margin-bottom: 4px; }
-.hist-line { font-family: 'Courier New', monospace; font-size: 1.15rem; font-weight: 700; color: var(--accent2); min-height: 24px; padding: 2px 0; }
-
-/* ACTIONS */
-.actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.act-btn {
-  font-family: inherit; font-size: 0.9rem; font-weight: 700;
-  border: none; border-radius: 8px; padding: 10px 18px; cursor: pointer;
-  transition: transform .1s, opacity .15s;
-}
-.act-btn:hover { transform: scale(1.03); }
-.act-btn.green { background: var(--green); color: #1a1a2e; }
-.act-btn.blue  { background: var(--blue);  color: #1a1a2e; }
-.act-btn.red   { background: var(--accent); color: #fff; }
-.act-btn.grey  { background: var(--grey);  color: #fff; }
-.act-btn:disabled { opacity: .4; cursor: default; transform: none; }
-
-/* SOLUTION AUTO */
-.sol-box { background: var(--bg-card); border-radius: 8px; padding: 10px 16px; }
-.sol-title { font-size: 0.8rem; color: var(--text-med); margin-bottom: 4px; }
-.sol-line { font-family: 'Courier New', monospace; font-size: 1.05rem; font-weight: 700; color: #fff; min-height: 20px; }
-.sol-line.exact { color: var(--green); }
-
-/* STATUS */
-.status { text-align: center; font-size: 0.85rem; color: var(--text-dim); padding: 4px 0; min-height: 20px; }
-
+*{box-sizing:border-box;margin:0;padding:0;}
+button,input,select{touch-action:manipulation;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--bg-hdr);display:flex;align-items:center;justify-content:space-between;padding:10px 20px;}
+header h1{font-size:1.2rem;font-weight:700;letter-spacing:2px;}
+.hdr-right{display:flex;gap:8px;}
+.info-bar{background:var(--bg-sub);display:flex;align-items:center;gap:16px;padding:6px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:.85rem;flex-wrap:wrap;}
+.timer{font-size:1.1rem;font-weight:700;color:var(--accent2);min-width:50px;}
+.score{margin-left:auto;font-weight:700;}
+main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.cible-label{font-size:.85rem;color:var(--text-med);}
+.cible-val{font-size:3rem;font-weight:700;color:var(--accent2);line-height:1.1;}
+.plq-title{font-size:.8rem;color:var(--text-dim);margin-bottom:6px;}
+.plq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:6px;}
+.plq-btn-ghost{background:transparent;border:2px dashed var(--border);border-radius:6px;height:48px;opacity:.35;pointer-events:none;}
+.plq-btn{font-family:inherit;font-size:1.1rem;font-weight:700;background:var(--btn-plq);color:#fff;border:2px solid transparent;border-radius:6px;height:48px;width:100%;cursor:pointer;transition:transform .1s,background .15s,border-color .1s;}
+.plq-btn:hover:not(:disabled){background:var(--btn-plq-sel);transform:scale(1.04);}
+.plq-btn.selected{border-color:var(--yellow);background:var(--btn-plq-sel);}
+.plq-btn.used{background:var(--btn-used);color:var(--text-dim);cursor:default;border-color:transparent;}
+.plq-btn:disabled{opacity:.5;cursor:default;}
+.cur-op{background:var(--bg-hdr);border:2px solid var(--yellow);border-radius:8px;padding:10px 16px;min-height:52px;font-size:1.8rem;font-weight:700;color:var(--yellow);text-align:center;letter-spacing:2px;}
+.op-row{display:flex;align-items:center;gap:10px;}
+.op-btn{font-family:inherit;font-size:1.2rem;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;width:52px;height:44px;cursor:pointer;transition:transform .1s;}
+.op-btn:hover{transform:scale(1.06);}
+.op-btn.active{outline:3px solid var(--yellow);background:#b03050;}
+.hist{background:var(--bg-card);border-radius:8px;padding:10px 16px;}
+.hist-title{font-size:.8rem;color:var(--text-med);margin-bottom:4px;}
+.hist-line{font-family:'Courier New',monospace;font-size:1.15rem;font-weight:700;color:var(--accent2);min-height:24px;padding:2px 0;}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.act-btn{font-family:inherit;font-size:.9rem;font-weight:700;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;transition:transform .1s,opacity .15s;}
+.act-btn:hover{transform:scale(1.03);}
+.act-btn.green{background:var(--green);color:#1a1a2e;}
+.act-btn.blue{background:var(--blue);color:#1a1a2e;}
+.act-btn.red{background:var(--accent);color:#fff;}
+.act-btn.grey{background:var(--grey);color:#fff;}
+.act-btn.yellow{background:var(--yellow);color:#1a1a2e;}
+.act-btn:disabled{opacity:.4;cursor:default;transform:none;}
+.sol-box{background:var(--bg-card);border-radius:8px;padding:10px 16px;}
+.sol-title{font-size:.8rem;color:var(--text-med);margin-bottom:6px;}
+.sol-line{font-family:'Courier New',monospace;font-size:1.2rem;font-weight:700;color:#fff;min-height:24px;padding:1px 0;line-height:1.5;}
+.sol-line.exact{color:var(--green);}
+.status{text-align:center;font-size:.85rem;color:var(--text-dim);padding:4px 0;min-height:20px;}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg-hdr);color:var(--text);border-radius:10px;padding:12px 20px;font-size:.92rem;font-weight:600;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:200;max-width:90vw;transition:transform .3s ease,opacity .3s ease;opacity:0;pointer-events:none;white-space:pre-line;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.green{border-left:5px solid var(--green);}
+.toast.orange{border-left:5px solid var(--accent2);}
+.toast.red{border-left:5px solid var(--accent);}
+.toast.warn{border-left:5px solid var(--yellow);}
 /* MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100; align-items: center; justify-content: center; }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--bg-card); border-radius: 12px; padding: 24px; min-width: 300px; max-width: 480px; width: 90%; }
-.modal h2 { font-size: 1rem; margin-bottom: 16px; color: var(--accent2); }
-.modal .row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.9rem; }
-.modal label { width: 180px; color: var(--text-med); flex-shrink: 0; }
-.modal input[type=number] { width: 80px; background: var(--bg-hdr); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; }
-.modal select { background: var(--bg-hdr); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; }
-.modal .modal-actions { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; }
-
-/* DETAIL MODAL */
-.detail-tabs { display: flex; gap: 0; margin-bottom: 0; }
-.tab-btn { background: var(--bg-sub); color: var(--text-med); border: none; padding: 8px 16px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
-.tab-btn.active { background: var(--bg-card); color: var(--accent); font-weight: 700; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.reach-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-height: 340px; overflow-y: auto; margin-top: 8px; }
-.reach-cell { font-family: 'Courier New', monospace; font-size: 0.75rem; text-align: center; padding: 3px 2px; border-radius: 3px; background: var(--bg-sub); color: var(--text); }
-.reach-cell.is-target { background: var(--accent2); color: #1a1a2e; font-weight: 700; }
-.reach-cell.is-firstgap { background: #2d5f80; color: var(--blue); }
-.sol-item { background: var(--bg-sub); border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-family: 'Courier New', monospace; font-size: 0.82rem; cursor: pointer; }
-.sol-item:hover { background: #3a6a90; }
-.sol-item .sol-preview { color: var(--text-med); font-size: 0.78rem; }
-.sol-steps { display: none; margin-top: 6px; }
-.sol-steps.open { display: block; }
-.sol-steps span { display: block; color: var(--green); }
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg-card);border-radius:12px;padding:24px;min-width:300px;max-width:660px;width:95%;}
+.modal h2{font-size:1rem;margin-bottom:12px;color:var(--accent2);}
+.modal .row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:.88rem;}
+.modal label{width:185px;color:var(--text-med);flex-shrink:0;}
+.modal input[type=number]{width:74px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.88rem;}
+.modal select{background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.88rem;}
+.modal .modal-actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end;flex-wrap:wrap;}
+/* ONGLETS OPTIONS */
+.opt-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border);}
+.opt-tab-btn{background:transparent;color:var(--text-dim);border:none;padding:8px 18px;cursor:pointer;font-size:.9rem;font-family:inherit;font-weight:600;border-bottom:3px solid transparent;margin-bottom:-2px;}
+.opt-tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2);}
+.opt-tab-pane{display:none;}
+.opt-tab-pane.active{display:block;}
+.opts-section{font-size:.72rem;font-weight:700;color:var(--accent2);padding:8px 0 3px;letter-spacing:1px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+/* ONGLETS DÉTAIL / STATS */
+.detail-tabs{display:flex;gap:0;margin-bottom:0;}
+.tab-btn{background:var(--bg-sub);color:var(--text-med);border:none;padding:8px 14px;cursor:pointer;font-size:.85rem;font-family:inherit;}
+.tab-btn.active{background:var(--bg-card);color:var(--accent);font-weight:700;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.sol-item{background:var(--bg-sub);border-radius:6px;padding:8px 12px;margin-bottom:6px;font-family:'Courier New',monospace;font-size:.82rem;cursor:pointer;}
+.sol-item:hover{background:#3a6a90;}
 </style>
 </head>
 <body>
@@ -157,6 +97,7 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 <header>
   <h1>LE COMPTE EST BON <span style="font-size:.6rem;font-weight:400;opacity:.7;letter-spacing:1px;">by J.Dimijian + Claude</span></h1>
   <div class="hdr-right">
+    <span id="hdr-version" style="font-size:.7rem;color:var(--text-dim);align-self:center;margin-right:4px;"></span>
     <button class="act-btn grey" onclick="openStats()" style="padding:8px 12px;">📊</button>
     <button class="act-btn grey" onclick="openOptions()">Options</button>
   </div>
@@ -166,11 +107,12 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
   <span id="lbl-round" style="color:var(--text-dim)">—</span>
   <span id="lbl-mode" style="color:var(--text-dim)">CEB24</span>
   <span class="timer" id="lbl-timer">—</span>
+  <span id="lbl-timeout" style="color:var(--accent);font-weight:700;display:none;"></span>
   <span class="score">Score : <span id="lbl-score">0</span></span>
 </div>
 
 <main>
-  <div class="cible-wrap" style="display:flex;align-items:center;gap:12px;">
+  <div style="display:flex;align-items:center;gap:12px;">
     <button class="act-btn red" id="btn-nouveau" onclick="newGame()" style="padding:10px 16px;flex-shrink:0;">Nouveau</button>
     <div style="flex:1;text-align:center;">
       <div class="cible-label">Cible</div>
@@ -178,18 +120,16 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
     </div>
   </div>
 
-  <div class="plq-section">
+  <div>
     <div class="plq-title" id="plq-title">Plaques disponibles</div>
     <div class="plq-grid" id="plq-grid"></div>
-    <!-- Mode entraînement : saisie libre -->
-    <div id="entrainement-zone" style="display:none; margin-top:8px;">
-      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:6px;">Saisis les plaques et la cible, puis clique sur Jouer</div>
+    <div id="entrainement-zone" style="display:none;margin-top:8px;">
+      <div style="font-size:.8rem;color:var(--text-dim);margin-bottom:6px;">Saisis les plaques et la cible, puis clique sur Jouer</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;" id="entry-plq-row"></div>
       <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-        <span style="font-size:0.85rem;color:var(--text-med);">Cible :</span>
+        <span style="font-size:.85rem;color:var(--text-med);">Cible :</span>
         <input type="number" id="entry-cible" min="1" max="9999"
-               style="width:80px;background:var(--bg-hdr);color:var(--accent2);border:1px solid var(--border);
-                      border-radius:6px;padding:6px 8px;font-size:1.1rem;font-weight:700;text-align:center;">
+          style="width:80px;background:var(--bg-hdr);color:var(--accent2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:1.1rem;font-weight:700;text-align:center;">
         <button class="act-btn green" onclick="jouerEntrainement()" style="padding:8px 14px;">Jouer !</button>
       </div>
     </div>
@@ -197,12 +137,12 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 
   <div class="cur-op" id="cur-op"></div>
 
-  <div class="op-row" id="op-row" style="display:flex;align-items:center;">
+  <div class="op-row">
     <div style="flex:1;display:flex;justify-content:center;gap:16px;">
-      <button class="op-btn" onclick="onOperator('+', this)">+</button>
-      <button class="op-btn" onclick="onOperator('-', this)">−</button>
-      <button class="op-btn" onclick="onOperator('X', this)">×</button>
-      <button class="op-btn" onclick="onOperator('/', this)">÷</button>
+      <button class="op-btn" onclick="onOperator('+',this)">+</button>
+      <button class="op-btn" onclick="onOperator('-',this)">−</button>
+      <button class="op-btn" onclick="onOperator('X',this)">×</button>
+      <button class="op-btn" onclick="onOperator('/',this)">/</button>
     </div>
     <button class="op-btn" onclick="onEffacer()" style="background:var(--grey);font-size:1rem;flex-shrink:0;">⌫</button>
   </div>
@@ -214,11 +154,11 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 
   <div class="actions">
     <button class="act-btn green" onclick="onValider()">Valider</button>
-    <button class="act-btn blue"  onclick="onResoudre()" id="btn-resoudre" disabled style="font-size:1.05rem;font-weight:700;color:#fff;">Résoudre</button>
-    <button class="act-btn grey"  onclick="openDetail()" id="btn-detail" disabled>Détail…</button>
+    <button class="act-btn blue"  onclick="onResoudre()" id="btn-resoudre" disabled>Résoudre</button>
+    <button class="act-btn grey"  onclick="openDetail()" id="btn-detail"   disabled>Détail…</button>
   </div>
 
-  <div class="sol-box" id="sol-box" style="display:none">
+  <div class="sol-box" id="sol-box" style="display:none;">
     <div class="sol-title">Meilleure solution :</div>
     <div id="sol-lines"></div>
   </div>
@@ -226,52 +166,123 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
   <div class="status" id="lbl-status">Clique sur Nouveau pour commencer</div>
 </main>
 
-<!-- OPTIONS MODAL -->
+<div id="toast" class="toast"></div>
+
+<!-- ═══ OPTIONS (2 onglets) ═══ -->
 <div class="modal-overlay" id="modal-options">
-  <div class="modal" style="max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;">
-    <h2>Options du jeu</h2>
-    <div style="font-size:.8rem;color:var(--accent2);margin-bottom:6px;font-weight:700;">— Partie —</div>
-    <div class="row">
-      <label>N° partie / graine (0=aléatoire)</label>
-      <input type="number" id="opt-partie" value="0" min="0" style="width:80px;">
-      <span style="font-size:.75rem;color:var(--text-dim)">⚠ reset score</span>
+  <div class="modal" style="max-height:90vh;overflow-y:auto;">
+    <h2>⚙ Options du jeu</h2>
+
+    <!-- Mode de jeu -->
+    <div style="display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap;">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
+        <input type="radio" name="opt-mode" id="opt-mode-libre" value="libre" style="accent-color:var(--green);">
+        <span>Partie libre <span style="font-size:.72rem;color:var(--text-dim)">(sans limite)</span></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
+        <input type="radio" name="opt-mode" id="opt-mode-comp" value="comp" style="accent-color:var(--accent2);">
+        <span>Compétition <span style="font-size:.72rem;color:var(--text-dim)">(graine fixe, N tirages)</span></span>
+      </label>
     </div>
-    <div class="row"><label>Nombre de tirages par partie</label><input type="number" id="opt-nbtirages" min="1" max="999" value="50" style="width:80px;"></div>
-    <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Tirage —</div>
-    <div class="row"><label>Mode de tirage</label>
-      <select id="opt-tirage">
-        <option value="ceb24">CEB 24 (classique)</option>
-        <option value="ceb28">CEB 28 (grands ×2)</option>
-        <option value="alea20">Aléatoire 20</option>
-      </select>
+
+    <!-- Onglets -->
+    <div class="opt-tabs">
+      <button class="opt-tab-btn active" onclick="switchOptTab('opt-pane-partie',this)">🎲 Partie &amp; Plaques</button>
+      <button class="opt-tab-btn"        onclick="switchOptTab('opt-pane-temps',this)">⏱ Temps &amp; Scores</button>
     </div>
-    <div class="row"><label>Nombre de plaques</label><input type="number" id="opt-nbplq" min="2" max="8" value="6"></div>
-    <div class="row"><label>Cible minimum</label><input type="number" id="opt-tmin" value="101"></div>
-    <div class="row"><label>Cible maximum</label><input type="number" id="opt-tmax" value="999"></div>
-    <div class="row"><label>Cible forcément atteignable</label>
-      <input type="checkbox" id="opt-exact" checked style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
+
+    <!-- Onglet 1 : Partie & Plaques -->
+    <div class="opt-tab-pane active" id="opt-pane-partie">
+      <div class="opts-section">PARTIE (compétition)</div>
+      <div class="row" id="row-graine">
+        <label>N° partie / graine</label>
+        <input type="number" id="opt-partie" value="0" min="0" style="width:80px;">
+        <button onclick="rndGraine()" title="Tirer au sort" style="background:var(--accent2);border:none;border-radius:6px;padding:4px 9px;cursor:pointer;font-size:1rem;">🎲</button>
+      </div>
+      <div class="row" id="row-nbtirages">
+        <label>Tirages par partie</label>
+        <input type="number" id="opt-nbtirages" min="1" max="999" value="30" style="width:74px;">
+      </div>
+
+      <div class="opts-section" style="margin-top:8px;">MODÈLE DE PLAQUES</div>
+      <div class="row">
+        <label>Modèle</label>
+        <select id="opt-tirage">
+          <option value="ceb24">CEB 24 (classique)</option>
+          <option value="ceb28">CEB 28 (grands ×2)</option>
+          <option value="alea20">Aléatoire 20</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Nombre de plaques</label>
+        <input type="number" id="opt-nbplq" min="2" max="8" value="6" style="width:52px;">
+      </div>
+      <div class="row">
+        <label>Cible minimum</label>
+        <input type="number" id="opt-tmin" value="101" style="width:74px;">
+      </div>
+      <div class="row">
+        <label>Cible maximum</label>
+        <input type="number" id="opt-tmax" value="999" style="width:74px;">
+      </div>
+      <div class="row">
+        <label>Cible forcément atteignable</label>
+        <input type="checkbox" id="opt-exact" checked style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
+      </div>
+      <div class="row">
+        <label>Mode Solveur (plaques libres)</label>
+        <input type="checkbox" id="opt-entrainement" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
+      </div>
     </div>
-    <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Jeu —</div>
-    <div class="row"><label>Temps limite (s)</label><input type="number" id="opt-time" value="45"></div>
-    <div class="row"><label>Reprise auto résultat précédent</label>
-      <input type="checkbox" id="opt-reprise" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
+
+    <!-- Onglet 2 : Temps & Scores -->
+    <div class="opt-tab-pane" id="opt-pane-temps">
+      <div class="opts-section">TEMPS</div>
+      <div class="row">
+        <label>Temps limite / tirage (s)</label>
+        <input type="number" id="opt-time" value="45" style="width:60px;">
+      </div>
+      <div class="row" id="row-timeout">
+        <label>Timeout global compét. (s)</label>
+        <input type="number" id="opt-timeout" value="120" style="width:60px;">
+        <span style="font-size:.7rem;color:var(--text-dim);">(warning)</span>
+      </div>
+      <div class="row">
+        <label>Reprise auto résultat préc.</label>
+        <input type="checkbox" id="opt-reprise" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
+      </div>
+
+      <div class="opts-section" style="margin-top:8px;">SCORES</div>
+      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">In time — Exact / ±1-3 / &gt;3</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="number" id="opt-si0"  value="10"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        <input type="number" id="opt-si13" value="7"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        <input type="number" id="opt-si4"  value="-5"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+      </div>
+      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">Out of time — Exact / ±1-3 / &gt;3</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="number" id="opt-so0"  value="5"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        <input type="number" id="opt-so13" value="2"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        <input type="number" id="opt-so4"  value="-10" style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+      </div>
+
+      <div class="opts-section" style="margin-top:8px;">SOLVEUR</div>
+      <div class="row">
+        <label>Mode résolution</label>
+        <select id="opt-solve">
+          <option value="complete">Meilleure solution</option>
+          <option value="stop">Première exacte</option>
+          <option value="all">Toutes (récur ≤ 3)</option>
+        </select>
+      </div>
+
+      <div class="opts-section" style="margin-top:8px;">RACCOURCIS</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:7px 12px;font-size:.82rem;">🌸 Sylvie</button>
+        <button class="act-btn grey" onclick="resetDefaut()" style="padding:7px 12px;font-size:.82rem;">↺ Défaut</button>
+      </div>
     </div>
-    <div class="row"><label>Mode Solveur (plaques + cible libres)</label>
-      <input type="checkbox" id="opt-entrainement" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
-    </div>
-    <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Solveur —</div>
-    <div class="row"><label>Mode résolution</label>
-      <select id="opt-solve">
-        <option value="complete">Meilleure solution</option>
-        <option value="stop">Première exacte</option>
-        <option value="all">Toutes (jusqu'à récur 3)</option>
-      </select>
-    </div>
-    <div style="font-size:.8rem;color:var(--accent2);margin:8px 0 6px;font-weight:700;">— Raccourcis —</div>
-    <div class="row" style="gap:8px;">
-      <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:8px 12px;font-size:.85rem;">🌸 Mode Sylvie</button>
-      <button class="act-btn grey" onclick="resetDefaut()" style="padding:8px 12px;font-size:.85rem;">↺ Reset défaut</button>
-    </div>
+
     <div class="modal-actions">
       <button class="act-btn green" onclick="saveOptions()">Appliquer</button>
       <button class="act-btn red"   onclick="closeModal('modal-options')">Annuler</button>
@@ -279,34 +290,34 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
   </div>
 </div>
 
-<!-- DETAIL MODAL -->
+<!-- ═══ DÉTAIL ═══ -->
 <div class="modal-overlay" id="modal-detail">
-  <div class="modal" style="max-width:640px; width:95%; max-height:90vh; overflow:hidden; display:flex; flex-direction:column;">
+  <div class="modal" style="max-width:640px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;">
     <h2 id="detail-title" style="flex-shrink:0;">Détail</h2>
     <div class="detail-tabs" style="flex-shrink:0;">
-      <button class="tab-btn active" onclick="showTab('tab-reach')">Résultats</button>
-      <button class="tab-btn"        onclick="showTab('tab-sols')">Solutions exactes</button>
-      <button class="tab-btn"        onclick="showTab('tab-best')">Meilleure</button>
+      <button class="tab-btn active" onclick="showTab('tab-reach','modal-detail')">Résultats</button>
+      <button class="tab-btn"        onclick="showTab('tab-sols','modal-detail')">Solutions exactes</button>
+      <button class="tab-btn"        onclick="showTab('tab-best','modal-detail')">Meilleure</button>
     </div>
-    <div style="flex:1; overflow-y:auto; min-height:0;">
-    <div id="tab-reach" class="tab-content active">
-      <div id="reach-info" style="font-size:.85rem;color:var(--text-med);padding:6px 0"></div>
-      <div id="reach-canvas-wrap" style="overflow-y:auto;max-height:340px;margin-top:4px;"></div>
+    <div style="flex:1;overflow-y:auto;min-height:0;">
+      <div id="tab-reach" class="tab-content active">
+        <div id="reach-info" style="font-size:.85rem;color:var(--text-med);padding:6px 0;"></div>
+        <div id="reach-canvas-wrap" style="overflow-y:auto;max-height:340px;margin-top:4px;"></div>
+      </div>
+      <div id="tab-sols" class="tab-content">
+        <div id="sols-list" style="overflow-y:auto;max-height:420px;"></div>
+      </div>
+      <div id="tab-best" class="tab-content">
+        <div id="best-content" style="padding:12px 0;font-family:'Courier New',monospace;font-size:1rem;"></div>
+      </div>
     </div>
-    <div id="tab-sols" class="tab-content">
-      <div id="sols-list" style="overflow-y:auto;max-height:420px;"></div>
-    </div>
-    <div id="tab-best" class="tab-content">
-      <div id="best-content" style="padding:12px 0; font-family:'Courier New',monospace; font-size:1rem;"></div>
-    </div>
-    </div>
-    <div style="flex-shrink:0; border-top:1px solid var(--border); padding-top:10px; margin-top:8px; text-align:right;">
+    <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;text-align:right;">
       <button class="act-btn red" onclick="closeModal('modal-detail')">Fermer</button>
     </div>
   </div>
 </div>
 
-<!-- FIN DE PARTIE MODAL -->
+<!-- ═══ FIN DE PARTIE ═══ -->
 <div class="modal-overlay" id="modal-fin">
   <div class="modal" style="max-width:480px;width:95%;text-align:center;">
     <h2 style="font-size:1.4rem;margin-bottom:4px;">🏁 Fin de partie !</h2>
@@ -314,38 +325,30 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
     <div id="fin-score" style="font-size:2.5rem;font-weight:700;color:var(--accent2);margin-bottom:4px;"></div>
     <div id="fin-moyenne" style="font-size:.9rem;color:var(--text-med);margin-bottom:16px;"></div>
     <div id="fin-hist" style="text-align:left;max-height:260px;overflow-y:auto;margin-bottom:16px;"></div>
-    <div class="modal-actions" style="justify-content:center;gap:12px;">
-      <button class="act-btn green" onclick="nouvellePartie()">Nouvelle partie</button>
-      <button class="act-btn grey"  onclick="closeModal('modal-fin')">Fermer</button>
+    <div class="modal-actions" style="justify-content:center;gap:12px;flex-wrap:wrap;">
+      <button class="act-btn green"  onclick="nouvellePartie()">Nouvelle partie</button>
+      <button class="act-btn yellow" onclick="nouvelleGraine()">🎲 Nouvelle graine</button>
+      <button class="act-btn grey"   onclick="closeModal('modal-fin')">Fermer</button>
     </div>
   </div>
 </div>
 
-<!-- STATS MODAL -->
+<!-- ═══ STATS ═══ -->
 <div class="modal-overlay" id="modal-stats">
   <div class="modal" style="max-width:580px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;">
     <h2 style="flex-shrink:0;">📊 Statistiques</h2>
     <div class="detail-tabs" style="flex-shrink:0;">
-      <button class="tab-btn active" onclick="showStatsTab('st-global')">Globales</button>
-      <button class="tab-btn"        onclick="showStatsTab('st-parties')">Parties</button>
-      <button class="tab-btn"        onclick="showStatsTab('st-modes')">Modes</button>
+      <button class="tab-btn active" onclick="showTab('st-global','modal-stats')">Globales</button>
+      <button class="tab-btn"        onclick="showTab('st-parties','modal-stats')">Parties</button>
+      <button class="tab-btn"        onclick="showTab('st-modes','modal-stats')">Modes</button>
     </div>
     <div style="flex:1;overflow-y:auto;min-height:0;padding:8px 0;">
-
-      <!-- Globales -->
-      <div id="st-global" class="tab-content active"></div>
-
-      <!-- Parties -->
-      <div id="st-parties" class="tab-content">
-        <div id="st-parties-list" style="font-size:.82rem;"></div>
-      </div>
-
-      <!-- Modes -->
-      <div id="st-modes" class="tab-content"></div>
-
+      <div id="st-global"  class="tab-content active"></div>
+      <div id="st-parties" class="tab-content"><div id="st-parties-list" style="font-size:.82rem;"></div></div>
+      <div id="st-modes"   class="tab-content"></div>
     </div>
     <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;display:flex;justify-content:space-between;">
-      <button class="act-btn red" onclick="resetStats()" style="font-size:.8rem;padding:8px 12px;">🗑 Reset stats</button>
+      <button class="act-btn red"  onclick="resetStats()" style="font-size:.8rem;padding:8px 12px;">🗑 Reset stats</button>
       <button class="act-btn grey" onclick="closeModal('modal-stats')">Fermer</button>
     </div>
   </div>
@@ -354,1324 +357,871 @@ main { max-width: 680px; margin: 0 auto; padding: 16px; display: flex; flex-dire
 <script>
 "use strict";
 
-// ══════════════════════════════════════════════════════
-//  HP11C RANDOM — BigInt pour éviter toute perte d'arrondi
-// ══════════════════════════════════════════════════════
-const KINCR  = 1017980433n;
-const KBASE  = 1574352261n;
-const K10E10 = 10000000000n;
+// ═══════════════════════════════════════════════
+//  HP11C RANDOM
+// ═══════════════════════════════════════════════
+const KINCR=1017980433n,KBASE=1574352261n,K10E10=10000000000n;
+class HP11CRandom{
+  constructor(p=0){this._next=p>0?BigInt(p)*10000n:BigInt(Math.floor(Math.random()*99999999));}
+  rand(lim){this._next=(this._next*KBASE+KINCR)%K10E10;return Number(this._next*BigInt(lim+1)/K10E10);}
+}
 
-class HP11CRandom {
-  constructor(partieNum = 0) {
-    this._next = partieNum > 0
-      ? BigInt(partieNum) * 10000n
-      : BigInt(Math.floor(Math.random() * 99999999));
+// ═══════════════════════════════════════════════
+//  TIRAGE
+// ═══════════════════════════════════════════════
+function extract(pool,n,rng){
+  pool=[...pool];const r=[];
+  for(let i=0;i<n;i++){const k=rng.rand(pool.length-1);r.push(pool.splice(k,1)[0]);}
+  return r;
+}
+const ceb24=(n,r)=>extract([...Array.from({length:10},(_,i)=>i+1),...Array.from({length:10},(_,i)=>i+1),25,50,75,100],n,r);
+const ceb28=(n,r)=>{const b=[...Array.from({length:10},(_,i)=>i+1),25,50,75,100];return extract([...b,...b],n,r);};
+function alea20(n,r){const p=[...Array.from({length:10},(_,i)=>i+1),...Array.from({length:10},(_,i)=>i+1)];for(let i=0;i<8;i++)p.push(r.rand(88)+11);return extract(p,n,r);}
+const tireCible=(mn,mx,r)=>r.rand(mx-mn)+mn;
+
+// ═══════════════════════════════════════════════
+//  SOLVEUR — correction mode "all"
+//  En mode 'all', depth ≤ 3 : on N'UTILISE PAS _seen du tout
+//  (ni en lecture ni en écriture), ce qui permet d'explorer
+//  TOUS les chemins alternatifs menant au même ensemble de plaques.
+// ═══════════════════════════════════════════════
+function calc4(a,b){
+  if(a<b){let t=a;a=b;b=t;}
+  return[a+b, a!==b?a-b:0, b!==1?a*b:0, (b!==1&&b!==0&&a%b===0)?a/b:0];
+}
+
+class CEBSolver{
+  constructor(target,mode='complete'){
+    this.target=target; this.mode=mode;
+    this.best=null; this.allSols=[]; this.reachable=new Set();
+    this._seen=new Set(); this._solSigs=new Set(); this._ops=0;
   }
-  rand(limHaute) {
-    this._next = (this._next * KBASE + KINCR) % K10E10;
-    return Number(this._next * BigInt(limHaute + 1) / K10E10);
-  }
-}
+  _key(pl){return[...pl].sort((a,b)=>a-b).join('/');}
 
-// ══════════════════════════════════════════════════════
-//  TIRAGE DES PLAQUES
-// ══════════════════════════════════════════════════════
-function extract(pool, n, rng) {
-  pool = [...pool];
-  const result = [];
-  for (let i = 0; i < n; i++) {
-    const remaining = pool.length - 1;
-    const idx = rng.rand(remaining);
-    result.push(pool.splice(idx, 1)[0]);
-  }
-  return result;
-}
+  _recurse(pl,steps){
+    const n=pl.length; if(n<2)return;
+    const depth=this._depthTotal-n+1;
+    const key=this._key(pl);
 
-function ceb24(n, rng) {
-  const pool = [...Array.from({length:10},(_,i)=>i+1), ...Array.from({length:10},(_,i)=>i+1), 25,50,75,100];
-  return extract(pool, n, rng);
-}
-function ceb28(n, rng) {
-  const base = [...Array.from({length:10},(_,i)=>i+1), 25,50,75,100];
-  return extract([...base,...base], n, rng);
-}
-function alea20(n, rng) {
-  const pool = [...Array.from({length:10},(_,i)=>i+1), ...Array.from({length:10},(_,i)=>i+1)];
-  for (let i = 0; i < 8; i++) pool.push(rng.rand(88) + 11);
-  return extract(pool, n, rng);
-}
-function tireCible(min, max, rng) {
-  return rng.rand(max - min) + min;
-}
-
-// ══════════════════════════════════════════════════════
-//  SOLVEUR RÉCURSIF
-// ══════════════════════════════════════════════════════
-function calc4(a, b) {
-  if (a < b) { let t = a; a = b; b = t; }
-  const som = a + b;
-  const dif = (a !== b) ? a - b : 0;
-  const mul = (b !== 1) ? a * b : 0;
-  let div = 0;
-  if (b !== 1 && b !== 0 && a % b === 0) div = a / b;
-  return [som, dif, mul, div];
-}
-
-class CEBSolver {
-  constructor(target, mode = 'complete') {
-    this.target    = target;
-    this.mode      = mode;
-    this.best      = null;
-    this.allSols   = [];
-    this.reachable = new Set();
-    this._seen     = new Set();
-    this._ops      = 0;
-  }
-
-  _comboKey(plaques) {
-    return [...plaques].sort((a,b)=>a-b).join('/');
-  }
-
-  _recurse(plaques, steps) {
-    const n = plaques.length;
-    if (n < 2) return;
-
-    const key   = this._comboKey(plaques);
-    const depth = this._depthTotal - n + 1;
-
-    if (this._seen.has(key)) {
-      if (this.mode === 'all' && depth <= 3) { /* continue */ }
+    if(this._seen.has(key)){
+      // Traduction exacte ABAP exec_recurence lignes 729-743 :
+      // doublon déjà vu + mode 'all' + profondeur > 3 → on continue (pas de EXIT)
+      // tous les autres cas → on coupe (EXIT)
+      if(this.mode==='all' && depth>3){ /* continue, pas de return */ }
       else return;
+    }else{
+      this._seen.add(key);
     }
-    this._seen.add(key);
 
-    if (this.mode === 'stop' && this.best && this.best.diff === 0) return;
+    if(this.mode==='stop'&&this.best&&this.best.diff===0)return;
 
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = i + 1; j < n; j++) {
+    for(let i=0;i<n-1;i++){
+      for(let j=i+1;j<n;j++){
         this._ops++;
-        const a = plaques[i], b = plaques[j];
-        const [som, dif, mul, div] = calc4(a, b);
-        const big = Math.max(a,b), small = Math.min(a,b);
-
-        const ops = [
-          [som, `${big} + ${small} = ${som}`],
-          dif ? [dif, `${big} - ${small} = ${dif}`] : null,
-          mul ? [mul, `${big} × ${small} = ${mul}`] : null,
-          div ? [div, `${big} / ${small} = ${div}`] : null,
+        const a=pl[i],b=pl[j];
+        const[som,dif,mul,div]=calc4(a,b);
+        const big=Math.max(a,b),sm=Math.min(a,b);
+        const ops=[
+          [som,`${big} + ${sm} = ${som}`],
+          dif?[dif,`${big} - ${sm} = ${dif}`]:null,
+          mul?[mul,`${big} × ${sm} = ${mul}`]:null,
+          div?[div,`${big} / ${sm} = ${div}`]:null,
         ];
-
-        for (const entry of ops) {
-          if (!entry) continue;
-          const [result, label] = entry;
+        for(const e of ops){
+          if(!e)continue;
+          const[result,label]=e;
           this.reachable.add(result);
-          const diff = Math.abs(result - this.target);
-          const curSteps = [...steps, label];
-
-          const bestDiff = this.best ? this.best.diff : this.target;
-          let isBetter = false;
-          if (!this.best)                                          isBetter = true;
-          else if (diff < this.best.diff)                          isBetter = true;
-          else if (diff === this.best.diff && curSteps.length < this.best.depth) isBetter = true;
-
-          if (diff <= bestDiff) {
-            const sol = { result, diff, depth: curSteps.length, steps: curSteps };
-            if (diff === 0) this.allSols.push(sol);
-            if (isBetter)   this.best = sol;
+          const diff=Math.abs(result-this.target);
+          const cs=[...steps,label];
+          const bd=this.best?this.best.diff:Infinity;
+          const better=!this.best||(diff<this.best.diff)||(diff===this.best.diff&&cs.length<this.best.depth);
+          if(diff<=bd||(this.best&&diff<=this.best.diff)){
+            const sol={result,diff,depth:cs.length,steps:cs};
+            if(diff===0){const sig=cs.join('|');if(!this._solSigs.has(sig)){this._solSigs.add(sig);this.allSols.push(sol);}}
+            if(better)this.best=sol;
           }
         }
-
-        const rest = plaques.filter((_,k) => k !== i && k !== j);
-        for (const entry of [
-          mul ? [mul, `${big} × ${small} = ${mul}`] : null,
-          div ? [div, `${big} / ${small} = ${div}`] : null,
-          [som, `${big} + ${small} = ${som}`],
-          dif ? [dif, `${big} - ${small} = ${dif}`] : null,
-        ]) {
-          if (!entry) continue;
-          const [val, label] = entry;
-          this._recurse([...rest, val], [...steps, label]);
-        }
+        const rest=pl.filter((_,k)=>k!==i&&k!==j);
+        for(const e of[
+          mul?[mul,`${big} × ${sm} = ${mul}`]:null,
+          div?[div,`${big} / ${sm} = ${div}`]:null,
+          [som,`${big} + ${sm} = ${som}`],
+          dif?[dif,`${big} - ${sm} = ${dif}`]:null,
+        ]){if(!e)continue;this._recurse([...rest,e[0]],[...steps,e[1]]);}
       }
     }
   }
 
-  solve(plaques) {
-    this._seen.clear();
-    this._ops = 0;
-    this._depthTotal = plaques.length;
-
-    if (plaques.includes(this.target)) {
-      this.best = { result: this.target, diff: 0, depth: 0,
-                    steps: [`La cible ${this.target} est directement une des plaques !`] };
-      this.allSols = [this.best];
-      return this.best;
+  solve(pl){
+    this._seen.clear();this._solSigs.clear();this._ops=0;this._depthTotal=pl.length;
+    if(pl.includes(this.target)){
+      this.best={result:this.target,diff:0,depth:0,steps:[`La cible ${this.target} est directement une des plaques !`]};
+      this.allSols=[this.best];return this.best;
     }
-
-    const bestPlaque = plaques.reduce((b,x) => Math.abs(x-this.target) < Math.abs(b-this.target) ? x : b);
-    this.best = { result: bestPlaque, diff: Math.abs(bestPlaque-this.target), depth: 0,
-                  steps: [`(meilleure plaque seule : ${bestPlaque})`] };
-
-    this._recurse(plaques, []);
-    return this.best;
+    const bp=pl.reduce((b,x)=>Math.abs(x-this.target)<Math.abs(b-this.target)?x:b);
+    this.best={result:bp,diff:Math.abs(bp-this.target),depth:0,steps:[`(meilleure plaque seule : ${bp})`]};
+    this._recurse(pl,[]);return this.best;
   }
 }
 
-// ══════════════════════════════════════════════════════
-//  MOTEUR DE JEU
-// ══════════════════════════════════════════════════════
-const cfg = {
-  tirageMode: 'ceb24', solveMode: 'complete',
-  nbPlaques: 6, targetMin: 101, targetMax: 999,
-  timeLimit: 45, partieNum: 0, nbTirages: 50,
-  exactOnly:    true,
-  repriseAuto:  true,   // reprise auto résultat précédent (défaut coché)
-  entrainement: false,
-  scoreInTime:  [10,  7, -5],
-  scoreOutTime: [ 5,  2,-10],
+// ═══════════════════════════════════════════════
+//  CONFIG / STATE
+// ═══════════════════════════════════════════════
+const cfg={
+  modeJeu:'libre', tirageMode:'ceb24', solveMode:'complete',
+  nbPlaques:6, targetMin:101, targetMax:999,
+  timeLimit:45, globalTimeout:120, partieNum:0, nbTirages:30,
+  exactOnly:true, repriseAuto:true, entrainement:false,
+  scoreInTime:[10,7,-5], scoreOutTime:[5,2,-10],
 };
+let state={plaques:[],target:0,best:null,allSols:[],reachable:new Set(),startTime:0,score:0,roundNum:0,validated:true,history:[]};
+let rng=null;
+const getRng=()=>{if(!rng)rng=new HP11CRandom(cfg.partieNum);return rng;};
 
-let state = {
-  plaques: [], target: 0,
-  best: null, allSols: [], reachable: new Set(),
-  startTime: 0, score: 0, roundNum: 0,
-  validated: true,
-  history: [],   // [{tirage, target, diff, pts, inTime}]
-};
-
-let rng = null;
-function getRng() {
-  if (!rng) rng = new HP11CRandom(cfg.partieNum);
-  return rng;
-}
-
-function doTirage() {
-  const r = getRng();
-  let plaques;
-  if      (cfg.tirageMode === 'ceb24')  plaques = ceb24(cfg.nbPlaques, r);
-  else if (cfg.tirageMode === 'ceb28')  plaques = ceb28(cfg.nbPlaques, r);
-  else                                  plaques = alea20(cfg.nbPlaques, r);
-
+function doTirage(){
+  const r=getRng();
+  let pl=cfg.tirageMode==='ceb24'?ceb24(cfg.nbPlaques,r):cfg.tirageMode==='ceb28'?ceb28(cfg.nbPlaques,r):alea20(cfg.nbPlaques,r);
   let target;
-  if (cfg.exactOnly) {
-    // Calcule d'abord toutes les valeurs atteignables, puis tire parmi elles
-    const scanner = new CEBSolver(0, 'complete');
-    scanner._depthTotal = plaques.length;
-    scanner._recurse(plaques, []);
-    const candidates = [...scanner.reachable]
-      .filter(v => v >= cfg.targetMin && v <= cfg.targetMax)
-      .sort((a, b) => a - b);
-    if (candidates.length > 0) {
-      const idx = r.rand(candidates.length - 1);
-      target = candidates[idx];
-    } else {
-      target = tireCible(cfg.targetMin, cfg.targetMax, r); // fallback
-    }
-  } else {
-    target = tireCible(cfg.targetMin, cfg.targetMax, r);
-  }
-
-  state = { ...state, plaques, target, best: null, allSols: [], reachable: new Set(),
-            startTime: Date.now(), roundNum: state.roundNum + 1, validated: false };
+  if(cfg.exactOnly){
+    const sc=new CEBSolver(0,'complete');sc._depthTotal=pl.length;sc._recurse(pl,[]);
+    const cands=[...sc.reachable].filter(v=>v>=cfg.targetMin&&v<=cfg.targetMax).sort((a,b)=>a-b);
+    target=cands.length>0?cands[r.rand(cands.length-1)]:tireCible(cfg.targetMin,cfg.targetMax,r);
+  }else{target=tireCible(cfg.targetMin,cfg.targetMax,r);}
+  state={...state,plaques:pl,target,best:null,allSols:[],reachable:new Set(),startTime:Date.now(),roundNum:state.roundNum+1,validated:false};
   return state;
 }
-
-function doSolve() {
-  const solver = new CEBSolver(state.target, cfg.solveMode);
-  const t0 = performance.now();
-  const sol = solver.solve(state.plaques);
-  const ms  = performance.now() - t0;
-  state.best    = sol;
-  state.allSols = solver.allSols;
-  state.reachable = solver.reachable;
-  return { sol, solver, ms };
+function doSolve(){
+  const sv=new CEBSolver(state.target,cfg.solveMode);
+  const t0=performance.now();const sol=sv.solve(state.plaques);const ms=performance.now()-t0;
+  state.best=sol;state.allSols=sv.allSols;state.reachable=sv.reachable;
+  return{sol,solver:sv,ms};
 }
-
-function evaluate(playerResult) {
-  if (state.validated) return { error: 'Déjà évalué.' };
-  const elapsed = (Date.now() - state.startTime) / 1000;
-  const inTime  = elapsed <= cfg.timeLimit;
-  const diff    = Math.abs(playerResult - state.target);
-  const tbl     = inTime ? cfg.scoreInTime : cfg.scoreOutTime;
-  const pts     = diff === 0 ? tbl[0] : diff <= 3 ? tbl[1] : tbl[2];
-  state.score    += pts;
-  state.validated = true;
-  state.history.push({
-    num: state.roundNum, plaques: [...state.plaques],
-    target: state.target, result: playerResult,
-    diff, pts, inTime, elapsed: +elapsed.toFixed(1),
-  });
-  if (!cfg.entrainement && state.roundNum >= cfg.nbTirages) {
-    setTimeout(() => openFinPartie(), 400);
-  }
+function evaluate(playerResult){
+  if(state.validated)return{error:'Déjà évalué.'};
+  const sec=(Date.now()-state.startTime)/1000;
+  const inTime=sec<=cfg.timeLimit;
+  const diff=Math.abs(playerResult-state.target);
+  const tbl=inTime?cfg.scoreInTime:cfg.scoreOutTime;
+  const pts=diff===0?tbl[0]:diff<=3?tbl[1]:tbl[2];
+  if(cfg.modeJeu==='comp')state.score+=pts;
+  state.validated=true;
+  state.history.push({num:state.roundNum,plaques:[...state.plaques],target:state.target,result:playerResult,diff,pts,inTime,elapsed:+sec.toFixed(1)});
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&state.roundNum>=cfg.nbTirages)setTimeout(openFinPartie,400);
   saveSession();
-  return { diff, inTime, elapsed: elapsed.toFixed(1), points: pts,
-           total: state.score,
-           msg: `${inTime ? '✓ In time' : '✗ Out of time'} (${elapsed.toFixed(1)}s) | écart=${diff} | ${pts >= 0 ? '+' : ''}${pts} pts` };
+  return{diff,inTime,elapsed:sec.toFixed(1),points:pts,total:state.score,
+    msg:`${inTime?'✓ In time':'✗ Out of time'} (${sec.toFixed(1)}s) | écart=${diff} | ${pts>=0?'+':''}${pts} pts`};
 }
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  UI STATE
-// ══════════════════════════════════════════════════════
-let phase = 1;  // 1=op1, 2=oper, 3=op2
-let currentOp1   = null;  // {idx, val}
-let currentOper  = null;
-let calcSteps    = [];    // [{op1,oper,op2,res}]
-let plaqueBtns   = [];
-let plaqueActive = [];
-let plaqueVals   = [];
-let timerId      = null;
-let elapsed      = 0;
-let lastSolver   = null;
+//
+//  calcSteps[] = {op1Val, op1Idx, oper, op2Val, op2Idx, res, resIdx}
+//    - op1Idx, op2Idx : index dans plaqueVals/plaqueBtns au moment du calcul
+//    - resIdx         : index du bouton résultat créé
+//
+//  phase : 1=attente op1 | 2=op1 choisi | 3=op1+oper choisis
+// ═══════════════════════════════════════════════
+let phase=1, currentOp1=null, currentOper=null;
+let calcSteps=[], plaqueBtns=[], plaqueActive=[], plaqueVals=[];
+let timerId=null, globalTimerId=null, elapsed=0, lastSolver=null;
 
-// ══════════════════════════════════════════════════════
-//  TIMER
-// ══════════════════════════════════════════════════════
-function startTimer() {
-  elapsed = 0;
+// ═══════════════════════════════════════════════
+//  TIMERS
+// ═══════════════════════════════════════════════
+function startTimer(resume=false){
   stopTimer();
+  elapsed=resume?Math.floor((Date.now()-state.startTime)/1000):0;
+  if(!resume)state.startTime=Date.now();
   tick();
+  if(cfg.modeJeu==='comp')startGlobalTimeout(resume);
 }
-function tick() {
-  const rest = cfg.timeLimit - elapsed;
-  const t = document.getElementById('lbl-timer');
-  t.textContent = rest >= 0 ? `${rest}s` : 'Temps !';
-  t.style.color = rest > 15 ? 'var(--green)' : rest > 5 ? 'var(--accent2)' : 'var(--accent)';
-  elapsed++;
-  timerId = setTimeout(tick, 1000);
+function tick(){
+  const rest=cfg.timeLimit-elapsed;
+  const t=document.getElementById('lbl-timer');
+  t.textContent=rest>=0?`${rest}s`:'Temps !';
+  t.style.color=rest>15?'var(--green)':rest>5?'var(--accent2)':'var(--accent)';
+  elapsed++;timerId=setTimeout(tick,1000);
 }
-function stopTimer() {
-  if (timerId) { clearTimeout(timerId); timerId = null; }
+function stopTimer(){if(timerId){clearTimeout(timerId);timerId=null;}}
+function startGlobalTimeout(resume=false){
+  stopGlobalTimeout();
+  const already=resume?Math.floor((Date.now()-state.startTime)/1000):0;
+  let cnt=cfg.globalTimeout-already;
+  if(cnt<=0){_fireGlobalTimeout();return;}
+  const lbl=document.getElementById('lbl-timeout');lbl.style.display='';
+  (function tg(){
+    if(state.validated){stopGlobalTimeout();return;}
+    lbl.textContent=cnt<=30?`⏰ ${cnt}s`:'';
+    if(cnt<=0){_fireGlobalTimeout();return;}
+    cnt--;globalTimerId=setTimeout(tg,1000);
+  })();
 }
-
-// ══════════════════════════════════════════════════════
-//  AFFICHAGE PLAQUES
-// ══════════════════════════════════════════════════════
-function renderPlaques() {
-  const grid = document.getElementById('plq-grid');
-  const n    = state.plaques.length;
-  grid.innerHTML = '';
-  plaqueBtns = [];
-
-  // Rangée 1 — plaques initiales
-  for (let i = 0; i < n; i++) {
-    const btn = _makePlaqueBtn(i, plaqueVals[i], plaqueActive[i], false);
-    grid.appendChild(btn);
-    plaqueBtns.push(btn);
-  }
-
-  // Rangée 2 — emplacements résultats (n slots fantômes)
-  for (let i = 0; i < n; i++) {
-    const ghost = document.createElement('div');
-    ghost.className = 'plq-btn-ghost';
-    ghost.dataset.slot = i;
-    grid.appendChild(ghost);
-  }
+function stopGlobalTimeout(){
+  if(globalTimerId){clearTimeout(globalTimerId);globalTimerId=null;}
+  const lbl=document.getElementById('lbl-timeout');if(lbl)lbl.style.display='none';
+}
+function _fireGlobalTimeout(){
+  stopGlobalTimeout();stopTimer();if(state.validated)return;
+  _showToast('⏰ Timeout global — passage au tirage suivant !','warn',4000);
+  setStatus('Timeout global.');evaluate(0);
+  document.getElementById('lbl-score').textContent=state.score;
+  document.getElementById('btn-resoudre').disabled=false;updateNouveauBtn();
 }
 
-function _makePlaqueBtn(idx, val, active, isResult) {
-  const btn = document.createElement('button');
-  btn.className = 'plq-btn' + (!active ? ' used' : '');
-  btn.textContent = val;
-  btn.disabled = !active;
-  btn.onclick = () => onPlaque(idx);
-  return btn;
+// ═══════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════
+let _toastT=null;
+function _showToast(msg,type='green',ms=3000){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`toast ${type}`;
+  void el.offsetWidth;el.classList.add('show');
+  if(_toastT)clearTimeout(_toastT);
+  _toastT=setTimeout(()=>el.classList.remove('show'),ms);
 }
 
-// Ajoute un résultat dans le prochain slot fantôme de la rangée 2
-function _addResultBtn(idx, val) {
-  const grid    = document.getElementById('plq-grid');
-  const n       = state.plaques.length;
-  const slotIdx = idx - n;
-  const target  = grid.querySelector(`.plq-btn-ghost[data-slot="${slotIdx}"]`);
-  if (!target) return;
-  const btn = _makePlaqueBtn(idx, val, true, true);
-  grid.replaceChild(btn, target);
-  plaqueBtns.push(btn);
+// ═══════════════════════════════════════════════
+//  PLAQUES — rendu
+// ═══════════════════════════════════════════════
+function renderPlaques(){
+  const grid=document.getElementById('plq-grid');const n=state.plaques.length;
+  grid.innerHTML='';plaqueBtns=[];
+  for(let i=0;i<n;i++){const b=_mkBtn(i,plaqueVals[i],plaqueActive[i]);grid.appendChild(b);plaqueBtns.push(b);}
+  for(let i=0;i<n;i++){const g=document.createElement('div');g.className='plq-btn-ghost';g.dataset.slot=i;grid.appendChild(g);}
+}
+function _mkBtn(idx,val,active){
+  const b=document.createElement('button');
+  b.className='plq-btn'+(active?'':' used');b.textContent=val;b.disabled=!active;
+  b.onclick=()=>onPlaque(idx);return b;
+}
+function _addResultBtn(idx,val){
+  const grid=document.getElementById('plq-grid');const n=state.plaques.length;
+  const t=grid.querySelector(`.plq-btn-ghost[data-slot="${idx-n}"]`);if(!t)return;
+  const b=_mkBtn(idx,val,true);grid.replaceChild(b,t);plaqueBtns.push(b);
+}
+function _removeResultBtn(resIdx){
+  // Supprime le bouton résultat à resIdx et remet un ghost à sa place
+  const grid=document.getElementById('plq-grid');const n=state.plaques.length;
+  const slotIdx=resIdx-n;
+  const children=[...grid.children];
+  // Le bouton résultat est dans les enfants à la position n + slotIdx (rangée 2)
+  // Mais il a pu être déplacé si des résultats antérieurs ont été supprimés.
+  // On cherche par contenu dans plaqueBtns :
+  const btn=plaqueBtns[resIdx];
+  if(!btn)return;
+  const ghost=document.createElement('div');
+  ghost.className='plq-btn-ghost';ghost.dataset.slot=slotIdx;
+  if(btn.parentNode===grid)grid.replaceChild(ghost,btn);
+  // Tronque plaqueBtns jusqu'à resIdx
+  plaqueBtns.length=resIdx;
 }
 
-// Supprime le dernier résultat et remet un ghost à sa place
-function _removeLastResultBtn() {
-  const grid = document.getElementById('plq-grid');
-  const n    = state.plaques.length;
-  const children = [...grid.children];
-  for (let i = children.length - 1; i >= n; i--) {
-    if (!children[i].classList.contains('plq-btn-ghost')) {
-      const slotIdx = i - n;
-      const ghost = document.createElement('div');
-      ghost.className = 'plq-btn-ghost';
-      ghost.dataset.slot = slotIdx;
-      grid.replaceChild(ghost, children[i]);
-      plaqueBtns.pop();
-      return;
-    }
-  }
-}
-
-function refreshHist() {
-  const div = document.getElementById('hist-lines');
-  div.innerHTML = '';
-  for (let i = 0; i < state.plaques.length - 1; i++) {
-    const d = document.createElement('div');
-    d.className = 'hist-line';
-    if (i < calcSteps.length) {
-      const {op1,oper,op2,res} = calcSteps[i];
-      d.textContent = `  ${op1} ${oper} ${op2} = ${res}`;
+function refreshHist(){
+  const div=document.getElementById('hist-lines');div.innerHTML='';
+  const maxLines=state.plaques.length-1;
+  for(let i=0;i<maxLines;i++){
+    const d=document.createElement('div');d.className='hist-line';
+    if(i<calcSteps.length){
+      const s=calcSteps[i];
+      d.textContent=`  ${s.op1Val} ${_opLbl(s.oper)} ${s.op2Val} = ${s.res}`;
     }
     div.appendChild(d);
   }
 }
+function setStatus(t){document.getElementById('lbl-status').textContent=t;}
+function setCurOp(t){document.getElementById('cur-op').textContent=t;}
+function _opLbl(op){return op==='X'?'×':op;}
 
-function setStatus(txt) { document.getElementById('lbl-status').textContent = txt; }
-function setCurOp(txt)   { document.getElementById('cur-op').textContent = txt; }
-
-// ══════════════════════════════════════════════════════
-//  CHECK OPERATION
-// ══════════════════════════════════════════════════════
-function checkOperation(op1, oper, op2) {
-  if (oper === '+') return { ok: true, res: op1 + op2, err: '' };
-  if (oper === '-') {
-    const res = op1 - op2;
-    if (res < 1) return { ok: false, res: 0, err: `Soustraction non autorisée (résultat = ${res} < 1)` };
-    return { ok: true, res, err: '' };
-  }
-  if (oper === 'X' || oper === '×') return { ok: true, res: op1 * op2, err: '' };
-  if (oper === '/') {
-    if (op2 === 0) return { ok: false, res: 0, err: 'Division par zéro' };
-    if (op1 % op2 !== 0) return { ok: false, res: 0, err: `Division non entière (${op1} ÷ ${op2})` };
-    return { ok: true, res: op1 / op2, err: '' };
-  }
-  return { ok: false, res: 0, err: 'Opérateur inconnu' };
+// ═══════════════════════════════════════════════
+//  VÉRIF OPÉRATION
+// ═══════════════════════════════════════════════
+function checkOp(op1,oper,op2){
+  if(oper==='+')return{ok:true,res:op1+op2};
+  if(oper==='-'){const r=op1-op2;if(r<1)return{ok:false,err:`Soustraction non autorisée (résultat ${r} < 1)`};return{ok:true,res:r};}
+  if(oper==='X')return{ok:true,res:op1*op2};
+  if(oper==='/'){if(op2===0)return{ok:false,err:'Division par zéro'};if(op1%op2!==0)return{ok:false,err:`Division non entière (${op1} / ${op2})`};return{ok:true,res:op1/op2};}
+  return{ok:false,err:'Opérateur inconnu'};
 }
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  INTERACTIONS JOUEUR
-// ══════════════════════════════════════════════════════
-function onPlaque(idx) {
-  if (!plaqueActive[idx]) return;
-  const val = plaqueVals[idx];
+// ═══════════════════════════════════════════════
+function onPlaque(idx){
+  if(!plaqueActive[idx])return;
+  const val=plaqueVals[idx];
 
-  if (phase === 1 || phase === 2) {
-    // Phase 1 : choix op1  |  Phase 2 : remplacement op1 (nouvelle plaque cliquée)
-    if (phase === 2 && currentOp1) {
-      // Désélectionne l'ancien op1
+  if(phase===1){
+    currentOp1={idx,val};plaqueBtns[idx].classList.add('selected');
+    phase=2;setCurOp(`${val}  ?  …`);setStatus(`${val} sélectionné — choisis un opérateur.`);
+  }else if(phase===2){
+    // Changement d'op1
+    if(currentOp1)plaqueBtns[currentOp1.idx].classList.remove('selected');
+    currentOp1={idx,val};plaqueBtns[idx].classList.add('selected');
+    setCurOp(`${val}  ?  …`);setStatus(`${val} sélectionné — choisis un opérateur.`);
+  }else if(phase===3){
+    // Clic sur op1 → annulation
+    if(idx===currentOp1.idx){
       plaqueBtns[currentOp1.idx].classList.remove('selected');
+      _clearOpBtns();currentOp1=currentOper=null;phase=1;setCurOp('');setStatus('Sélectionne une plaque.');return;
     }
-    currentOp1 = { idx, val };
-    plaqueBtns[idx].classList.add('selected');
-    phase = 2;
-    setCurOp(`${val}  ?  ...`);
-    setStatus(`${val} sélectionné — choisis un opérateur.`);
+    const chk=checkOp(currentOp1.val,currentOper,val);
+    if(!chk.ok){_showToast(chk.err,'red');return;}
+    const res=chk.res;
 
-  } else if (phase === 3) {
-    // Clic sur la plaque déjà choisie comme op1 → désélection, retour phase 1
-    if (idx === currentOp1.idx) {
-      plaqueBtns[currentOp1.idx].classList.remove('selected');
-      document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-      currentOp1 = currentOper = null;
-      phase = 1;
-      setCurOp('');
-      setStatus('Sélectionne une plaque.');
-      return;
+    // Désactive les deux opérandes
+    plaqueActive[currentOp1.idx]=false;
+    if(plaqueBtns[currentOp1.idx]){plaqueBtns[currentOp1.idx].disabled=true;plaqueBtns[currentOp1.idx].classList.remove('selected');plaqueBtns[currentOp1.idx].classList.add('used');}
+    plaqueActive[idx]=false;
+    if(plaqueBtns[idx]){plaqueBtns[idx].disabled=true;plaqueBtns[idx].classList.remove('selected');plaqueBtns[idx].classList.add('used');}
+
+    // Ajoute le bouton résultat
+    const resIdx=plaqueVals.length;
+    plaqueVals.push(res);plaqueActive.push(true);
+    _addResultBtn(resIdx,res);
+
+    // Enregistre le step avec les index
+    calcSteps.push({op1Val:currentOp1.val,op1Idx:currentOp1.idx,oper:currentOper,op2Val:val,op2Idx:idx,res,resIdx});
+    refreshHist();_clearOpBtns();
+
+    if(res===state.target&&!state.validated){
+      stopTimer();stopGlobalTimeout();
+      const r=evaluate(res);
+      if(!r.error){document.getElementById('lbl-score').textContent=r.total;setStatus(`🎉 COMPTE EST BON ! ${r.msg}`);_showToast(`🎉 Compte est bon !\n${r.msg}`,'green',4000);document.getElementById('btn-resoudre').disabled=false;updateNouveauBtn();}
+      _resetPhase();saveSession();return;
     }
-    const op1 = currentOp1.val;
-    const { ok, res, err } = checkOperation(op1, currentOper, val);
-    if (!ok) { alert(err); return; }
-
-    // Désactive les deux plaques
-    for (const i2 of [currentOp1.idx, idx]) {
-      plaqueActive[i2] = false;
-      plaqueBtns[i2].disabled = true;
-      plaqueBtns[i2].classList.remove('selected');
-      plaqueBtns[i2].classList.add('used');
-    }
-
-    calcSteps.push({ op1, oper: currentOper, op2: val, res });
-    refreshHist();
     saveSession();
-
-    // Bouton résultat dans la rangée 2
-    const newIdx = plaqueVals.length;
-    plaqueVals.push(res);
-    plaqueActive.push(true);
-    _addResultBtn(newIdx, res);
-
-    if (res === state.target && !state.validated) {
-      stopTimer();
-      const r = evaluate(res);
-      if (!r.error) {
-        document.getElementById('lbl-score').textContent = r.total;
-        setStatus(`🎉 COMPTE EST BON !  ${r.msg}`);
-        alert(`Compte est bon !\n\n${r.msg}`);
-        document.getElementById('btn-resoudre').disabled = false;
-        updateNouveauBtn();
-      }
-      resetPhase();
-      return;
-    }
-
-    // Reprise auto : le résultat devient op1 de la prochaine étape
-    if (cfg.repriseAuto) {
-      currentOp1 = { idx: newIdx, val: res };
-      plaqueBtns[newIdx].classList.add('selected');
-      phase = 2;
-      setCurOp(`${res}  ?  ...`);
-      setStatus(`Reprise : ${res} sélectionné — choisis un opérateur.`);
-    } else {
-      resetPhase();
-    }
+    if(cfg.repriseAuto){
+      currentOp1={idx:resIdx,val:res};plaqueBtns[resIdx].classList.add('selected');
+      phase=2;setCurOp(`${res}  ?  …`);setStatus(`Reprise : ${res} — choisis un opérateur.`);
+    }else{_resetPhase();}
   }
 }
 
-function onOperator(sym, btn) {
-  // Autorisé en phase 2 (op1 choisi) ou phase 3 (remplacement opérateur)
-  if (phase !== 2 && phase !== 3) return;
-  document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  currentOper = sym;
-  phase = 3;
-  setCurOp(`${currentOp1.val}  ${sym}  ...`);
-  setStatus(`${currentOp1.val} ${sym} ... — choisis la 2e plaque.`);
+function onOperator(sym,btn){
+  if(phase!==2&&phase!==3)return;
+  _clearOpBtns();if(btn)btn.classList.add('active');
+  currentOper=sym;phase=3;
+  setCurOp(`${currentOp1.val}  ${_opLbl(sym)}  …`);setStatus(`${currentOp1.val} ${_opLbl(sym)} … — choisis la 2e plaque.`);
 }
+function _clearOpBtns(){document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('active'));}
+function _resetPhase(){currentOp1=currentOper=null;phase=1;setCurOp('');_clearOpBtns();setStatus('Sélectionne une plaque.');}
 
-function resetPhase() {
-  currentOp1 = currentOper = null;
-  phase = 1;
-  setCurOp('');
-  document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-  setStatus('Sélectionne une plaque.');
-}
+// ─────────────────────────────────────────────
+//  ⌫ EFFACEMENT GRANULAIRE
+//
+//  Principe : on recule d'une "micro-phase" à la fois.
+//  Les micro-phases d'un calcul en cours ou du dernier calcul validé :
+//    op2 → oper → op1 → (ligne précédente) op2 → oper → op1 → ...
+//
+//  On ne supprime JAMAIS une ligne entière d'un coup.
+//  Les index stockés dans calcSteps garantissent la correction même
+//  quand des résultats intermédiaires ont été réutilisés.
+// ─────────────────────────────────────────────
 
-function onEffacer() {
-  if (phase === 2) {
-    // Annule sélection op1
+// _backPhase suit où on en est dans le démontage d'un step historique :
+//   null = pas en cours de démontage historique
+//   'op2' = op2 vient d'être retiré, op1+oper affichés, attente op2 ou ⌫
+//   'oper'= oper vient d'être effacé, op1 affiché, attente oper ou ⌫
+//   'op1' = op1 vient d'être effacé, retour phase 1 pure
+let _backPhase=null;
+
+function onEffacer(){
+  // ── Calcul en cours ──────────────────────────
+  if(phase===2){
+    // Annule op1 sélectionné
     plaqueBtns[currentOp1.idx].classList.remove('selected');
-    resetPhase();
-  } else if (phase === 3) {
-    // Annule opérateur seulement → retour sélection 2e opérande (garde op1)
-    currentOper = null;
-    document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-    phase = 2;
-    setCurOp(`${currentOp1.val}  ?  ...`);
-    setStatus(`${currentOp1.val} sélectionné — choisis un opérateur.`);
-  } else if (calcSteps.length > 0) {
-    // Annule le dernier calcul
-    const {op1, op2, res} = calcSteps.pop();
-    for (const search of [op1, op2]) {
-      for (let i = 0; i < plaqueVals.length; i++) {
-        if (plaqueVals[i] === search && !plaqueActive[i] && i < plaqueBtns.length) {
-          plaqueActive[i] = true;
-          plaqueBtns[i].disabled = false;
-          plaqueBtns[i].classList.remove('used');
-          break;
-        }
-      }
+    currentOp1=null;phase=1;setCurOp('');setStatus('Sélectionne une plaque.');_backPhase=null;return;
+  }
+  if(phase===3){
+    // Annule opérateur (garde op1)
+    currentOper=null;_clearOpBtns();phase=2;
+    setCurOp(`${currentOp1.val}  ?  …`);setStatus(`${currentOp1.val} sélectionné — choisis un opérateur.`);_backPhase=null;return;
+  }
+
+  // ── Phase 1 : démontage historique ──────────
+  if(calcSteps.length===0){setStatus('Rien à effacer.');_backPhase=null;return;}
+
+  if(_backPhase===null){
+    // Début du démontage du dernier step validé
+    const step=calcSteps[calcSteps.length-1];
+
+    // 1. Supprime le bouton résultat de ce step
+    _removeResultBtn(step.resIdx);
+    plaqueVals.splice(step.resIdx,1);
+    plaqueActive.splice(step.resIdx,1);
+
+    // 2. Restaure op2
+    plaqueActive[step.op2Idx]=true;
+    if(plaqueBtns[step.op2Idx]){plaqueBtns[step.op2Idx].disabled=false;plaqueBtns[step.op2Idx].classList.remove('used');}
+
+    // 3. Retire le step de l'historique
+    calcSteps.pop();
+    refreshHist();saveSession();
+
+    // 4. Met l'UI en état : op1 sélectionné + oper actif, phase 3
+    currentOp1={idx:step.op1Idx,val:step.op1Val};
+    currentOper=step.oper;
+    // Restaure op1 : le rend de nouveau actif (cliquable)
+    plaqueActive[step.op1Idx]=true;
+    if(plaqueBtns[step.op1Idx]){
+      plaqueBtns[step.op1Idx].disabled=false;
+      plaqueBtns[step.op1Idx].classList.remove('used');
+      plaqueBtns[step.op1Idx].classList.add('selected');
     }
-    if (plaqueVals.length > state.plaques.length) {
-      _removeLastResultBtn();
-      plaqueActive.pop();
-      plaqueVals.pop();
-    }
-    refreshHist();
-    resetPhase();
-    saveSession();
+    _markOpBtn(step.oper);
+    phase=3;
+    setCurOp(`${step.op1Val}  ${_opLbl(step.oper)}  …`);
+    setStatus('⌫ op2 effacé — choisis la 2e plaque ou appuie encore sur ⌫.');
+    _backPhase='op2';return;
+  }
+
+  if(_backPhase==='op2'){
+    // Annule opérateur
+    currentOper=null;_clearOpBtns();phase=2;_backPhase='oper';
+    setCurOp(`${currentOp1.val}  ?  …`);setStatus('⌫ opérateur effacé — choisis un opérateur ou appuie encore sur ⌫.');return;
+  }
+
+  if(_backPhase==='oper'){
+    // Annule op1 → retour phase 1, prêt pour une nouvelle ligne ou démontage précédent
+    if(plaqueBtns[currentOp1.idx])plaqueBtns[currentOp1.idx].classList.remove('selected');
+    currentOp1=null;phase=1;setCurOp('');_backPhase=null;
+    setStatus('⌫ op1 effacé — sélectionne une plaque.');return;
   }
 }
 
-function onValider() {
-  if (!calcSteps.length) { alert('Effectue au moins un calcul d\'abord.'); return; }
-  if (state.validated)   { alert('Déjà validé — Lance un nouveau tirage !'); return; }
-  stopTimer();
-  const r = evaluate(calcSteps[calcSteps.length - 1].res);
-  if (r.error) { alert(r.error); return; }
-  document.getElementById('lbl-score').textContent = r.total;
-  setStatus(r.msg);
-  alert(r.msg);
-  document.getElementById('btn-resoudre').disabled = false;
-  updateNouveauBtn();
+function _markOpBtn(sym){
+  document.querySelectorAll('.op-btn').forEach(b=>{
+    const s=b.textContent.trim();
+    if((sym==='+'&&s==='+')||(sym==='-'&&s==='−')||(sym==='X'&&s==='×')||(sym==='/'&&s==='/'))b.classList.add('active');
+  });
 }
 
-function onResoudre() {
-  setStatus('Calcul en cours…');
-  document.getElementById('btn-resoudre').disabled = true;
-  setTimeout(() => {
-    const { sol, solver, ms } = doSolve();
-    lastSolver = solver;
-    showSolution(sol, solver, ms);
-    document.getElementById('btn-resoudre').disabled = false;
-    document.getElementById('btn-detail').disabled = false;
-  }, 10);
+// ═══════════════════════════════════════════════
+//  VALIDER / RÉSOUDRE
+// ═══════════════════════════════════════════════
+function onValider(){
+  const libre=cfg.modeJeu==='libre'||cfg.entrainement;
+  if(!calcSteps.length&&!libre){_showToast('Effectue au moins un calcul d\'abord.','red');return;}
+  if(state.validated){_showToast('Déjà validé — Lance un nouveau tirage !','red');return;}
+  stopTimer();stopGlobalTimeout();
+  const lastRes=calcSteps.length?calcSteps[calcSteps.length-1].res:0;
+  const r=evaluate(lastRes);
+  if(r.error){_showToast(r.error,'red');return;}
+  document.getElementById('lbl-score').textContent=r.total;setStatus(r.msg);
+  _showToast(r.msg,r.diff===0?'green':r.diff<=3?'orange':'red',4000);
+  document.getElementById('btn-resoudre').disabled=false;updateNouveauBtn();
 }
-
-function showSolution(sol, solver, ms) {
-  const box = document.getElementById('sol-box');
-  const div = document.getElementById('sol-lines');
-  box.style.display = 'block';
-  div.innerHTML = '';
-  if (sol) {
-    for (const step of sol.steps) {
-      const d = document.createElement('div');
-      d.className = 'sol-line' + (sol.diff === 0 ? ' exact' : '');
-      d.textContent = `  ${step}`;
-      div.appendChild(d);
-    }
-  }
-  const diff = sol ? (sol.diff === 0 ? 'exact' : `écart=${sol.diff}`) : '?';
-  setStatus(`Résolu en ${ms.toFixed(0)} ms — ${diff} — ${solver.allSols.length} solution(s) exacte(s)`);
+function onResoudre(){
+  setStatus('Calcul en cours…');document.getElementById('btn-resoudre').disabled=true;
+  setTimeout(()=>{
+    const{sol,solver,ms}=doSolve();lastSolver=solver;showSolution(sol,solver,ms);
+    document.getElementById('btn-resoudre').disabled=false;document.getElementById('btn-detail').disabled=false;
+  },10);
 }
+function showSolution(sol,solver,ms){
+  const box=document.getElementById('sol-box'),div=document.getElementById('sol-lines');
+  box.style.display='block';div.innerHTML='';
+  if(sol)for(const s of sol.steps){const d=document.createElement('div');d.className='sol-line'+(sol.diff===0?' exact':'');d.textContent=`  ${s}`;div.appendChild(d);}
+  setStatus(`Résolu en ${ms.toFixed(0)} ms — ${sol?(sol.diff===0?'exact':`écart=${sol.diff}`):'?'} — ${solver.allSols.length} solution(s) exacte(s)`);
+}
+function hideSolution(){document.getElementById('sol-box').style.display='none';document.getElementById('sol-lines').innerHTML='';lastSolver=null;}
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  NOUVEAU TIRAGE
-// ══════════════════════════════════════════════════════
-function newGame() {
-  stopTimer();
-  hideSolution();
+// ═══════════════════════════════════════════════
+function newGame(){
+  stopTimer();stopGlobalTimeout();hideSolution();_backPhase=null;
 
-  if (cfg.entrainement) {
-    // Mode entraînement : affiche la zone de saisie, pas de tirage auto
-    document.getElementById('entrainement-zone').style.display = 'block';
-    document.getElementById('plq-title').textContent = 'Saisie libre';
-    document.getElementById('plq-grid').innerHTML = '';
-    document.getElementById('lbl-cible').textContent = '—';
-    document.getElementById('lbl-round').textContent = 'Entraînement';
-    document.getElementById('lbl-mode').textContent  = 'LIBRE';
-    document.getElementById('lbl-timer').textContent = '—';
-    document.getElementById('btn-detail').disabled   = true;
-    document.getElementById('btn-resoudre').disabled = true;
-    _buildEntryPlaques(cfg.nbPlaques);
-    calcSteps = []; plaqueVals = []; plaqueActive = []; plaqueBtns = [];
-    refreshHist();
-    resetPhase();
-    setStatus('Saisis tes plaques et ta cible, puis clique sur Jouer !');
-    return;
+  if(cfg.entrainement){
+    document.getElementById('entrainement-zone').style.display='block';
+    document.getElementById('plq-title').textContent='Saisie libre';
+    document.getElementById('lbl-round').textContent='Entraînement';
+    document.getElementById('lbl-mode').textContent='LIBRE';
+    document.getElementById('lbl-timer').textContent='—';
+    document.getElementById('btn-detail').disabled=true;
+    document.getElementById('btn-resoudre').disabled=false;
+    _buildEntryPlaques(cfg.nbPlaques,state.plaques.length>0);
+    if(state.plaques.length>0){calcSteps=[];plaqueActive=state.plaques.map(()=>true);plaqueVals=[...state.plaques];renderPlaques();refreshHist();}
+    _resetPhase();setStatus('Modifie tes plaques/cible et clique sur Jouer, ou lance Résoudre directement.');return;
   }
 
-  document.getElementById('entrainement-zone').style.display = 'none';
-  document.getElementById('plq-title').textContent = 'Plaques disponibles';
+  document.getElementById('entrainement-zone').style.display='none';
+  document.getElementById('plq-title').textContent='Plaques disponibles';
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0){_showToast('Validez votre résultat avant de continuer.','warn');return;}
 
   setStatus('Tirage en cours…');
-  // setTimeout pour laisser le DOM se mettre à jour avant le calcul exactOnly
-  setTimeout(() => {
-    const s = doTirage();
-    saveSession();
-    document.getElementById('lbl-cible').textContent = s.target;
-    document.getElementById('lbl-round').textContent = `Tirage ${s.roundNum} / ${cfg.nbTirages}`;
-    document.getElementById('lbl-mode').textContent  = cfg.tirageMode.toUpperCase() + (cfg.exactOnly ? ' ✓' : '');
-    document.getElementById('btn-detail').disabled   = true;
-    document.getElementById('btn-resoudre').disabled = true;
-    plaqueVals   = [...s.plaques];
-    plaqueActive = s.plaques.map(() => true);
-    calcSteps    = [];
-    renderPlaques();
-    refreshHist();
-    resetPhase();
-    startTimer();
-    updateNouveauBtn();
+  setTimeout(()=>{
+    const s=doTirage();saveSession();
+    document.getElementById('lbl-cible').textContent=s.target;
+    document.getElementById('lbl-round').textContent=cfg.modeJeu==='comp'&&cfg.partieNum>0?`Tirage ${s.roundNum} / ${cfg.nbTirages}`:`Tirage ${s.roundNum}`;
+    document.getElementById('lbl-mode').textContent=cfg.tirageMode.toUpperCase()+(cfg.exactOnly?' ✓':'');
+    document.getElementById('btn-detail').disabled=true;
+    document.getElementById('btn-resoudre').disabled=(cfg.modeJeu==='comp'&&!state.validated);
+    plaqueVals=[...s.plaques];plaqueActive=s.plaques.map(()=>true);calcSteps=[];_backPhase=null;
+    renderPlaques();refreshHist();_resetPhase();startTimer();updateNouveauBtn();
     setStatus('Sélectionne une plaque pour commencer !');
-  }, 10);
+  },10);
 }
-
-function hideSolution() {
-  document.getElementById('sol-box').style.display = 'none';
-  document.getElementById('sol-lines').innerHTML = '';
-  lastSolver = null;
-}
-
-// ── Mode entraînement ────────────────────────────────
-function _buildEntryPlaques(nb) {
-  const row = document.getElementById('entry-plq-row');
-  row.innerHTML = '';
-  for (let i = 0; i < nb; i++) {
-    const inp = document.createElement('input');
-    inp.type = 'number'; inp.min = '1'; inp.max = '999';
-    inp.placeholder = `P${i+1}`;
-    inp.style.cssText = 'width:60px;background:var(--bg-hdr);color:var(--text);' +
-      'border:1px solid var(--border);border-radius:6px;padding:6px 4px;' +
-      'font-size:1rem;font-weight:700;text-align:center;';
-    inp.dataset.idx = i;
+function _buildEntryPlaques(nb,keep=false){
+  const row=document.getElementById('entry-plq-row');
+  const old=keep?[...row.querySelectorAll('input')].map(i=>i.value):[];
+  row.innerHTML='';
+  for(let i=0;i<nb;i++){
+    const inp=document.createElement('input');inp.type='number';inp.min='1';inp.max='999';
+    inp.placeholder=`P${i+1}`;inp.value=(keep&&old[i])?old[i]:'';
+    inp.style.cssText='width:60px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 4px;font-size:1rem;font-weight:700;text-align:center;';
     row.appendChild(inp);
   }
-  document.getElementById('entry-cible').value = '';
+  if(!keep)document.getElementById('entry-cible').value='';
+}
+function jouerEntrainement(){
+  const inputs=[...document.querySelectorAll('#entry-plq-row input')];
+  const plaques=[];
+  for(const inp of inputs){const v=parseInt(inp.value);if(!v||v<1){_showToast('Toutes les plaques doivent être ≥ 1','red');inp.focus();return;}plaques.push(v);}
+  const cible=parseInt(document.getElementById('entry-cible').value);
+  if(!cible||cible<1){_showToast('Saisis une cible valide','red');return;}
+  document.getElementById('entrainement-zone').style.display='none';
+  state={...state,plaques,target:cible,best:null,allSols:[],reachable:new Set(),startTime:Date.now(),roundNum:state.roundNum+1,validated:false};
+  document.getElementById('lbl-cible').textContent=cible;
+  document.getElementById('lbl-round').textContent=`Entraînement ${state.roundNum}`;
+  document.getElementById('btn-detail').disabled=true;document.getElementById('btn-resoudre').disabled=false;
+  plaqueVals=[...plaques];plaqueActive=plaques.map(()=>true);calcSteps=[];_backPhase=null;
+  renderPlaques();refreshHist();_resetPhase();
+  document.getElementById('lbl-timer').textContent='Libre';setStatus('C\'est parti !');
 }
 
-function jouerEntrainement() {
-  const inputs = document.querySelectorAll('#entry-plq-row input');
-  const plaques = [];
-  for (const inp of inputs) {
-    const v = parseInt(inp.value);
-    if (!v || v < 1) { alert('Toutes les plaques doivent être remplies (>= 1)'); inp.focus(); return; }
-    plaques.push(v);
-  }
-  const cible = parseInt(document.getElementById('entry-cible').value);
-  if (!cible || cible < 1) { alert('Saisis une cible valide (>= 1)'); return; }
-
-  document.getElementById('entrainement-zone').style.display = 'none';
-  state = { ...state, plaques, target: cible,
-            best: null, allSols: [], reachable: new Set(),
-            startTime: Date.now(), roundNum: state.roundNum + 1, validated: false };
-
-  document.getElementById('lbl-cible').textContent = cible;
-  document.getElementById('lbl-round').textContent = `Entraînement ${state.roundNum}`;
-  document.getElementById('btn-detail').disabled   = true;
-  document.getElementById('btn-resoudre').disabled = true;
-
-  plaqueVals   = [...plaques];
-  plaqueActive = plaques.map(() => true);
-  calcSteps    = [];
-  renderPlaques();
-  refreshHist();
-  resetPhase();
-  // Pas de timer en mode entraînement
-  document.getElementById('lbl-timer').textContent = 'Entraînement';
-  setStatus('C\'est parti ! Sélectionne une plaque.');
-}
-
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  OPTIONS
-// ══════════════════════════════════════════════════════
-function openOptions() {
-  stopTimer();
-  document.getElementById('opt-tirage').value         = cfg.tirageMode;
-  document.getElementById('opt-nbplq').value          = cfg.nbPlaques;
-  document.getElementById('opt-tmin').value           = cfg.targetMin;
-  document.getElementById('opt-tmax').value           = cfg.targetMax;
-  document.getElementById('opt-time').value           = cfg.timeLimit;
-  document.getElementById('opt-partie').value         = cfg.partieNum;
-  document.getElementById('opt-nbtirages').value      = cfg.nbTirages;
-  document.getElementById('opt-solve').value          = cfg.solveMode;
-  document.getElementById('opt-exact').checked        = cfg.exactOnly;
-  document.getElementById('opt-reprise').checked      = cfg.repriseAuto;
-  document.getElementById('opt-entrainement').checked = cfg.entrainement;
+// ═══════════════════════════════════════════════
+function switchOptTab(paneId,btn){
+  document.querySelectorAll('.opt-tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.opt-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(paneId).classList.add('active');
+  btn.classList.add('active');
+}
+function openOptions(){
+  stopTimer();stopGlobalTimeout();
+  document.getElementById('opt-tirage').value=cfg.tirageMode;
+  document.getElementById('opt-nbplq').value=cfg.nbPlaques;
+  document.getElementById('opt-tmin').value=cfg.targetMin;
+  document.getElementById('opt-tmax').value=cfg.targetMax;
+  document.getElementById('opt-time').value=cfg.timeLimit;
+  document.getElementById('opt-timeout').value=cfg.globalTimeout;
+  document.getElementById('opt-partie').value=cfg.partieNum;
+  document.getElementById('opt-nbtirages').value=cfg.nbTirages;
+  document.getElementById('opt-solve').value=cfg.solveMode;
+  document.getElementById('opt-exact').checked=cfg.exactOnly;
+  document.getElementById('opt-reprise').checked=cfg.repriseAuto;
+  document.getElementById('opt-entrainement').checked=cfg.entrainement;
+  document.getElementById('opt-si0').value=cfg.scoreInTime[0];
+  document.getElementById('opt-si13').value=cfg.scoreInTime[1];
+  document.getElementById('opt-si4').value=cfg.scoreInTime[2];
+  document.getElementById('opt-so0').value=cfg.scoreOutTime[0];
+  document.getElementById('opt-so13').value=cfg.scoreOutTime[1];
+  document.getElementById('opt-so4').value=cfg.scoreOutTime[2];
+  document.getElementById(cfg.modeJeu==='comp'?'opt-mode-comp':'opt-mode-libre').checked=true;
+  _syncOptUI();
   document.getElementById('modal-options').classList.add('open');
 }
-
-function saveOptions() {
-  const nb  = parseInt(document.getElementById('opt-nbplq').value);
-  const mn  = parseInt(document.getElementById('opt-tmin').value);
-  const mx  = parseInt(document.getElementById('opt-tmax').value);
-  const nbt = parseInt(document.getElementById('opt-nbtirages').value);
-  if (mn >= mx)   { alert('Cible min doit être < Cible max'); return; }
-  if (nb < 2 || nb > 8) { alert('Nombre de plaques : 2 à 8'); return; }
-  if (nbt < 1)    { alert('Nombre de tirages >= 1'); return; }
-
-  cfg.tirageMode   = document.getElementById('opt-tirage').value;
-  cfg.solveMode    = document.getElementById('opt-solve').value;
-  cfg.nbPlaques    = nb;
-  cfg.targetMin    = mn;
-  cfg.targetMax    = mx;
-  cfg.timeLimit    = parseInt(document.getElementById('opt-time').value);
-  cfg.nbTirages    = nbt;
-  cfg.exactOnly    = document.getElementById('opt-exact').checked;
-  cfg.repriseAuto  = document.getElementById('opt-reprise').checked;
-  cfg.entrainement = document.getElementById('opt-entrainement').checked;
-
-  const np = parseInt(document.getElementById('opt-partie').value);
-  if (np !== cfg.partieNum) {
-    cfg.partieNum = np;
-    rng = null;
-    clearSession();
-    state.score    = 0;
-    state.roundNum = 0;
-    state.history  = [];
-    document.getElementById('lbl-score').textContent = 0;
-  }
+function _syncOptUI(){
+  const comp=document.getElementById('opt-mode-comp').checked;
+  ['row-graine','row-nbtirages','row-timeout'].forEach(id=>document.getElementById(id).style.opacity=comp?'1':'.4');
+  document.getElementById('opt-partie').disabled=!comp;
+  document.getElementById('opt-nbtirages').disabled=!comp;
+  document.getElementById('opt-timeout').disabled=!comp;
+}
+document.getElementById('opt-mode-libre').addEventListener('change',_syncOptUI);
+document.getElementById('opt-mode-comp').addEventListener('change',_syncOptUI);
+function rndGraine(){document.getElementById('opt-partie').value=Math.floor(Math.random()*999999)+1;}
+function saveOptions(){
+  const nb=parseInt(document.getElementById('opt-nbplq').value);
+  const mn=parseInt(document.getElementById('opt-tmin').value);
+  const mx=parseInt(document.getElementById('opt-tmax').value);
+  if(mn>=mx){_showToast('Cible min doit être < Cible max','red');return;}
+  if(nb<2||nb>8){_showToast('Nombre de plaques : 2 à 8','red');return;}
+  const newMode=document.getElementById('opt-mode-comp').checked?'comp':'libre';
+  const np=parseInt(document.getElementById('opt-partie').value)||0;
+  const oldPartie=cfg.partieNum, oldMode=cfg.modeJeu;
+  cfg.tirageMode=document.getElementById('opt-tirage').value;
+  cfg.solveMode=document.getElementById('opt-solve').value;
+  cfg.nbPlaques=nb;cfg.targetMin=mn;cfg.targetMax=mx;
+  cfg.timeLimit=parseInt(document.getElementById('opt-time').value)||45;
+  cfg.globalTimeout=parseInt(document.getElementById('opt-timeout').value)||120;
+  cfg.nbTirages=parseInt(document.getElementById('opt-nbtirages').value)||30;
+  cfg.exactOnly=document.getElementById('opt-exact').checked;
+  cfg.repriseAuto=document.getElementById('opt-reprise').checked;
+  cfg.entrainement=document.getElementById('opt-entrainement').checked;
+  cfg.modeJeu=newMode;cfg.partieNum=np;
+  cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
+  cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
+  if(np!==oldPartie||newMode!==oldMode){rng=null;clearSession();state.score=0;state.roundNum=0;state.history=[];document.getElementById('lbl-score').textContent=0;}
   closeModal('modal-options');
-  if (cfg.entrainement) {
-    newGame();
-  } else {
-    setStatus('Options appliquées — Lance un nouveau tirage !');
-  }
+  if(cfg.entrainement)newGame();else setStatus('Options appliquées — Lance un nouveau tirage !');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function updateNouveauBtn(){
+  const locked=cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0;
+  const btn=document.getElementById('btn-nouveau');btn.disabled=locked;btn.title=locked?'Validez votre résultat avant de continuer':'';
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ── Verrou bouton Nouveau en mode compétition ─────────
-function updateNouveauBtn() {
-  const locked = cfg.partieNum > 0 && !cfg.entrainement && !state.validated;
-  const btn = document.getElementById('btn-nouveau');
-  btn.disabled = locked;
-  btn.title    = locked ? 'Validez votre résultat avant de passer au tirage suivant' : '';
+// ═══════════════════════════════════════════════
+//  FIN DE PARTIE / RACCOURCIS
+// ═══════════════════════════════════════════════
+function modeSylvie(){
+  document.getElementById('opt-tirage').value='alea20';document.getElementById('opt-nbplq').value='5';
+  document.getElementById('opt-tmin').value='26';document.getElementById('opt-tmax').value='100';
+  document.getElementById('opt-nbtirages').value='10';document.getElementById('opt-time').value='60';
+  document.getElementById('opt-exact').checked=true;document.getElementById('opt-reprise').checked=true;
+  document.getElementById('opt-entrainement').checked=false;document.getElementById('opt-solve').value='complete';
+  document.getElementById('opt-partie').value='0';document.getElementById('opt-mode-libre').checked=true;
+  _syncOptUI();setStatus('Mode Sylvie prêt — clique sur Appliquer.');
 }
-
-// ══════════════════════════════════════════════════════
-//  FIN DE PARTIE
-// ══════════════════════════════════════════════════════
-function modeSylvie() {
-  document.getElementById('opt-tirage').value    = 'alea20';
-  document.getElementById('opt-nbplq').value     = '5';
-  document.getElementById('opt-tmin').value      = '11';
-  document.getElementById('opt-tmax').value      = '100';
-  document.getElementById('opt-nbtirages').value = '10';
-  document.getElementById('opt-time').value      = '60';
-  document.getElementById('opt-exact').checked   = true;
-  document.getElementById('opt-reprise').checked = true;
-  document.getElementById('opt-entrainement').checked = false;
-  document.getElementById('opt-solve').value     = 'complete';
+function resetDefaut(){
+  document.getElementById('opt-tirage').value='ceb24';document.getElementById('opt-nbplq').value='6';
+  document.getElementById('opt-tmin').value='101';document.getElementById('opt-tmax').value='999';
+  document.getElementById('opt-nbtirages').value='30';document.getElementById('opt-time').value='45';
+  document.getElementById('opt-timeout').value='120';document.getElementById('opt-exact').checked=true;
+  document.getElementById('opt-reprise').checked=true;document.getElementById('opt-entrainement').checked=false;
+  document.getElementById('opt-solve').value='complete';document.getElementById('opt-partie').value='0';
+  document.getElementById('opt-mode-libre').checked=true;_syncOptUI();
 }
-
-function resetDefaut() {
-  document.getElementById('opt-tirage').value    = 'ceb24';
-  document.getElementById('opt-nbplq').value     = '6';
-  document.getElementById('opt-tmin').value      = '101';
-  document.getElementById('opt-tmax').value      = '999';
-  document.getElementById('opt-nbtirages').value = '50';
-  document.getElementById('opt-time').value      = '45';
-  document.getElementById('opt-exact').checked   = true;
-  document.getElementById('opt-reprise').checked = true;
-  document.getElementById('opt-entrainement').checked = false;
-  document.getElementById('opt-solve').value     = 'complete';
-  document.getElementById('opt-partie').value    = '0';
-}
-
-function openFinPartie() {
-  stopTimer();
-  recordPartie();   // sauvegarde dans localStorage
-  const h    = state.history;
-  const tot  = state.score;
-  const moy  = h.length ? (tot / h.length).toFixed(1) : 0;
-  const gagne = h.filter(e => e.diff === 0).length;
-
-  document.getElementById('fin-graine').textContent =
-    `Partie ${cfg.partieNum || 'aléatoire'} — ${h.length} tirages`;
-  document.getElementById('fin-score').textContent = `${tot > 0 ? '+' : ''}${tot} pts`;
-  document.getElementById('fin-score').style.color = tot >= 0 ? 'var(--accent2)' : 'var(--accent)';
-  document.getElementById('fin-moyenne').textContent =
-    `Moyenne : ${moy} pts/tirage  |  Comptes exacts : ${gagne} / ${h.length}`;
-
-  const div = document.getElementById('fin-hist');
-  div.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  h.forEach(e => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;justify-content:space-between;padding:4px 8px;' +
-      `border-radius:4px;margin-bottom:3px;font-size:.82rem;` +
-      `background:${e.diff === 0 ? '#1a4a2a' : e.diff <= 3 ? '#2a3a1a' : '#3a1a1a'};`;
-    row.innerHTML =
-      `<span style="color:var(--text-dim)">#${e.num}</span>` +
-      `<span>${e.plaques.join(' ')}</span>` +
-      `<span style="color:var(--accent2);font-weight:700">→${e.target}</span>` +
-      `<span style="color:${e.diff===0?'var(--green)':e.diff<=3?'var(--accent2)':'var(--accent)'}">` +
-        `${e.diff===0?'✓':('±'+e.diff)}</span>` +
-      `<span style="color:${e.pts>=0?'var(--green)':'var(--accent)'}">` +
-        `${e.pts>=0?'+':''}${e.pts}</span>`;
+function openFinPartie(){
+  stopTimer();stopGlobalTimeout();recordPartie();
+  const h=state.history,tot=state.score,moy=h.length?(tot/h.length).toFixed(1):0,gagne=h.filter(e=>e.diff===0).length;
+  document.getElementById('fin-graine').textContent=`Partie ${cfg.partieNum||'aléatoire'} — ${h.length} tirages`;
+  document.getElementById('fin-score').textContent=`${tot>0?'+':''}${tot} pts`;
+  document.getElementById('fin-score').style.color=tot>=0?'var(--accent2)':'var(--accent)';
+  document.getElementById('fin-moyenne').textContent=`Moyenne : ${moy} pts/tirage  |  Comptes exacts : ${gagne} / ${h.length}`;
+  const div=document.getElementById('fin-hist');div.innerHTML='';
+  const frag=document.createDocumentFragment();
+  h.forEach(e=>{
+    const row=document.createElement('div');
+    row.style.cssText=`display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;margin-bottom:3px;font-size:.82rem;background:${e.diff===0?'#1a4a2a':e.diff<=3?'#2a3a1a':'#3a1a1a'};`;
+    row.innerHTML=`<span style="color:var(--text-dim)">#${e.num}</span><span>${e.plaques.join(' ')}</span><span style="color:var(--accent2);font-weight:700">→${e.target}</span><span style="color:${e.diff===0?'var(--green)':e.diff<=3?'var(--accent2)':'var(--accent)'}">${e.diff===0?'✓':'±'+e.diff}</span><span style="color:${e.pts>=0?'var(--green)':'var(--accent)'}">${e.pts>=0?'+':''}${e.pts}</span>`;
     frag.appendChild(row);
   });
-  div.appendChild(frag);
-  document.getElementById('modal-fin').classList.add('open');
+  div.appendChild(frag);document.getElementById('modal-fin').classList.add('open');
+}
+function nouvellePartie(){closeModal('modal-fin');clearSession();rng=null;cfg.partieNum=0;state.score=0;state.roundNum=0;state.history=[];document.getElementById('lbl-score').textContent=0;newGame();}
+function nouvelleGraine(){
+  closeModal('modal-fin');clearSession();rng=null;
+  cfg.partieNum=Math.floor(Math.random()*999999)+1;state.score=0;state.roundNum=0;state.history=[];
+  document.getElementById('lbl-score').textContent=0;_showToast(`Nouvelle graine : ${cfg.partieNum}`,'orange',3000);newGame();
 }
 
-function nouvellePartie() {
-  closeModal('modal-fin');
-  clearSession();
-  rng = null;
-  state.score    = 0;
-  state.roundNum = 0;
-  state.history  = [];
-  document.getElementById('lbl-score').textContent = 0;
-  newGame();
-}
-
-// ══════════════════════════════════════════════════════
-//  DETAIL — canvas virtualisé pour résultats atteignables
-// ══════════════════════════════════════════════════════
-let _reachCanvas = null, _reachData = null;
-
-function _buildReachCanvas(sorted, target) {
-  const wrap = document.getElementById('reach-canvas-wrap');
-  wrap.innerHTML = '';
-
-  const COL    = 10;
-  const CW     = 58;   // cell width px
-  const CH     = 22;   // cell height px
-  const PAD    = 2;
-  const nRows  = Math.ceil(sorted.length / COL);
-  const totalH = nRows * (CH + PAD);
-
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'display:block;width:100%;cursor:default;';
-  wrap.appendChild(canvas);
-
-  // Premier gap (pour couleur)
-  let firstGapVal = null;
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] !== sorted[i-1] + 1) { firstGapVal = sorted[i]; break; }
-  }
-
-  function draw() {
-    const W = wrap.clientWidth || 600;
-    const cw = Math.floor(W / COL);
-    canvas.width  = W;
-    canvas.height = totalH;
-    canvas.style.height = totalH + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.font = '11px Courier New';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    for (let idx = 0; idx < sorted.length; idx++) {
-      const val = sorted[idx];
-      const row = Math.floor(idx / COL);
-      const col = idx % COL;
-      const x   = col * cw;
-      const y   = row * (CH + PAD);
-
-      let bg = '#2e5070', fg = '#ffffff';
-      if (val === target)        { bg = '#f5a623'; fg = '#1a1a2e'; }
-      else if (val === firstGapVal) { bg = '#2d5f80'; fg = '#5dade2'; }
-
-      ctx.fillStyle = bg;
-      ctx.fillRect(x + 1, y + 1, cw - 2, CH - 2);
-      ctx.fillStyle = fg;
-      ctx.fillText(val, x + cw / 2, y + CH / 2);
+// ═══════════════════════════════════════════════
+//  DÉTAIL
+// ═══════════════════════════════════════════════
+function _buildReachCanvas(sorted,target){
+  const wrap=document.getElementById('reach-canvas-wrap');wrap.innerHTML='';
+  const COL=10,CH=22,PAD=2,nRows=Math.ceil(sorted.length/COL),totalH=nRows*(CH+PAD);
+  const canvas=document.createElement('canvas');canvas.style.cssText='display:block;width:100%;cursor:default;';wrap.appendChild(canvas);
+  let fg1=null;for(let i=1;i<sorted.length;i++){if(sorted[i]!==sorted[i-1]+1){fg1=sorted[i];break;}}
+  function draw(){
+    const W=wrap.clientWidth||600,cw=Math.floor(W/COL);
+    canvas.width=W;canvas.height=totalH;canvas.style.height=totalH+'px';
+    const ctx=canvas.getContext('2d');ctx.font='11px Courier New';ctx.textAlign='center';ctx.textBaseline='middle';
+    for(let idx=0;idx<sorted.length;idx++){
+      const val=sorted[idx],row=Math.floor(idx/COL),col=idx%COL,x=col*cw,y=row*(CH+PAD);
+      let bg='#2e5070',fg='#ffffff';
+      if(val===target){bg='#f5a623';fg='#1a1a2e';}else if(val===fg1){bg='#2d5f80';fg='#5dade2';}
+      ctx.fillStyle=bg;ctx.fillRect(x+1,y+1,cw-2,CH-2);ctx.fillStyle=fg;ctx.fillText(val,x+cw/2,y+CH/2);
     }
   }
-
-  _reachCanvas = canvas;
-  _reachData   = { sorted, target, draw };
-  draw();
-
-  // Redessine si la fenêtre change de taille
-  const ro = new ResizeObserver(() => draw());
-  ro.observe(wrap);
+  draw();new ResizeObserver(draw).observe(wrap);
 }
-
-function openDetail() {
-  if (!lastSolver) return;
-  const solver = lastSolver;
-  document.getElementById('detail-title').textContent =
-    `Plaques : ${state.plaques.join('  ')}   |   Cible : ${state.target}`;
-
-  // ── Tab résultats ────────────────────────────────
-  const sorted = [...solver.reachable].sort((a, b) => a - b);
-  const attein = solver.reachable.has(state.target);
-  document.getElementById('reach-info').textContent =
-    `${sorted.length} résultats  |  Cible ${state.target} : ${attein ? '✓ Atteignable' : '✗ Non atteignable'}`;
-  document.getElementById('reach-info').style.color = attein ? 'var(--green)' : 'var(--accent)';
-  // Canvas rendu après que la modale soit visible (dimensions correctes)
-  requestAnimationFrame(() => _buildReachCanvas(sorted, state.target));
-
-  // ── Tab solutions exactes (virtualisé : 1 div par solution, pas par cellule) ──
-  const solsList = document.getElementById('sols-list');
-  solsList.innerHTML = '';
-  if (!solver.allSols.length) {
-    solsList.innerHTML = '<p style="color:var(--text-dim);padding:16px">Aucune solution exacte.</p>';
-  } else {
-    const sorted2 = [...solver.allSols].sort(
-      (a, b) => a.depth - b.depth || a.steps.join().localeCompare(b.steps.join()));
-    // Fragment pour batch-insert
-    const frag = document.createDocumentFragment();
-    sorted2.forEach((sol, i) => {
-      const div = document.createElement('div');
-      div.className = 'sol-item';
-      div.innerHTML =
-        `<span style="color:var(--text-dim);font-size:.8rem">[${i+1}] ${sol.depth} étape(s)</span><br>` +
-        `<span class="sol-preview">${sol.steps.join('  →  ')}</span>`;
-      // Toggle détail inline
-      div.onclick = () => {
-        const open = div.dataset.open === '1';
-        div.dataset.open = open ? '0' : '1';
-        div.querySelector('.sol-detail')?.remove();
-        if (!open) {
-          const detail = document.createElement('div');
-          detail.className = 'sol-detail';
-          detail.style.cssText = 'margin-top:6px;padding:6px;background:var(--bg-hdr);border-radius:4px;';
-          detail.innerHTML = sol.steps.map(s =>
-            `<div style="color:var(--green);font-size:.85rem">${s}</div>`).join('');
-          div.appendChild(detail);
-        }
+function openDetail(){
+  if(!lastSolver)return;
+  const sv=lastSolver;
+  document.getElementById('detail-title').textContent=`Plaques : ${state.plaques.join('  ')}   |   Cible : ${state.target}`;
+  const sorted=[...sv.reachable].sort((a,b)=>a-b);const att=sv.reachable.has(state.target);
+  document.getElementById('reach-info').textContent=`${sorted.length} résultats  |  Cible ${state.target} : ${att?'✓ Atteignable':'✗ Non atteignable'}`;
+  document.getElementById('reach-info').style.color=att?'var(--green)':'var(--accent)';
+  requestAnimationFrame(()=>_buildReachCanvas(sorted,state.target));
+  const sl=document.getElementById('sols-list');sl.innerHTML='';
+  if(!sv.allSols.length){sl.innerHTML='<p style="color:var(--text-dim);padding:16px">Aucune solution exacte.</p>';}
+  else{
+    const sorted2=[...sv.allSols].sort((a,b)=>a.depth-b.depth||a.steps.join().localeCompare(b.steps.join()));
+    const frag=document.createDocumentFragment();
+    sorted2.forEach((sol,i)=>{
+      const div=document.createElement('div');div.className='sol-item';
+      div.innerHTML=`<span style="color:var(--text-dim);font-size:.8rem">[${i+1}] ${sol.depth} étape(s)</span><br><span style="color:var(--text-med);font-size:.78rem">${sol.steps.join('  →  ')}</span>`;
+      div.onclick=()=>{
+        const open=div.dataset.open==='1';div.dataset.open=open?'0':'1';div.querySelector('.sol-detail')?.remove();
+        if(!open){const d=document.createElement('div');d.className='sol-detail';d.style.cssText='margin-top:6px;padding:6px;background:var(--bg-hdr);border-radius:4px;';d.innerHTML=sol.steps.map(s=>`<div style="color:var(--green);font-size:.85rem">${s}</div>`).join('');div.appendChild(d);}
       };
       frag.appendChild(div);
     });
-    solsList.appendChild(frag);
+    sl.appendChild(frag);
   }
-
-  // ── Tab meilleure ────────────────────────────────
-  const bestDiv = document.getElementById('best-content');
-  bestDiv.innerHTML = '';
-  if (solver.best) {
-    bestDiv.innerHTML =
-      `<div style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:${solver.best.diff === 0 ? 'var(--green)' : 'var(--accent2)'}">` +
-        (solver.best.diff === 0 ? 'Compte exact !' : `Écart : ${solver.best.diff}`) +
-      `</div>` +
-      solver.best.steps.map(s => `<div style="margin:4px 0;font-size:1.05rem">${s}</div>`).join('') +
-      `<div style="margin-top:14px;font-size:.8rem;color:var(--text-dim)">${solver._ops} opérations testées</div>`;
-  }
-
-  showTab('tab-reach');
-  document.getElementById('modal-detail').classList.add('open');
+  const bd=document.getElementById('best-content');bd.innerHTML='';
+  if(sv.best){bd.innerHTML=`<div style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:${sv.best.diff===0?'var(--green)':'var(--accent2)'}">${sv.best.diff===0?'Compte exact !':`Écart : ${sv.best.diff}`}</div>`+sv.best.steps.map(s=>`<div style="margin:4px 0;font-size:1.05rem">${s}</div>`).join('')+`<div style="margin-top:14px;font-size:.8rem;color:var(--text-dim)">${sv._ops} opérations testées | ${sv.allSols.length} solution(s) exacte(s)</div>`;}
+  showTab('tab-reach','modal-detail');document.getElementById('modal-detail').classList.add('open');
 }
 
-function showTab(id) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const idx = ['tab-reach','tab-sols','tab-best'].indexOf(id);
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+// ═══════════════════════════════════════════════
+//  showTab scopé au modal
+// ═══════════════════════════════════════════════
+function showTab(id,modalId){
+  const modal=document.getElementById(modalId);if(!modal)return;
+  modal.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  modal.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(id);if(el)el.classList.add('active');
+  const detIds=['tab-reach','tab-sols','tab-best'],stIds=['st-global','st-parties','st-modes'];
+  const all=[...detIds,...stIds];const tabIdx=all.indexOf(id)%(detIds.length);
+  const tabs=[...modal.querySelectorAll('.tab-btn')];if(tabIdx>=0&&tabs[tabIdx])tabs[tabIdx].classList.add('active');
 }
+function showStatsTab(id){showTab(id,'modal-stats');}
 
-// ══════════════════════════════════════════════════════
-//  PWA — manifest inline + service worker
-// ══════════════════════════════════════════════════════
-function initPWA() {
-  // Pas de PWA en file:// (pas de HTTPS, service worker interdit)
-  if (location.protocol === 'file:') return;
-  try {
-    const manifest = {
-      name: 'Le Compte Est Bon',
-      short_name: 'CEB',
-      description: 'Le célèbre jeu de calcul mental',
-      start_url: './',
-      display: 'standalone',
-      background_color: '#1e3a52',
-      theme_color: '#1e3a52',
-      icons: [{
-        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a52'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' font-family='serif' fill='%23f5a623'%3E%3D%3C/text%3E%3C/svg%3E",
-        sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable',
-      }],
+// ═══════════════════════════════════════════════
+//  PWA
+// ═══════════════════════════════════════════════
+const CEB_VERSION = '1.0';
+const CEB_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="28" fill="#1e3a52"/>
+  <rect x="10" y="10" width="172" height="172" rx="20" fill="#2e5070"/>
+  <rect x="16" y="20" width="36" height="28" rx="6" fill="#27ae60"/>
+  <rect x="58" y="20" width="36" height="28" rx="6" fill="#27ae60"/>
+  <rect x="100" y="20" width="36" height="28" rx="6" fill="#27ae60"/>
+  <rect x="142" y="20" width="36" height="28" rx="6" fill="#e05c6e"/>
+  <text x="34"  y="40" font-size="14" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="white">1</text>
+  <text x="76"  y="40" font-size="14" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="white">3</text>
+  <text x="118" y="40" font-size="14" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="white">8</text>
+  <text x="160" y="40" font-size="14" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="white">+</text>
+  <text x="96" y="115" font-size="56" font-weight="900" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" fill="#f5a623">849</text>
+  <text x="96" y="148" font-size="22" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="#f5c518">= ?</text>
+  <rect x="16" y="158" width="160" height="22" rx="5" fill="#1e3a52"/>
+  <text x="96" y="174" font-size="11" font-weight="bold" text-anchor="middle" font-family="Arial,sans-serif" fill="#f5a623">LE COMPTE EST BON</text>
+</svg>`;
+
+function initPWA(){
+  // Affiche la version dans le header
+  const vspan = document.getElementById('hdr-version');
+  if(vspan) vspan.textContent = `v${CEB_VERSION}`;
+
+  if(location.protocol==='file:')return;
+  try{
+    const iconDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(CEB_ICON_SVG)));
+    const m={
+      name:'Le Compte Est Bon',
+      short_name:'CEB',
+      description:'Le célèbre jeu de calcul mental',
+      version: CEB_VERSION,
+      start_url:'./',
+      display:'standalone',
+      background_color:'#1e3a52',
+      theme_color:'#1e3a52',
+      icons:[
+        {src: iconDataUrl, sizes:'192x192', type:'image/svg+xml', purpose:'any'},
+        {src: iconDataUrl, sizes:'512x512', type:'image/svg+xml', purpose:'maskable'},
+      ]
     };
-    const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-    document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-  } catch {}
-
-  try {
-    if ('serviceWorker' in navigator) {
-      const swCode = `
-const CACHE = 'ceb-v1';
-self.addEventListener('install', e =>
-  e.waitUntil(caches.open(CACHE).then(c => c.add('/')))
-);
-self.addEventListener('fetch', e =>
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)))
-);
-      `;
-      const swBlob = new Blob([swCode], {type: 'application/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+    document.getElementById('pwa-manifest').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
+  }catch{}
+  try{
+    if('serviceWorker'in navigator){
+      const c=`const C='ceb-v${CEB_VERSION}';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+      navigator.serviceWorker.register(URL.createObjectURL(new Blob([c],{type:'application/javascript'}))).catch(()=>{});
     }
-  } catch {}
+  }catch{}
 }
 
-// ══════════════════════════════════════════════════════
-//  STATISTIQUES — localStorage
-// ══════════════════════════════════════════════════════
-const STATS_KEY = 'ceb_stats_v1';
-
-function _emptyStats() {
-  return {
-    global: {
-      partiesJouees: 0, tiragesJoues: 0, scoreTotal: 0,
-      exacts: 0, approches: 0, rates: 0, tempsTotal: 0,
-    },
-    parGraine: {},   // { "42": {meilleurScore, parties, date} }
-    parMode:   {},   // { "ceb24": {tirages, exacts, approches, rates} }
-    parNbPlq:  {},   // { "6": {tirages, exacts} }
-    historique: [],  // dernières 100 parties
-  };
-}
-
-function loadStats() {
-  try {
-    const raw = localStorage.getItem(STATS_KEY);
-    return raw ? { ..._emptyStats(), ...JSON.parse(raw) } : _emptyStats();
-  } catch { return _emptyStats(); }
-}
-
-function saveStats(st) {
-  try { localStorage.setItem(STATS_KEY, JSON.stringify(st)); } catch {}
-}
-
-function recordPartie() {
-  const h   = state.history;
-  if (!h.length) return;
-  const st  = loadStats();
-  const tot = state.score;
-  const n   = h.length;
-  const exacts   = h.filter(e => e.diff === 0).length;
-  const approches= h.filter(e => e.diff > 0 && e.diff <= 3).length;
-  const rates    = h.filter(e => e.diff > 3).length;
-  const tTemps   = h.reduce((s, e) => s + e.elapsed, 0);
-  const mode     = cfg.tirageMode;
-  const nbp      = String(cfg.nbPlaques);
-  const graine   = String(cfg.partieNum);
-  const date     = new Date().toLocaleDateString('fr-FR');
-
-  // Global
-  st.global.partiesJouees++;
-  st.global.tiragesJoues  += n;
-  st.global.scoreTotal    += tot;
-  st.global.exacts        += exacts;
-  st.global.approches     += approches;
-  st.global.rates         += rates;
-  st.global.tempsTotal    += tTemps;
-
-  // Par graine
-  if (cfg.partieNum > 0) {
-    const g = st.parGraine[graine] || { meilleurScore: -Infinity, parties: 0, date };
-    g.parties++;
-    g.date = date;
-    if (tot > g.meilleurScore) g.meilleurScore = tot;
-    st.parGraine[graine] = g;
-  }
-
-  // Par mode
-  const m = st.parMode[mode] || { tirages: 0, exacts: 0, approches: 0, rates: 0 };
-  m.tirages   += n;
-  m.exacts    += exacts;
-  m.approches += approches;
-  m.rates     += rates;
-  st.parMode[mode] = m;
-
-  // Par nb plaques
-  const p = st.parNbPlq[nbp] || { tirages: 0, exacts: 0 };
-  p.tirages += n;
-  p.exacts  += exacts;
-  st.parNbPlq[nbp] = p;
-
-  // Historique (max 100 parties)
-  st.historique.unshift({
-    graine: cfg.partieNum, mode, nbPlq: cfg.nbPlaques,
-    nbTirages: n, score: tot, exacts, approches, rates, date,
-  });
-  if (st.historique.length > 100) st.historique.length = 100;
-
+// ═══════════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════════
+const STATS_KEY='ceb_stats_v1';
+function _emptyStats(){return{global:{partiesJouees:0,tiragesJoues:0,scoreTotal:0,exacts:0,approches:0,rates:0,tempsTotal:0},parGraine:{},parMode:{},parNbPlq:{},historique:[]};}
+function loadStats(){try{const r=localStorage.getItem(STATS_KEY);return r?{..._emptyStats(),...JSON.parse(r)}:_emptyStats();}catch{return _emptyStats();}}
+function saveStats(st){try{localStorage.setItem(STATS_KEY,JSON.stringify(st));}catch{}}
+function recordPartie(){
+  const h=state.history;if(!h.length)return;
+  const st=loadStats(),tot=state.score,n=h.length;
+  const ex=h.filter(e=>e.diff===0).length,ap=h.filter(e=>e.diff>0&&e.diff<=3).length,ra=h.filter(e=>e.diff>3).length;
+  const tT=h.reduce((s,e)=>s+e.elapsed,0),mode=cfg.tirageMode,nbp=String(cfg.nbPlaques),gr=String(cfg.partieNum),date=new Date().toLocaleDateString('fr-FR');
+  st.global.partiesJouees++;st.global.tiragesJoues+=n;st.global.scoreTotal+=tot;st.global.exacts+=ex;st.global.approches+=ap;st.global.rates+=ra;st.global.tempsTotal+=tT;
+  if(cfg.partieNum>0){const g=st.parGraine[gr]||{meilleurScore:-Infinity,parties:0,date};g.parties++;g.date=date;if(tot>g.meilleurScore)g.meilleurScore=tot;st.parGraine[gr]=g;}
+  const m=st.parMode[mode]||{tirages:0,exacts:0,approches:0,rates:0};m.tirages+=n;m.exacts+=ex;m.approches+=ap;m.rates+=ra;st.parMode[mode]=m;
+  const p=st.parNbPlq[nbp]||{tirages:0,exacts:0};p.tirages+=n;p.exacts+=ex;st.parNbPlq[nbp]=p;
+  st.historique.unshift({graine:cfg.partieNum,mode,nbPlq:cfg.nbPlaques,nbTirages:n,score:tot,exacts:ex,approches:ap,rates:ra,date});
+  if(st.historique.length>100)st.historique.length=100;
   saveStats(st);
 }
-
-function resetStats() {
-  if (!confirm('Effacer toutes les statistiques ?')) return;
-  localStorage.removeItem(STATS_KEY);
-  renderStatsGlobal(_emptyStats());
-  renderStatsParties(_emptyStats());
-  renderStatsModes(_emptyStats());
+function resetStats(){if(!confirm('Effacer toutes les statistiques ?'))return;localStorage.removeItem(STATS_KEY);const e=_emptyStats();renderStatsGlobal(e);renderStatsParties(e);renderStatsModes(e);}
+function _pct(a,b){return b?(a/b*100).toFixed(1)+'%':'—';}
+function _avg(a,b){return b?(a/b).toFixed(1):'—';}
+function _statRow(l,v,c){return`<div style="display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--border);font-size:.9rem;"><span style="color:var(--text-med)">${l}</span><span style="font-weight:700;color:${c||'var(--text)'};">${v}</span></div>`;}
+function _secT(t){return`<div style="font-size:.75rem;font-weight:700;color:var(--accent2);padding:10px 12px 4px;letter-spacing:1px;">${t}</div>`;}
+function renderStatsGlobal(st){
+  const g=st.global,moy=g.partiesJouees?(g.scoreTotal/g.partiesJouees).toFixed(1):'—';
+  document.getElementById('st-global').innerHTML=_secT('RÉSULTATS')+_statRow('Parties jouées',g.partiesJouees)+_statRow('Tirages joués',g.tiragesJoues)+_statRow('Score total',(g.scoreTotal>=0?'+':'')+g.scoreTotal,g.scoreTotal>=0?'var(--green)':'var(--accent)')+_statRow('Score moy/partie',moy)+_statRow('Score moy/tirage',_avg(g.scoreTotal,g.tiragesJoues))+_secT('PRÉCISION')+_statRow('Comptes exacts',`${g.exacts} (${_pct(g.exacts,g.tiragesJoues)})`,'var(--green)')+_statRow('Comptes approchés',`${g.approches} (${_pct(g.approches,g.tiragesJoues)})`,'var(--accent2)')+_statRow('Ratés (>3)',`${g.rates} (${_pct(g.rates,g.tiragesJoues)})`,'var(--accent)')+_secT('TEMPS')+_statRow('Temps moyen/tirage',_avg(g.tempsTotal,g.tiragesJoues)+' s')+_statRow('Temps total joué',Math.round(g.tempsTotal/60)+' min');
 }
-
-// ── Rendu ─────────────────────────────────────────────
-function _pct(a, b) { return b ? (a / b * 100).toFixed(1) + '%' : '—'; }
-function _avg(a, b) { return b ? (a / b).toFixed(1) : '—'; }
-
-function _statRow(label, val, color) {
-  return `<div style="display:flex;justify-content:space-between;padding:6px 12px;
-    border-bottom:1px solid var(--border);font-size:.9rem;">
-    <span style="color:var(--text-med)">${label}</span>
-    <span style="font-weight:700;color:${color||'var(--text)'};">${val}</span>
-  </div>`;
-}
-
-function _sectionTitle(t) {
-  return `<div style="font-size:.75rem;font-weight:700;color:var(--accent2);
-    padding:10px 12px 4px;letter-spacing:1px;">${t}</div>`;
-}
-
-function renderStatsGlobal(st) {
-  const g = st.global;
-  const div = document.getElementById('st-global');
-  const moy = g.partiesJouees ? (g.scoreTotal / g.partiesJouees).toFixed(1) : '—';
-  div.innerHTML =
-    _sectionTitle('RÉSULTATS') +
-    _statRow('Parties jouées',    g.partiesJouees) +
-    _statRow('Tirages joués',     g.tiragesJoues) +
-    _statRow('Score total',       (g.scoreTotal >= 0 ? '+' : '') + g.scoreTotal,
-             g.scoreTotal >= 0 ? 'var(--green)' : 'var(--accent)') +
-    _statRow('Score moy / partie', moy) +
-    _statRow('Score moy / tirage', _avg(g.scoreTotal, g.tiragesJoues)) +
-    _sectionTitle('PRÉCISION') +
-    _statRow('Comptes exacts',   `${g.exacts}  (${_pct(g.exacts, g.tiragesJoues)})`,  'var(--green)') +
-    _statRow('Comptes approchés',`${g.approches}  (${_pct(g.approches, g.tiragesJoues)})`, 'var(--accent2)') +
-    _statRow('Ratés (>3)',       `${g.rates}  (${_pct(g.rates, g.tiragesJoues)})`,    'var(--accent)') +
-    _sectionTitle('TEMPS') +
-    _statRow('Temps moyen / tirage', _avg(g.tempsTotal, g.tiragesJoues) + ' s') +
-    _statRow('Temps total joué', Math.round(g.tempsTotal / 60) + ' min');
-}
-
-function renderStatsParties(st) {
-  const div = document.getElementById('st-parties-list');
-  if (!st.historique.length) {
-    div.innerHTML = '<p style="color:var(--text-dim);padding:16px">Aucune partie enregistrée.</p>';
-    return;
-  }
-  const frag = document.createDocumentFragment();
-  st.historique.forEach((p, i) => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:grid;grid-template-columns:24px 60px 60px 1fr 48px 48px 48px 48px;' +
-      'gap:4px;align-items:center;padding:5px 8px;border-bottom:1px solid var(--border);font-size:.78rem;';
-    row.innerHTML =
-      `<span style="color:var(--text-dim)">${i+1}</span>` +
-      `<span style="color:var(--text-dim)">${p.date}</span>` +
-      `<span style="color:var(--text-med)">${p.graine || 'aléa'}</span>` +
-      `<span style="color:var(--text-med)">${p.mode} ${p.nbPlq}♟ ×${p.nbTirages}</span>` +
-      `<span style="font-weight:700;color:${p.score>=0?'var(--green)':'var(--accent)'};">${p.score>=0?'+':''}${p.score}</span>` +
-      `<span style="color:var(--green)">✓${p.exacts}</span>` +
-      `<span style="color:var(--accent2)">~${p.approches}</span>` +
-      `<span style="color:var(--accent)">✗${p.rates}</span>`;
+function renderStatsParties(st){
+  const div=document.getElementById('st-parties-list');
+  if(!st.historique.length){div.innerHTML='<p style="color:var(--text-dim);padding:16px">Aucune partie enregistrée.</p>';return;}
+  const frag=document.createDocumentFragment();
+  st.historique.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:grid;grid-template-columns:24px 60px 60px 1fr 48px 48px 48px 48px;gap:4px;align-items:center;padding:5px 8px;border-bottom:1px solid var(--border);font-size:.78rem;';
+    row.innerHTML=`<span style="color:var(--text-dim)">${i+1}</span><span style="color:var(--text-dim)">${p.date}</span><span style="color:var(--text-med)">${p.graine||'aléa'}</span><span style="color:var(--text-med)">${p.mode} ${p.nbPlq}♟</span><span style="font-weight:700;color:${p.score>=0?'var(--green)':'var(--accent)'};">${p.score>=0?'+':''}${p.score}</span><span style="color:var(--green)">✓${p.exacts}</span><span style="color:var(--accent2)">~${p.approches}</span><span style="color:var(--accent)">✗${p.rates}</span>`;
     frag.appendChild(row);
   });
-  // En-tête
-  const hdr = document.createElement('div');
-  hdr.style.cssText = 'display:grid;grid-template-columns:24px 60px 60px 1fr 48px 48px 48px 48px;' +
-    'gap:4px;padding:4px 8px;font-size:.7rem;color:var(--text-dim);border-bottom:2px solid var(--border);';
-  hdr.innerHTML = '<span>#</span><span>Date</span><span>Graine</span><span>Mode</span>' +
-    '<span>Score</span><span>✓</span><span>~</span><span>✗</span>';
-  div.innerHTML = '';
-  div.appendChild(hdr);
-  div.appendChild(frag);
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:grid;grid-template-columns:24px 60px 60px 1fr 48px 48px 48px 48px;gap:4px;padding:4px 8px;font-size:.7rem;color:var(--text-dim);border-bottom:2px solid var(--border);';
+  hdr.innerHTML='<span>#</span><span>Date</span><span>Graine</span><span>Mode</span><span>Score</span><span>✓</span><span>~</span><span>✗</span>';
+  div.innerHTML='';div.appendChild(hdr);div.appendChild(frag);
 }
-
-function renderStatsModes(st) {
-  const div = document.getElementById('st-modes');
-  let html = _sectionTitle('PAR MODE DE TIRAGE');
-  const modes = { ceb24: 'CEB 24', ceb28: 'CEB 28', alea20: 'Aléatoire 20' };
-  for (const [key, label] of Object.entries(modes)) {
-    const m = st.parMode[key];
-    if (!m || !m.tirages) continue;
-    html += `<div style="padding:4px 12px 2px;font-size:.85rem;color:var(--text);font-weight:700">${label}</div>`;
-    html += _statRow('Tirages', m.tirages);
-    html += _statRow('Exacts',  `${m.exacts} (${_pct(m.exacts, m.tirages)})`, 'var(--green)');
-    html += _statRow('Approchés', `${m.approches} (${_pct(m.approches, m.tirages)})`, 'var(--accent2)');
-  }
-  html += _sectionTitle('PAR NOMBRE DE PLAQUES');
-  for (const [nbp, p] of Object.entries(st.parNbPlq).sort((a,b)=>+a[0]-+b[0])) {
-    html += _statRow(`${nbp} plaques`, `${p.tirages} tirages  —  ${_pct(p.exacts, p.tirages)} exacts`);
-  }
-  html += _sectionTitle('PAR GRAINE (top 10 meilleures)');
-  const graines = Object.entries(st.parGraine)
-    .sort((a,b) => b[1].meilleurScore - a[1].meilleurScore).slice(0, 10);
-  for (const [g, d] of graines) {
-    html += _statRow(`Graine ${g}`,
-      `Meilleur : ${d.meilleurScore >= 0 ? '+' : ''}${d.meilleurScore}  (${d.parties} partie(s))`,
-      'var(--accent2)');
-  }
-  if (!graines.length) html += '<p style="color:var(--text-dim);padding:12px">Aucune partie avec graine fixe.</p>';
-  div.innerHTML = html;
+function renderStatsModes(st){
+  let html=_secT('PAR MODE DE TIRAGE');
+  for(const[k,l]of Object.entries({ceb24:'CEB 24',ceb28:'CEB 28',alea20:'Aléatoire 20'})){const m=st.parMode[k];if(!m||!m.tirages)continue;html+=`<div style="padding:4px 12px 2px;font-size:.85rem;color:var(--text);font-weight:700">${l}</div>`+_statRow('Tirages',m.tirages)+_statRow('Exacts',`${m.exacts} (${_pct(m.exacts,m.tirages)})`,'var(--green)')+_statRow('Approchés',`${m.approches} (${_pct(m.approches,m.tirages)})`,'var(--accent2)');}
+  html+=_secT('PAR NOMBRE DE PLAQUES');
+  for(const[n,p]of Object.entries(st.parNbPlq).sort((a,b)=>+a[0]-+b[0]))html+=_statRow(`${n} plaques`,`${p.tirages} tirages — ${_pct(p.exacts,p.tirages)} exacts`);
+  html+=_secT('PAR GRAINE (top 10)');
+  const gr=Object.entries(st.parGraine).sort((a,b)=>b[1].meilleurScore-a[1].meilleurScore).slice(0,10);
+  for(const[g,d]of gr)html+=_statRow(`Graine ${g}`,`Meilleur : ${d.meilleurScore>=0?'+':''}${d.meilleurScore} (${d.parties} partie(s))`,'var(--accent2)');
+  if(!gr.length)html+='<p style="color:var(--text-dim);padding:12px">Aucune partie avec graine fixe.</p>';
+  document.getElementById('st-modes').innerHTML=html;
 }
+function openStats(){const st=loadStats();renderStatsGlobal(st);renderStatsParties(st);renderStatsModes(st);showTab('st-global','modal-stats');document.getElementById('modal-stats').classList.add('open');}
 
-function showStatsTab(id) {
-  document.querySelectorAll('#modal-stats .tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('#modal-stats .tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const idx = ['st-global','st-parties','st-modes'].indexOf(id);
-  document.querySelectorAll('#modal-stats .tab-btn')[idx].classList.add('active');
+// ═══════════════════════════════════════════════
+//  SESSION
+// ═══════════════════════════════════════════════
+const SESSION_KEY='ceb_session_v3';
+function saveSession(){
+  if(cfg.entrainement)return;
+  try{localStorage.setItem(SESSION_KEY,JSON.stringify({cfg:{...cfg},state:{plaques:state.plaques,target:state.target,score:state.score,roundNum:state.roundNum,validated:state.validated,history:state.history,startTime:state.startTime},rngNext:rng?rng._next.toString():null,plaqueVals,plaqueActive,calcSteps}));}catch{}
 }
-
-function openStats() {
-  const st = loadStats();
-  renderStatsGlobal(st);
-  renderStatsParties(st);
-  renderStatsModes(st);
-  showStatsTab('st-global');
-  document.getElementById('modal-stats').classList.add('open');
+function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch{}}
+function restoreSession(){
+  try{
+    const raw=localStorage.getItem(SESSION_KEY);if(!raw)return false;
+    const s=JSON.parse(raw);if(!s.state||!s.cfg)return false;
+    Object.assign(cfg,s.cfg);
+    state.plaques=s.state.plaques||[];state.target=s.state.target||0;state.score=s.state.score||0;
+    state.roundNum=s.state.roundNum||0;state.validated=s.state.validated??true;
+    state.history=s.state.history||[];state.startTime=s.state.startTime||Date.now();
+    if(s.rngNext){rng=new HP11CRandom(0);rng._next=BigInt(s.rngNext);}
+    plaqueVals=s.plaqueVals||[];plaqueActive=s.plaqueActive||[];calcSteps=s.calcSteps||[];
+    return state.plaques.length>0;
+  }catch{return false;}
 }
-
-// ══════════════════════════════════════════════════════
-//  PERSISTANCE SESSION — localStorage
-// ══════════════════════════════════════════════════════
-const SESSION_KEY = 'ceb_session_v1';
-
-function saveSession() {
-  if (cfg.entrainement) return; // pas de persistance en mode entraînement
-  try {
-    const session = {
-      cfg: { ...cfg },
-      state: {
-        plaques:   state.plaques,
-        target:    state.target,
-        score:     state.score,
-        roundNum:  state.roundNum,
-        validated: state.validated,
-        history:   state.history,
-      },
-      rngNext:     rng ? rng._next.toString() : null,
-      plaqueVals,
-      plaqueActive,
-      calcSteps,
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  } catch {}
-}
-
-function clearSession() {
-  try { localStorage.removeItem(SESSION_KEY); } catch {}
-}
-
-function restoreSession() {
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return false;
-    const s = JSON.parse(raw);
-    if (!s.state || !s.cfg) return false;
-
-    // Restaure cfg
-    Object.assign(cfg, s.cfg);
-
-    // Restaure state
-    state.plaques   = s.state.plaques   || [];
-    state.target    = s.state.target    || 0;
-    state.score     = s.state.score     || 0;
-    state.roundNum  = s.state.roundNum  || 0;
-    state.validated = s.state.validated ?? true;
-    state.history   = s.state.history   || [];
-    state.startTime = Date.now(); // repart du moment du refresh
-
-    // Restaure RNG
-    if (s.rngNext) {
-      rng = new HP11CRandom(0);
-      rng._next = BigInt(s.rngNext);
-    }
-
-    // Restaure UI state
-    plaqueVals   = s.plaqueVals   || [];
-    plaqueActive = s.plaqueActive || [];
-    calcSteps    = s.calcSteps    || [];
-
-    return state.plaques.length > 0;
-  } catch { return false; }
-}
-
-function _restoreUI() {
-  // Reconstruit l'écran depuis le state restauré
-  document.getElementById('entrainement-zone').style.display = 'none';
-  document.getElementById('plq-title').textContent = 'Plaques disponibles';
-  document.getElementById('lbl-cible').textContent = state.target;
-  document.getElementById('lbl-round').textContent = `Tirage ${state.roundNum} / ${cfg.nbTirages}`;
-  document.getElementById('lbl-mode').textContent  = cfg.tirageMode.toUpperCase() + (cfg.exactOnly ? ' ✓' : '');
-  document.getElementById('lbl-score').textContent = state.score;
-  document.getElementById('btn-resoudre').disabled = !state.validated;
-  document.getElementById('btn-detail').disabled   = true;
-
+function _restoreUI(){
+  document.getElementById('entrainement-zone').style.display='none';
+  document.getElementById('plq-title').textContent='Plaques disponibles';
+  document.getElementById('lbl-cible').textContent=state.target;
+  document.getElementById('lbl-round').textContent=cfg.modeJeu==='comp'&&cfg.partieNum>0?`Tirage ${state.roundNum} / ${cfg.nbTirages}`:`Tirage ${state.roundNum}`;
+  document.getElementById('lbl-mode').textContent=cfg.tirageMode.toUpperCase()+(cfg.exactOnly?' ✓':'');
+  document.getElementById('lbl-score').textContent=state.score;
+  document.getElementById('btn-resoudre').disabled=!state.validated;
+  document.getElementById('btn-detail').disabled=true;
   renderPlaques();
-
-  // Remet les boutons résultats dans la grille
-  const n = state.plaques.length;
-  for (let i = n; i < plaqueVals.length; i++) {
-    _addResultBtn(i, plaqueVals[i]);
-    // Remet l'état used sur les plaques sources
-  }
-  // Remet l'état used sur les boutons plaques initiales
-  for (let i = 0; i < n; i++) {
-    if (!plaqueActive[i] && plaqueBtns[i]) {
-      plaqueBtns[i].disabled = true;
-      plaqueBtns[i].classList.add('used');
-    }
-  }
-
-  refreshHist();
-  resetPhase();
-  updateNouveauBtn();
-
-  if (!state.validated) {
-    startTimer();
-    setStatus('Partie restaurée — continue !');
-  } else {
-    document.getElementById('lbl-timer').textContent = '—';
-    setStatus('Partie restaurée — valide ou lance un nouveau tirage.');
-  }
+  for(let i=state.plaques.length;i<plaqueVals.length;i++)_addResultBtn(i,plaqueVals[i]);
+  for(let i=0;i<plaqueVals.length;i++){if(!plaqueActive[i]&&plaqueBtns[i]){plaqueBtns[i].disabled=true;plaqueBtns[i].classList.add('used');}}
+  refreshHist();_resetPhase();updateNouveauBtn();
+  if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
+  else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
-window.onload = () => {
-  initPWA();
-  if (restoreSession()) {
-    _restoreUI();
-  } else {
-    newGame();
-  }
-};
+window.onload=()=>{initPWA();if(restoreSession())_restoreUI();else newGame();};
 </script>
 </body>
 </html>
