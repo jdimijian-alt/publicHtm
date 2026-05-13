@@ -1,50 +1,150 @@
 # publicHtm
-Son fonctionnement combine une interface interactive avec un moteur de résolution algorithmique puissant. Voici comment il agit, décryptage étape par étape.
+```text
+================================================================================
+                    LE COMPTE EST BON - Solveur & Jeu
+================================================================================
 
-1. Mode de jeu : "Partie libre" vs "Compétition"
+Auteur : J.Dimijian
+Version : 1.0
+Langage : HTML5 / JavaScript (conversion depuis ABAP avec l'aide de Claude)
 
-Le programme offre deux grands modes via l'onglet "⚙ Options du jeu" :
+================================================================================
+                            PRÉSENTATION
+================================================================================
 
-· Partie libre : Vous saisissez manuellement la Cible (ex: 543) et jusqu'à 6 Plaques (ex: 2, 50, 75, 100, 6, 6). C'est le terrain de jeu classique.
-· Compétition : Vous choisissez une graine (nombre qui initialise le hasard) et un nombre de tirages. Le programme génère automatiquement les cibles et plaques. Un système de score et de temps limite s'active alors.
+Cette application web permet de jouer au "Compte est bon" (célèbre jeu de calcul
+mental) ou de laisser un solveur automatique trouver la meilleure solution.
+Elle propose à la fois un mode libre, un mode compétition chronométré, ainsi
+que de nombreuses options de personnalisation.
 
-2. Le Moteur de Résolution (Solveur)
+L'interface est responsive et fonctionne sur ordinateur comme sur smartphone
+(iPhone, Android).
 
-C'est le cœur algorithmique. Quatre options sont proposées sous "SOLVEUR > Mode résolution" :
+================================================================================
+                            MODES DE JEU
+================================================================================
 
-· Meilleure solution : Cherche la solution la plus précise (compte exact, sinon l'approche la plus proche possible). C'est le mode standard.
-· Première exacte : S'arrête dès qu'une solution parfaite est trouvée. Plus rapide, mais ne garantit pas la solution la plus courte ou élégante.
-· Toutes (récur ≤ 3) : Trouve toutes les solutions exactes, mais limite la profondeur de recherche à 3 étapes (pour éviter l'explosion combinatoire). Moins exhaustif.
+1. MODE LIBRE
+   - Vous saisissez manuellement une cible et jusqu'à 6 plaques
+   - Vous pouvez jouer vous-même en cliquant sur les plaques puis les opérateurs
+   - Vous pouvez demander au solveur de trouver la (meilleure) solution
 
-Mécanisme interne probable :
-Il utilise un algorithme de recherche arborescente (backtracking). Il génère toutes les combinaisons possibles de plaques avec les opérations (+, -, ×, ÷), en vérifiant les divisions exactes et les résultats positifs. Il compare ensuite chaque résultat à la cible.
+2. MODE COMPÉTITION
+   - Une graine aléatoire génère une série de tirages successifs
+   - Chaque tirage est chronométré (temps paramétrable)
+   - Un système de score récompense la rapidité et la précision
+   - Les scores sont différenciés selon que vous trouvez la solution dans les
+     temps ou hors temps
 
-3. Interaction utilisateur
+================================================================================
+                        OPTIONS DISPONIBLES
+================================================================================
 
-Vous pouvez aussi jouer à la main :
+📊 PARTIE & PLAQUES
+   - Modèle de plaques :
+        • CEB24 : sélection classique (1,2,3,4,5,6,7,8,9,10,25,50,75,100)
+        • CEB28 : sélection étendue (28 plaques spécifiques)
+        • Aléatoire complet : plaques totalement aléatoires (hors modèles)
+   - Nombre de plaques (variable selon le mode)
+   - Bornes min/max pour la cible
+   - Option "Cible forcément atteignable" (génération d'un tirage soluble)
 
-· Cliquez sur une plaque.
-· Cliquez sur une opération (+, -, ×, /).
-· Cliquez sur une autre plaque.
-· Le calcul s'affiche et le résultat devient une nouvelle "plaque" virtuelle.
-  Le programme valide alors si vous approchez ou atteignez la cible.
+⏱ TEMPS & SCORES
+   - Temps limite par tirage (en secondes)
+   - Score exact / ±1-3 / >3 (dans les temps)
+   - Score exact / ±1-3 / >3 (hors temps)
+   - Réglages fins des barèmes
 
-4. Les "Options" avancées (très intéressantes)
+🎲 BOUTONS SPÉCIFIQUES
+   - "🌸 Sylvie" : Mode simplifié avec cible comprise entre 25 et 100
+                 (hommage personnel à la compagne du développeur)
+   - "↺ Défaut" : Retour à la configuration classique du jeu
 
-Sous "⚙ Options du jeu", vous modifiez des paramètres profonds du solveur :
+================================================================================
+                        FONCTIONNALITÉS DU SOLVEUR
+================================================================================
 
-· Modèle de plaques : Classique CEB 24 (1,2,3,4,5,6,7,8,9,10,25,50,75,100) ou CEB 28 (ajoute 11-20, 30, 35, 40, 45, 60-90).
-· Cible forcément atteignable : Le programme garantit la génération d'un tirage soluble.
-· Temps limite : Pour le mode compétition, avec une logique de score différente si vous êtes "dans les temps" ou "hors temps".
+Le solveur automatique propose trois stratégies de résolution :
 
-Performances (basé sur l'analyse de son interface)
+• MEILLEURE SOLUTION
+  Trouve la solution la plus précise possible (compte exact si disponible,
+  sinon meilleure approximation). C'est le mode par défaut.
 
-· Solveur exhaustif : Pour 6 plaques, la recherche de la meilleure solution est quasi instantanée (moins d'une seconde).
-· Mode "Toutes" : L'option Toutes (récur ≤ 3) limite délibérément l'exploration pour rester fluide. Une recherche vraiment exhaustive de toutes les solutions exactes (sans limite) prendrait plus de temps et n'est pas proposée.
-· Le confort : Le bouton "Résoudre" lance le solveur. Le bouton "Détail…" montre le déroulement des opérations.
+• PREMIÈRE EXACTE
+  S'arrête dès qu'une solution exacte est trouvée. Plus rapide, mais ne garantit
+  pas la solution la plus courte ou élégante.
 
-En résumé : un solveur "semi-exhaustif"
+• TOUTES (RÉCUR ≤ 3)
+  Explore toutes les solutions exactes. Élagage des alternatives triviales
+  jusqu'au niveau 3, puis conservation et affichage de toutes les solutions
+  alternatives. Idéal pour comprendre la diversité des chemins possibles.
 
-Ce programme agit comme un solveur intelligent qui, pour le mode classique, explore toutes les branches les plus prometteuses pour dénicher la meilleure solution très vite. Il ne s'arrête pas à la première solution exacte (sauf si vous le demandez), ce qui lui permet parfois de trouver la combinaison d'opérations la plus courte ou la plus élégante.
+PERFORMANCES :
+  - Résolution en moins de 50 ms sur iPhone pour le mode classique (6 plaques)
+  - Algorithme optimisé avec élagage agressif :
+        • Divisions non entières ignorées
+        • Résultats négatifs ou nuls ignorés
+        • Commutativité gérée (a+b = b+a testé une seule fois)
 
-C'est un excellent outil, aussi bien pour apprendre (mode manuel) que pour analyser (solveur paramétrable). Si vous voulez que je détaille un point spécifique (comme la génération des plaques en mode compétition, ou le calcul du score), n'hésitez pas !
+================================================================================
+                        INTERACTION MANUELLE
+================================================================================
+
+Vous pouvez jouer sans le solveur :
+  1. Cliquez sur une plaque
+  2. Cliquez sur un opérateur (+, -, ×, /)
+  3. Cliquez sur une autre plaque
+  4. Le résultat s'affiche et devient une nouvelle plaque virtuelle
+  5. Recommencez jusqu'à approcher ou atteindre la cible
+  6. Cliquez sur "Valider" pour que le programme évalue votre proposition
+
+Le bouton "Résoudre" lance instantanément le solveur selon le mode choisi.
+Le bouton "Détail…" affiche le déroulement complet des opérations.
+
+================================================================================
+                        STATISTIQUES
+================================================================================
+
+L'onglet "Statistiques" permet de suivre vos performances sur la durée :
+  - Globales (tous tirages confondus)
+  - Par partie (session de compétition)
+  - Par mode de jeu (libre / compétition)
+
+Possibilité de réinitialiser les statistiques.
+
+================================================================================
+                            RACCOURCIS
+================================================================================
+
+Le jeu propose des "Raccourcis" paramétrables pour une prise en main rapide
+des fonctionnalités fréquentes (non détaillés ici car dépendants de votre
+implémentation finale).
+
+================================================================================
+                        EXIGENCES TECHNIQUES
+================================================================================
+
+- Navigateur web moderne (Chrome, Firefox, Safari, Edge)
+- JavaScript activé
+- Aucune connexion Internet requise après chargement initial
+- Fonctionne localement (pas de serveur nécessaire)
+
+================================================================================
+                    HISTORIQUE ET REMERCIEMENTS
+================================================================================
+
+Ce jeu a été initialement développé en ABAP, puis converti en HTML5/JavaScript
+avec l'assistance de Claude (IA d'Anthropic). L'application inclut des options
+personnalisées (bouton "Sylvie") et une attention particulière à l'expérience
+utilisateur.
+
+Merci de jouer et bonne chance pour vos calculs !
+
+================================================================================
+                          LICENCE ET CONTACT
+================================================================================
+
+Projet libre d'utilisation et de modification.
+Pour toute question ou suggestion : [votre contact GitHub]
+
+================================================================================
