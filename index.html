@@ -16,6 +16,10 @@
   --grey:#5a7a8a;--text:#ffffff;--text-med:#c8dde8;--text-dim:#8ab0c4;
   --border:#2e5070;--yellow:#f5c518;--btn-plq:#27ae60;--btn-plq-sel:#1e8449;--btn-used:#2e5070;
 }
+/* Thèmes selon mode */
+body.theme-libre   {--bg:#3a6186;--bg-card:#4a7399;--bg-hdr:#1e3a52;--bg-sub:#2e5070;}
+body.theme-comp    {--bg:#5a2030;--bg-card:#6a3040;--bg-hdr:#3a0a1a;--bg-sub:#4a1525;}
+body.theme-solveur {--bg:#2a3a4a;--bg-card:#3a4a5a;--bg-hdr:#1a2a3a;--bg-sub:#253545;}
 *{box-sizing:border-box;margin:0;padding:0;}
 button,input,select{touch-action:manipulation;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -173,11 +177,15 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
     <div style="display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap;">
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
         <input type="radio" name="opt-mode" id="opt-mode-libre" value="libre" style="accent-color:var(--green);">
-        <span>Partie libre <span style="font-size:.72rem;color:var(--text-dim)">(sans limite)</span></span>
+        <span style="color:#7ab4e0">Partie libre <span style="font-size:.72rem;color:var(--text-dim)">(sans limite)</span></span>
       </label>
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
         <input type="radio" name="opt-mode" id="opt-mode-comp" value="comp" style="accent-color:var(--accent2);">
-        <span>Compétition <span style="font-size:.72rem;color:var(--text-dim)">(graine fixe, N tirages)</span></span>
+        <span style="color:#c06070">Compétition <span style="font-size:.72rem;color:var(--text-dim)">(graine fixe, N tirages)</span></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
+        <input type="radio" name="opt-mode" id="opt-mode-solveur" value="solveur" style="accent-color:#8ab0c4;">
+        <span style="color:#8ab0c4">Solveur <span style="font-size:.72rem;color:var(--text-dim)">(saisie libre des plaques)</span></span>
       </label>
     </div>
 
@@ -224,10 +232,6 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
       <div class="row">
         <label>Cible forcément atteignable</label>
         <input type="checkbox" id="opt-exact" checked style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
-      </div>
-      <div class="row">
-        <label>Mode Solveur (plaques libres)</label>
-        <input type="checkbox" id="opt-entrainement" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
       </div>
     </div>
 
@@ -889,6 +893,7 @@ function newGame(){
     openFinPartie();return;
   }
 
+  setTheme(cfg.modeJeu);
   setStatus('Tirage en cours…');
   setTimeout(()=>{
     const s=doTirage();saveSession();
@@ -952,14 +957,14 @@ function openOptions(){
   document.getElementById('opt-solve').value=cfg.solveMode;
   document.getElementById('opt-exact').checked=cfg.exactOnly;
   document.getElementById('opt-reprise').checked=cfg.repriseAuto;
-  document.getElementById('opt-entrainement').checked=cfg.entrainement;
   document.getElementById('opt-si0').value=cfg.scoreInTime[0];
   document.getElementById('opt-si13').value=cfg.scoreInTime[1];
   document.getElementById('opt-si4').value=cfg.scoreInTime[2];
   document.getElementById('opt-so0').value=cfg.scoreOutTime[0];
   document.getElementById('opt-so13').value=cfg.scoreOutTime[1];
   document.getElementById('opt-so4').value=cfg.scoreOutTime[2];
-  document.getElementById(cfg.modeJeu==='comp'?'opt-mode-comp':'opt-mode-libre').checked=true;
+  const modeRadioId=cfg.modeJeu==='comp'?'opt-mode-comp':cfg.modeJeu==='solveur'?'opt-mode-solveur':'opt-mode-libre';
+  document.getElementById(modeRadioId).checked=true;
   _syncOptUI();
   document.getElementById('modal-options').classList.add('open');
 }
@@ -970,6 +975,8 @@ function _syncOptUI(){
   document.getElementById('opt-nbtirages').disabled=!comp;
   document.getElementById('opt-timeout').disabled=!comp;
 }
+// Lie les 3 radios
+document.getElementById('opt-mode-solveur').addEventListener('change',_syncOptUI);
 document.getElementById('opt-mode-libre').addEventListener('change',_syncOptUI);
 document.getElementById('opt-mode-comp').addEventListener('change',_syncOptUI);
 function rndGraine(){document.getElementById('opt-partie').value=Math.floor(Math.random()*999999)+1;}
@@ -979,7 +986,7 @@ function saveOptions(){
   const mx=parseInt(document.getElementById('opt-tmax').value);
   if(mn>=mx){_showToast('Cible min doit être < Cible max','red');return;}
   if(nb<2||nb>8){_showToast('Nombre de plaques : 2 à 8','red');return;}
-  const newMode=document.getElementById('opt-mode-comp').checked?'comp':'libre';
+  const newMode=document.getElementById('opt-mode-solveur').checked?'solveur':document.getElementById('opt-mode-comp').checked?'comp':'libre';
   const np=parseInt(document.getElementById('opt-partie').value)||0;
   const oldPartie=cfg.partieNum, oldMode=cfg.modeJeu;
   cfg.tirageMode=document.getElementById('opt-tirage').value;
@@ -990,13 +997,15 @@ function saveOptions(){
   cfg.nbTirages=parseInt(document.getElementById('opt-nbtirages').value)||30;
   cfg.exactOnly=document.getElementById('opt-exact').checked;
   cfg.repriseAuto=document.getElementById('opt-reprise').checked;
-  cfg.entrainement=document.getElementById('opt-entrainement').checked;
+  cfg.entrainement=(newMode==='solveur');
   cfg.modeJeu=newMode;cfg.partieNum=np;
   cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
   cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
-  if(np!==oldPartie||newMode!==oldMode){rng=null;clearSession();state.score=0;state.roundNum=0;state.history=[];document.getElementById('lbl-score').textContent=0;}
+  const modeChanged=newMode!==oldMode||np!==oldPartie;
+  if(modeChanged){rng=null;clearSession();state.score=0;state.roundNum=0;state.history=[];state.validated=true;document.getElementById('lbl-score').textContent=0;}
   closeModal('modal-options');
-  if(cfg.entrainement)newGame();else setStatus('Options appliquées — Lance un nouveau tirage !');
+  setTheme(newMode);
+  newGame(); // toujours lancer directement (validated=true si mode changé)
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function updateNouveauBtn(){
@@ -1012,7 +1021,7 @@ function modeSylvie(){
   document.getElementById('opt-tmin').value='26';document.getElementById('opt-tmax').value='100';
   document.getElementById('opt-nbtirages').value='10';document.getElementById('opt-time').value='60';
   document.getElementById('opt-exact').checked=true;document.getElementById('opt-reprise').checked=true;
-  document.getElementById('opt-entrainement').checked=false;document.getElementById('opt-solve').value='complete';
+  document.getElementById('opt-solve').value='complete';
   document.getElementById('opt-partie').value='0';document.getElementById('opt-mode-libre').checked=true;
   _syncOptUI();setStatus('Mode Sylvie prêt — clique sur Appliquer.');
 }
@@ -1021,7 +1030,7 @@ function resetDefaut(){
   document.getElementById('opt-tmin').value='101';document.getElementById('opt-tmax').value='999';
   document.getElementById('opt-nbtirages').value='30';document.getElementById('opt-time').value='45';
   document.getElementById('opt-timeout').value='120';document.getElementById('opt-exact').checked=true;
-  document.getElementById('opt-reprise').checked=true;document.getElementById('opt-entrainement').checked=false;
+  document.getElementById('opt-reprise').checked=true;
   document.getElementById('opt-solve').value='complete';document.getElementById('opt-partie').value='0';
   document.getElementById('opt-mode-libre').checked=true;_syncOptUI();
 }
@@ -1267,7 +1276,11 @@ function _restoreUI(){
   if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
   else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
-window.onload=()=>{initPWA();if(restoreSession())_restoreUI();else newGame();};
+function setTheme(mode){
+  document.body.classList.remove('theme-libre','theme-comp','theme-solveur');
+  document.body.classList.add(mode==='comp'?'theme-comp':mode==='solveur'?'theme-solveur':'theme-libre');
+}
+window.onload=()=>{initPWA();setTheme(cfg.modeJeu);if(restoreSession()){setTheme(cfg.modeJeu);_restoreUI();}else newGame();};
 </script>
 </body>
 </html>
