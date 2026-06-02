@@ -158,10 +158,6 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
     <button class="act-btn grey"  onclick="openDetail()" id="btn-detail"   disabled>Détail…</button>
   </div>
 
-  <div class="sol-box" id="sol-box" style="display:none;">
-    <div class="sol-title">Meilleure solution :</div>
-    <div id="sol-lines"></div>
-  </div>
 
   <div class="status" id="lbl-status">Clique sur Nouveau pour commencer</div>
 </main>
@@ -286,6 +282,20 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
     <div class="modal-actions">
       <button class="act-btn green" onclick="saveOptions()">Appliquer</button>
       <button class="act-btn red"   onclick="closeModal('modal-options')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SOLUTION POPUP ═══ -->
+<div class="modal-overlay" id="modal-sol">
+  <div class="modal" style="max-width:520px;width:95%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;">
+    <h2 style="flex-shrink:0;">💡 Meilleure solution</h2>
+    <div id="modal-sol-info" style="font-size:1.3rem;font-weight:700;margin-bottom:8px;flex-shrink:0;"></div>
+    <div style="flex:1;overflow-y:auto;min-height:0;padding:4px 0;" id="modal-sol-lines"></div>
+    <div id="modal-sol-meta" style="font-size:.75rem;color:var(--text-dim);margin-top:10px;flex-shrink:0;"></div>
+    <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="act-btn blue" onclick="openDetail()" id="modal-sol-detail">Détail…</button>
+      <button class="act-btn red"  onclick="closeModal('modal-sol')">Fermer</button>
     </div>
   </div>
 </div>
@@ -562,10 +572,24 @@ function stopGlobalTimeout(){
 }
 function _fireGlobalTimeout(){
   stopGlobalTimeout();stopTimer();if(state.validated)return;
-  _showToast('⏰ Timeout global — passage au tirage suivant !','warn',4000);
-  setStatus('Timeout global.');evaluate(0);
+  _showToast('⏰ Timeout global — tirage perdu !','warn',4000);
+  setStatus('Timeout global — Lance un nouveau tirage.');
+  evaluate(0);
   document.getElementById('lbl-score').textContent=state.score;
-  document.getElementById('btn-resoudre').disabled=false;updateNouveauBtn();
+  // Désactive toute saisie : plaques, opérateurs, valider
+  _lockInput();
+  document.getElementById('btn-resoudre').disabled=false;
+  updateNouveauBtn();
+}
+function _lockInput(){
+  // Désactive tous les boutons de plaques et opérateurs
+  plaqueBtns.forEach(b=>{if(b){b.disabled=true;}});
+  document.querySelectorAll('.op-btn').forEach(b=>b.disabled=true);
+  _resetPhase();
+}
+function _unlockInput(){
+  // Réactive les opérateurs (les plaques sont gérées par renderPlaques)
+  document.querySelectorAll('.op-btn').forEach(b=>b.disabled=false);
 }
 
 // ═══════════════════════════════════════════════
@@ -819,12 +843,18 @@ function onResoudre(){
   },10);
 }
 function showSolution(sol,solver,ms){
-  const box=document.getElementById('sol-box'),div=document.getElementById('sol-lines');
-  box.style.display='block';div.innerHTML='';
+  const div=document.getElementById('modal-sol-lines');div.innerHTML='';
   if(sol)for(const s of sol.steps){const d=document.createElement('div');d.className='sol-line'+(sol.diff===0?' exact':'');d.textContent=`  ${s}`;div.appendChild(d);}
-  setStatus(`Résolu en ${ms.toFixed(0)} ms — ${sol?(sol.diff===0?'exact':`écart=${sol.diff}`):'?'} — ${solver.allSols.length} solution(s) exacte(s)`);
+  const info=sol?(sol.diff===0?'✓ Compte exact !':'Écart : '+sol.diff):'Aucune solution';
+  const color=sol&&sol.diff===0?'var(--green)':'var(--accent2)';
+  document.getElementById('modal-sol-info').textContent=info;
+  document.getElementById('modal-sol-info').style.color=color;
+  document.getElementById('modal-sol-meta').textContent=
+    `Résolu en ${ms.toFixed(0)} ms  |  ${solver.allSols.length} solution(s) exacte(s)  |  ${solver._ops} op.`;
+  document.getElementById('modal-sol').classList.add('open');
+  setStatus(`Résolu en ${ms.toFixed(0)} ms — ${info} — ${solver.allSols.length} solution(s)`);
 }
-function hideSolution(){document.getElementById('sol-box').style.display='none';document.getElementById('sol-lines').innerHTML='';lastSolver=null;}
+function hideSolution(){document.getElementById('modal-sol').classList.remove('open');lastSolver=null;}
 
 // ═══════════════════════════════════════════════
 //  NOUVEAU TIRAGE
@@ -847,7 +877,17 @@ function newGame(){
 
   document.getElementById('entrainement-zone').style.display='none';
   document.getElementById('plq-title').textContent='Plaques disponibles';
-  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0){_showToast('Validez votre résultat avant de continuer.','warn');return;}
+
+  // Bug 1 : en compétition avec graine, bloquer si tirage en cours non validé
+  // (ne s'applique PAS quand on vient de nouvellePartie/nouvelleGraine qui remettent validated=true)
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0){
+    _showToast('Validez votre résultat avant de continuer.','warn');return;
+  }
+
+  // Bug 2 : bloquer si la partie compétition est terminée
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&state.roundNum>=cfg.nbTirages&&state.plaques.length>0){
+    openFinPartie();return;
+  }
 
   setStatus('Tirage en cours…');
   setTimeout(()=>{
@@ -858,7 +898,7 @@ function newGame(){
     document.getElementById('btn-detail').disabled=true;
     document.getElementById('btn-resoudre').disabled=(cfg.modeJeu==='comp'&&!state.validated);
     plaqueVals=[...s.plaques];plaqueActive=s.plaques.map(()=>true);calcSteps=[];_backPhase=null;
-    renderPlaques();refreshHist();_resetPhase();startTimer();updateNouveauBtn();
+    renderPlaques();refreshHist();_resetPhase();_unlockInput();startTimer();updateNouveauBtn();
     setStatus('Sélectionne une plaque pour commencer !');
   },10);
 }
@@ -1002,11 +1042,17 @@ function openFinPartie(){
   });
   div.appendChild(frag);document.getElementById('modal-fin').classList.add('open');
 }
-function nouvellePartie(){closeModal('modal-fin');clearSession();rng=null;cfg.partieNum=0;state.score=0;state.roundNum=0;state.history=[];document.getElementById('lbl-score').textContent=0;newGame();}
+function nouvellePartie(){
+  closeModal('modal-fin');clearSession();rng=null;cfg.partieNum=0;
+  state.score=0;state.roundNum=0;state.history=[];state.validated=true;
+  document.getElementById('lbl-score').textContent=0;newGame();
+}
 function nouvelleGraine(){
   closeModal('modal-fin');clearSession();rng=null;
-  cfg.partieNum=Math.floor(Math.random()*999999)+1;state.score=0;state.roundNum=0;state.history=[];
-  document.getElementById('lbl-score').textContent=0;_showToast(`Nouvelle graine : ${cfg.partieNum}`,'orange',3000);newGame();
+  cfg.partieNum=Math.floor(Math.random()*999999)+1;
+  state.score=0;state.roundNum=0;state.history=[];state.validated=true;
+  document.getElementById('lbl-score').textContent=0;
+  _showToast(`Nouvelle graine : ${cfg.partieNum}`,'orange',3000);newGame();
 }
 
 // ═══════════════════════════════════════════════
