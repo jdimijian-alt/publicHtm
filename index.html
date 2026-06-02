@@ -882,15 +882,16 @@ function newGame(){
   document.getElementById('entrainement-zone').style.display='none';
   document.getElementById('plq-title').textContent='Plaques disponibles';
 
-  // Bug 1 : en compétition avec graine, bloquer si tirage en cours non validé
-  // (ne s'applique PAS quand on vient de nouvellePartie/nouvelleGraine qui remettent validated=true)
-  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0){
-    _showToast('Validez votre résultat avant de continuer.','warn');return;
-  }
-
-  // Bug 2 : bloquer si la partie compétition est terminée
-  if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&state.roundNum>=cfg.nbTirages&&state.plaques.length>0){
-    openFinPartie();return;
+  // Compétition avec graine : guards stricts
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0){
+    // Tirage en cours non validé → bloquer
+    if(!state.validated&&state.roundNum>0){
+      _showToast('Validez votre résultat avant de continuer.','warn');return;
+    }
+    // Partie terminée → fin de partie
+    if(state.roundNum>=cfg.nbTirages&&state.roundNum>0){
+      openFinPartie();return;
+    }
   }
 
   setTheme(cfg.modeJeu);
@@ -1002,10 +1003,19 @@ function saveOptions(){
   cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
   cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
   const modeChanged=newMode!==oldMode||np!==oldPartie;
-  if(modeChanged){rng=null;clearSession();state.score=0;state.roundNum=0;state.history=[];state.validated=true;document.getElementById('lbl-score').textContent=0;}
   closeModal('modal-options');
   setTheme(newMode);
-  newGame(); // toujours lancer directement (validated=true si mode changé)
+  if(modeChanged){
+    // Mode ou graine changé : reset complet et nouvelle partie
+    rng=null;clearSession();
+    state.score=0;state.roundNum=0;state.history=[];state.validated=true;
+    document.getElementById('lbl-score').textContent=0;
+    newGame();
+  } else {
+    // Rien de fondamental changé : on laisse la partie en cours telle quelle
+    // (le guard de newGame() s'appliquerait de toute façon)
+    setStatus('Options appliquées.');
+  }
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function updateNouveauBtn(){
