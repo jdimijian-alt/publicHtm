@@ -116,6 +116,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 </div>
 
 <main>
+  <div id="lbl-modeinfo" style="font-size:.7rem;font-weight:600;color:var(--yellow);opacity:.8;text-align:left;padding:0 0 2px 2px;min-height:14px;"></div>
   <div style="display:flex;align-items:center;gap:12px;">
     <button class="act-btn red" id="btn-nouveau" onclick="newGame()" style="padding:10px 16px;flex-shrink:0;">Nouveau</button>
     <div style="flex:1;text-align:center;">
@@ -904,7 +905,7 @@ function newGame(){
     document.getElementById('btn-detail').disabled=true;
     document.getElementById('btn-resoudre').disabled=(cfg.modeJeu==='comp'&&!state.validated);
     plaqueVals=[...s.plaques];plaqueActive=s.plaques.map(()=>true);calcSteps=[];_backPhase=null;
-    renderPlaques();refreshHist();_resetPhase();_unlockInput();startTimer();updateNouveauBtn();
+    renderPlaques();refreshHist();_resetPhase();_unlockInput();startTimer();updateNouveauBtn();_updateModeInfo();
     setStatus('Sélectionne une plaque pour commencer !');
   },10);
 }
@@ -933,7 +934,7 @@ function jouerEntrainement(){
   document.getElementById('btn-detail').disabled=true;document.getElementById('btn-resoudre').disabled=false;
   plaqueVals=[...plaques];plaqueActive=plaques.map(()=>true);calcSteps=[];_backPhase=null;
   renderPlaques();refreshHist();_resetPhase();
-  document.getElementById('lbl-timer').textContent='Libre';setStatus('C\'est parti !');
+  document.getElementById('lbl-timer').textContent='Libre';_updateModeInfo();setStatus('C\'est parti !');
 }
 
 // ═══════════════════════════════════════════════
@@ -989,6 +990,13 @@ function saveOptions(){
   if(nb<2||nb>8){_showToast('Nombre de plaques : 2 à 8','red');return;}
   const newMode=document.getElementById('opt-mode-solveur').checked?'solveur':document.getElementById('opt-mode-comp').checked?'comp':'libre';
   const np=parseInt(document.getElementById('opt-partie').value)||0;
+  // Compétition sans graine = interdit
+  if(newMode==='comp'&&np===0){
+    _showToast('En mode Compétition, saisis un numéro de partie ou tire au sort 🎲','red',4000);
+    switchOptTab('opt-pane-partie',document.querySelector('.opt-tab-btn'));
+    document.getElementById('opt-partie').focus();
+    return;
+  }
   const oldPartie=cfg.partieNum, oldMode=cfg.modeJeu;
   cfg.tirageMode=document.getElementById('opt-tirage').value;
   cfg.solveMode=document.getElementById('opt-solve').value;
@@ -1021,6 +1029,14 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 function updateNouveauBtn(){
   const locked=cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0;
   const btn=document.getElementById('btn-nouveau');btn.disabled=locked;btn.title=locked?'Validez votre résultat avant de continuer':'';
+  _updateModeInfo();
+}
+function _updateModeInfo(){
+  const el=document.getElementById('lbl-modeinfo');if(!el)return;
+  if(cfg.modeJeu==='comp'&&cfg.partieNum>0)
+    el.textContent=`🔴 Compétition #${cfg.partieNum}`;
+  else
+    el.textContent='';
 }
 
 // ═══════════════════════════════════════════════
@@ -1282,13 +1298,14 @@ function _restoreUI(){
   renderPlaques();
   for(let i=state.plaques.length;i<plaqueVals.length;i++)_addResultBtn(i,plaqueVals[i]);
   for(let i=0;i<plaqueVals.length;i++){if(!plaqueActive[i]&&plaqueBtns[i]){plaqueBtns[i].disabled=true;plaqueBtns[i].classList.add('used');}}
-  refreshHist();_resetPhase();updateNouveauBtn();
+  refreshHist();_resetPhase();updateNouveauBtn();_updateModeInfo();
   if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
   else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
 function setTheme(mode){
   document.body.classList.remove('theme-libre','theme-comp','theme-solveur');
   document.body.classList.add(mode==='comp'?'theme-comp':mode==='solveur'?'theme-solveur':'theme-libre');
+  _updateModeInfo();
 }
 window.onload=()=>{initPWA();setTheme(cfg.modeJeu);if(restoreSession()){setTheme(cfg.modeJeu);_restoreUI();}else newGame();};
 </script>
