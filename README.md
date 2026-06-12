@@ -1,150 +1,136 @@
-# publicHtm
-```text
-================================================================================
-                    LE COMPTE EST BON - Solveur & Jeu
-================================================================================
+# Le Compte Est Bon
 
-Auteur : J.Dimijian
-Version : 1.0
-Langage : HTML5 / JavaScript (conversion depuis ABAP avec l'aide de Claude)
+> Implémentation web du célèbre jeu de calcul mental de l'émission *Des Chiffres et des Lettres*.
 
-================================================================================
-                            PRÉSENTATION
-================================================================================
+**Version 1.0** — par Joseph Dimijian · Portage web avec Claude (Anthropic)
 
-Cette application web permet de jouer au "Compte est bon" (célèbre jeu de calcul
-mental) ou de laisser un solveur automatique trouver la meilleure solution.
-Elle propose à la fois un mode libre, un mode compétition chronométré, ainsi
-que de nombreuses options de personnalisation.
+---
 
-L'interface est responsive et fonctionne sur ordinateur comme sur smartphone
-(iPhone, Android).
+## Présentation
 
-================================================================================
-                            MODES DE JEU
-================================================================================
+*Le Compte Est Bon* est un jeu de calcul mental : à partir de 6 plaques tirées aléatoirement, le joueur doit atteindre un nombre cible en utilisant les quatre opérations arithmétiques (+, −, ×, /).
 
-1. MODE LIBRE
-   - Vous saisissez manuellement une cible et jusqu'à 6 plaques
-   - Vous pouvez jouer vous-même en cliquant sur les plaques puis les opérateurs
-   - Vous pouvez demander au solveur de trouver la (meilleure) solution
+Ce projet est la version web d'un programme ABAP/SAP original écrit en 2011, porté successivement en Python puis en application web HTML/JS autonome.
 
-2. MODE COMPÉTITION
-   - Une graine aléatoire génère une série de tirages successifs
-   - Chaque tirage est chronométré (temps paramétrable)
-   - Un système de score récompense la rapidité et la précision
-   - Les scores sont différenciés selon que vous trouvez la solution dans les
-     temps ou hors temps
+---
 
-================================================================================
-                        OPTIONS DISPONIBLES
-================================================================================
+## Caractéristiques techniques
 
-📊 PARTIE & PLAQUES
-   - Modèle de plaques :
-        • CEB24 : sélection classique (1,2,3,4,5,6,7,8,9,10,25,50,75,100)
-        • CEB28 : sélection étendue (28 plaques spécifiques)
-        • Aléatoire complet : plaques totalement aléatoires (hors modèles)
-   - Nombre de plaques (variable selon le mode)
-   - Bornes min/max pour la cible
-   - Option "Cible forcément atteignable" (génération d'un tirage soluble)
+- **Fichier unique** : `index.html` — aucune dépendance externe, aucun serveur nécessaire
+- **PWA** : installable sur iPhone (Safari) et Android (Chrome) via "Ajouter à l'écran d'accueil"
+- **Offline** : fonctionne sans connexion après la première ouverture
+- **Compatible** : Chrome, Firefox, Safari, Edge — desktop et mobile
 
-⏱ TEMPS & SCORES
-   - Temps limite par tirage (en secondes)
-   - Score exact / ±1-3 / >3 (dans les temps)
-   - Score exact / ±1-3 / >3 (hors temps)
-   - Réglages fins des barèmes
+---
 
-🎲 BOUTONS SPÉCIFIQUES
-   - "🌸 Sylvie" : Mode simplifié avec cible comprise entre 25 et 100
-                 (hommage personnel à la compagne du développeur)
-   - "↺ Défaut" : Retour à la configuration classique du jeu
+## Modes de jeu
 
-================================================================================
-                        FONCTIONNALITÉS DU SOLVEUR
-================================================================================
+### 🔵 Partie libre
+Tirages illimités, pas de score comptabilisé, le bouton Résoudre est toujours accessible. Idéal pour s'entraîner.
 
-Le solveur automatique propose trois stratégies de résolution :
+### 🔴 Compétition
+Partie avec graine (numéro fixe ou tiré au sort 🎲), nombre de tirages défini (30 par défaut). Score calculé selon les résultats et le temps. Fin de partie avec récapitulatif. Un tirage doit être validé avant de passer au suivant.
 
-• MEILLEURE SOLUTION
-  Trouve la solution la plus précise possible (compte exact si disponible,
-  sinon meilleure approximation). C'est le mode par défaut.
+### ⬜ Solveur
+Saisie libre des plaques et de la cible. Le solveur calcule la meilleure solution. Aucune contrainte de temps ni de score.
 
-• PREMIÈRE EXACTE
-  S'arrête dès qu'une solution exacte est trouvée. Plus rapide, mais ne garantit
-  pas la solution la plus courte ou élégante.
+---
 
-• TOUTES (RÉCUR ≤ 3)
-  Explore toutes les solutions exactes. Élagage des alternatives triviales
-  jusqu'au niveau 3, puis conservation et affichage de toutes les solutions
-  alternatives. Idéal pour comprendre la diversité des chemins possibles.
+## Fonctionnalités
 
-PERFORMANCES :
-  - Résolution en moins de 50 ms sur iPhone pour le mode classique (6 plaques)
-  - Algorithme optimisé avec élagage agressif :
-        • Divisions non entières ignorées
-        • Résultats négatifs ou nuls ignorés
-        • Commutativité gérée (a+b = b+a testé une seule fois)
+### Tirage
+- **CEB 24** : tirage classique (1–10 ×2, 25/50/75/100 ×1)
+- **CEB 28** : grands nombres en double (25/50/75/100 ×2)
+- **Aléatoire 20** : 1–10 ×2 + 8 nombres entre 11 et 99
+- Cible forcément atteignable (option)
+- Plage cible configurable (101–999 par défaut)
+- Graine reproductible : même graine = même séquence de tirages
 
-================================================================================
-                        INTERACTION MANUELLE
-================================================================================
+### Saisie interactive
+- Sélection des plaques par clic
+- Opérateurs +, −, ×, /
+- Affichage de l'opération en cours en temps réel
+- **Phase 4 — révision** : quand on remonte une ligne précédente via ⌫, la ligne entière s'affiche avec code couleur (op1 jaune, opérateur orange modifiable, op2 bleu modifiable)
+- Reprise automatique du résultat comme premier opérande du calcul suivant
 
-Vous pouvez jouer sans le solveur :
-  1. Cliquez sur une plaque
-  2. Cliquez sur un opérateur (+, -, ×, /)
-  3. Cliquez sur une autre plaque
-  4. Le résultat s'affiche et devient une nouvelle plaque virtuelle
-  5. Recommencez jusqu'à approcher ou atteindre la cible
-  6. Cliquez sur "Valider" pour que le programme évalue votre proposition
+### Correction (⌫)
+Effacement granulaire phase par phase :
+- ⌫ en phase 3 → efface l'opérateur
+- ⌫ en phase 2 → efface op1 et remonte la ligne précédente si elle existe
+- ⌫ en phase 4 → efface op2 (retour phase 3)
+- 🗑 dans la boîte Calculs → remet toutes les plaques à zéro
 
-Le bouton "Résoudre" lance instantanément le solveur selon le mode choisi.
-Le bouton "Détail…" affiche le déroulement complet des opérations.
+### Solveur intégré
+- **Meilleure solution** : trouve la solution la plus proche en un minimum d'étapes
+- **Première exacte** : s'arrête dès qu'un compte exact est trouvé
+- **Toutes (récur ≤ 3)** : explore tous les chemins alternatifs (fidèle au comportement ABAP v1.30)
+- Popup de solution avec détail, nombre d'opérations testées, solutions exactes alternatives
 
-================================================================================
-                        STATISTIQUES
-================================================================================
+### Scores
+- In time / Out of time selon le temps limite configuré
+- Grille de points configurable (exact / approché ±1-3 / raté)
+- Timeout global en compétition (warning à N secondes)
 
-L'onglet "Statistiques" permet de suivre vos performances sur la durée :
-  - Globales (tous tirages confondus)
-  - Par partie (session de compétition)
-  - Par mode de jeu (libre / compétition)
+### Statistiques
+- Globales : parties, tirages, score total, précision, temps moyen
+- Par partie : historique des 100 dernières parties
+- Par mode et par graine
 
-Possibilité de réinitialiser les statistiques.
+### Options
+Deux onglets dans le panneau Options :
+- **Partie & Plaques** : mode de jeu, graine, modèle de plaques, nombre de plaques, plage cible
+- **Temps & Scores** : temps limite, timeout global, grille de scores, mode solveur, orientation écran
 
-================================================================================
-                            RACCOURCIS
-================================================================================
+---
 
-Le jeu propose des "Raccourcis" paramétrables pour une prise en main rapide
-des fonctionnalités fréquentes (non détaillés ici car dépendants de votre
-implémentation finale).
+## Générateur aléatoire
 
-================================================================================
-                        EXIGENCES TECHNIQUES
-================================================================================
+Le tirage utilise le générateur pseudo-aléatoire de la calculatrice **HP-11C**, implémenté en BigInt JavaScript pour une fidélité exacte au programme ABAP original :
 
-- Navigateur web moderne (Chrome, Firefox, Safari, Edge)
-- JavaScript activé
-- Aucune connexion Internet requise après chargement initial
-- Fonctionne localement (pas de serveur nécessaire)
+```
+next = (next × 1574352261 + 1017980433) mod 10000000000
+```
 
-================================================================================
-                    HISTORIQUE ET REMERCIEMENTS
-================================================================================
+Une graine fixe garantit la reproductibilité complète d'une partie.
 
-Ce jeu a été initialement développé en ABAP, puis converti en HTML5/JavaScript
-avec l'assistance de Claude (IA d'Anthropic). L'application inclut des options
-personnalisées (bouton "Sylvie") et une attention particulière à l'expérience
-utilisateur.
+---
 
-Merci de jouer et bonne chance pour vos calculs !
+## Installation
 
-================================================================================
-                          LICENCE ET CONTACT
-================================================================================
+### Utilisation directe
+Télécharge `index.html` et ouvre-le dans un navigateur. Aucune installation requise.
 
-Projet libre d'utilisation et de modification.
-Pour toute question ou suggestion : [votre contact GitHub]
+### GitHub Pages
+Le fichier est déployé automatiquement via GitHub Pages à l'adresse :
+```
+https://<username>.github.io/<repository>/
+```
 
-================================================================================
+### PWA (iPhone / Android)
+1. Ouvre l'URL dans Safari (iOS) ou Chrome (Android)
+2. "Partager" → "Ajouter à l'écran d'accueil" (iOS) ou "Installer l'application" (Android)
+3. L'icône apparaît sur l'écran d'accueil, l'appli fonctionne hors ligne
+
+---
+
+## Historique des versions
+
+| Version | Description |
+|---------|-------------|
+| **1.0** | Version web initiale — moteur complet, 3 modes, solveur, stats, PWA |
+
+---
+
+## Crédits
+
+- **Concept & logique originale** : Joseph Dimijian — programme ABAP/SAP, 2011
+- **Portage web** : Joseph Dimijian + Claude (Anthropic), 2024–2025
+- **Algorithme de résolution** : récursion fidèle à la version ABAP 1.30
+- **Générateur aléatoire** : HP-11C RNG (BigInt)
+
+---
+
+## Licence
+
+© Joseph Dimijian — Tous droits réservés.  
+Usage personnel autorisé. Redistribution ou usage commercial interdits sans autorisation.
