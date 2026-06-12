@@ -19,7 +19,7 @@
 /* Thèmes selon mode */
 body.theme-libre   {--bg:#3a6186;--bg-card:#4a7399;--bg-hdr:#1e3a52;--bg-sub:#2e5070;}
 body.theme-comp    {--bg:#5a2030;--bg-card:#6a3040;--bg-hdr:#3a0a1a;--bg-sub:#4a1525;}
-body.theme-solveur {--bg:#9a8a00;--bg-card:#8a7a00;--bg-hdr:#5a4a00;--bg-sub:#7a6a00;}
+body.theme-solveur {--bg:#6a5c00;--bg-card:#5a4e00;--bg-hdr:#3a3200;--bg-sub:#504400;}
 *{box-sizing:border-box;margin:0;padding:0;}
 button,input,select{touch-action:manipulation;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -156,7 +156,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
   <div class="hist">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
       <div class="hist-title" style="margin-bottom:0;">Calculs :</div>
-      <button onclick="onEffacerTout()" title="Tout effacer" style="background:transparent;border:none;color:var(--text-dim);font-size:.85rem;cursor:pointer;padding:2px 6px;border-radius:4px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">🗑</button>
+      <button onclick="onEffacerTout()" title="Tout effacer" style="background:var(--bg-sub);border:1px solid var(--border);color:var(--accent);font-size:1.1rem;cursor:pointer;padding:3px 10px;border-radius:6px;line-height:1;" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='var(--bg-sub)';this.style.color='var(--accent)'">🗑</button>
     </div>
     <div id="hist-lines"></div>
   </div>
@@ -239,127 +239,132 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
   </div>
 </div>
 
-<!-- ═══ OPTIONS (2 onglets) ═══ -->
+<!-- ═══ OPTIONS (3 onglets) ═══ -->
 <div class="modal-overlay" id="modal-options">
-  <div class="modal" style="max-height:90vh;overflow-y:auto;">
-    <h2>⚙ Options du jeu</h2>
+  <div class="modal" style="max-height:90vh;display:flex;flex-direction:column;padding-bottom:0;">
+    <h2 style="flex-shrink:0;">⚙ Options du jeu</h2>
 
-    <!-- Mode de jeu -->
-    <div style="display:flex;gap:20px;margin-bottom:12px;flex-wrap:wrap;">
-      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
-        <input type="radio" name="opt-mode" id="opt-mode-libre" value="libre" style="accent-color:var(--green);">
-        <span style="color:#7ab4e0">Partie libre <span style="font-size:.72rem;color:var(--text-dim)">(sans limite)</span></span>
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
-        <input type="radio" name="opt-mode" id="opt-mode-comp" value="comp" style="accent-color:var(--accent2);">
-        <span style="color:#c06070">Compétition <span style="font-size:.72rem;color:var(--text-dim)">(graine fixe, N tirages)</span></span>
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;">
-        <input type="radio" name="opt-mode" id="opt-mode-solveur" value="solveur" style="accent-color:#8ab0c4;">
-        <span style="color:#8ab0c4">Solveur <span style="font-size:.72rem;color:var(--text-dim)">(saisie libre des plaques)</span></span>
-      </label>
+    <div class="opt-tabs" style="flex-shrink:0;">
+      <button class="opt-tab-btn active" onclick="switchOptTab('opt-pane-partie',this)">🎲 Partie</button>
+      <button class="opt-tab-btn"        onclick="switchOptTab('opt-pane-plaques',this)">🃏 Plaques</button>
+      <button class="opt-tab-btn"        onclick="switchOptTab('opt-pane-temps',this)">⏱ Temps</button>
     </div>
 
-    <!-- Onglets -->
-    <div class="opt-tabs">
-      <button class="opt-tab-btn active" onclick="switchOptTab('opt-pane-partie',this)">🎲 Partie &amp; Plaques</button>
-      <button class="opt-tab-btn"        onclick="switchOptTab('opt-pane-temps',this)">⏱ Temps &amp; Scores</button>
+    <div style="flex:1;overflow-y:auto;min-height:0;padding:10px 0;">
+
+      <!-- Onglet 1 : Partie -->
+      <div class="opt-tab-pane active" id="opt-pane-partie">
+        <div class="opts-section">MODE DE JEU</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.88rem;">
+            <input type="radio" name="opt-mode" id="opt-mode-libre" value="libre" style="accent-color:var(--green);">
+            <span style="color:#7ab4e0;">🔵 Partie libre <span style="font-size:.72rem;color:var(--text-dim)">(tirages illimités)</span></span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.88rem;">
+            <input type="radio" name="opt-mode" id="opt-mode-comp" value="comp" style="accent-color:var(--accent2);">
+            <span style="color:#c06070;">🔴 Compétition <span style="font-size:.72rem;color:var(--text-dim)">(graine fixe, N tirages)</span></span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.88rem;">
+            <input type="radio" name="opt-mode" id="opt-mode-solveur" value="solveur" style="accent-color:#8ab0c4;">
+            <span style="color:#8ab0c4;">⬜ Solveur <span style="font-size:.72rem;color:var(--text-dim)">(saisie libre)</span></span>
+          </label>
+        </div>
+        <div class="opts-section">COMPÉTITION</div>
+        <div class="row" id="row-graine">
+          <label>N° partie / graine</label>
+          <input type="number" id="opt-partie" value="0" min="0" style="width:80px;">
+          <button onclick="rndGraine()" title="Tirer au sort" style="background:var(--accent2);border:none;border-radius:6px;padding:4px 9px;cursor:pointer;font-size:1rem;">🎲</button>
+        </div>
+        <div class="row" id="row-nbtirages">
+          <label>Tirages par partie</label>
+          <input type="number" id="opt-nbtirages" min="1" max="999" value="30" style="width:74px;">
+        </div>
+        <div class="opts-section" style="margin-top:8px;">AFFICHAGE</div>
+        <div class="row">
+          <label>Orientation (PWA)</label>
+          <select id="opt-orientation">
+            <option value="auto">Automatique</option>
+            <option value="portrait">Portrait forcé</option>
+            <option value="landscape">Paysage autorisé</option>
+          </select>
+        </div>
+        <div class="opts-section" style="margin-top:8px;">RACCOURCIS</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:7px 12px;font-size:.82rem;">🌸 Sylvie</button>
+          <button class="act-btn grey" onclick="resetDefaut()" style="padding:7px 12px;font-size:.82rem;">↺ Défaut</button>
+        </div>
+      </div>
+
+      <!-- Onglet 2 : Plaques -->
+      <div class="opt-tab-pane" id="opt-pane-plaques">
+        <div class="opts-section">MODÈLE DE PLAQUES</div>
+        <div class="row">
+          <label>Modèle</label>
+          <select id="opt-tirage">
+            <option value="ceb24">CEB 24 (classique)</option>
+            <option value="ceb28">CEB 28 (grands ×2)</option>
+            <option value="alea20">Aléatoire 20</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Nombre de plaques</label>
+          <input type="number" id="opt-nbplq" min="2" max="8" value="6" style="width:52px;">
+        </div>
+        <div class="opts-section" style="margin-top:8px;">CIBLE</div>
+        <div class="row">
+          <label>Minimum</label>
+          <input type="number" id="opt-tmin" value="101" style="width:74px;">
+        </div>
+        <div class="row">
+          <label>Maximum</label>
+          <input type="number" id="opt-tmax" value="999" style="width:74px;">
+        </div>
+        <div class="row">
+          <label>Forcément atteignable</label>
+          <input type="checkbox" id="opt-exact" checked style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
+        </div>
+        <div class="opts-section" style="margin-top:8px;">SOLVEUR</div>
+        <div class="row">
+          <label>Mode résolution</label>
+          <select id="opt-solve">
+            <option value="complete">Meilleure solution</option>
+            <option value="stop">Première exacte</option>
+            <option value="all">Toutes (récur ≤ 3)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Onglet 3 : Temps & Scores -->
+      <div class="opt-tab-pane" id="opt-pane-temps">
+        <div class="opts-section">TEMPS</div>
+        <div class="row">
+          <label>Temps limite / tirage (s)</label>
+          <input type="number" id="opt-time" value="45" style="width:60px;">
+        </div>
+        <div class="row" id="row-timeout">
+          <label>Timeout global compét. (s)</label>
+          <input type="number" id="opt-timeout" value="120" style="width:60px;">
+          <span style="font-size:.7rem;color:var(--text-dim);">(warning)</span>
+        </div>
+        <div class="opts-section" style="margin-top:8px;">SCORES</div>
+        <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">In time — Exact / ±1-3 / &gt;3</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input type="number" id="opt-si0"  value="10"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+          <input type="number" id="opt-si13" value="7"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+          <input type="number" id="opt-si4"  value="-5"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        </div>
+        <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">Out of time — Exact / ±1-3 / &gt;3</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input type="number" id="opt-so0"  value="5"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+          <input type="number" id="opt-so13" value="2"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+          <input type="number" id="opt-so4"  value="-10" style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
+        </div>
+      </div>
+
     </div>
 
-    <!-- Onglet 1 : Partie & Plaques -->
-    <div class="opt-tab-pane active" id="opt-pane-partie">
-      <div class="opts-section">PARTIE (compétition)</div>
-      <div class="row" id="row-graine">
-        <label>N° partie / graine</label>
-        <input type="number" id="opt-partie" value="0" min="0" style="width:80px;">
-        <button onclick="rndGraine()" title="Tirer au sort" style="background:var(--accent2);border:none;border-radius:6px;padding:4px 9px;cursor:pointer;font-size:1rem;">🎲</button>
-      </div>
-      <div class="row" id="row-nbtirages">
-        <label>Tirages par partie</label>
-        <input type="number" id="opt-nbtirages" min="1" max="999" value="30" style="width:74px;">
-      </div>
-
-      <div class="opts-section" style="margin-top:8px;">MODÈLE DE PLAQUES</div>
-      <div class="row">
-        <label>Modèle</label>
-        <select id="opt-tirage">
-          <option value="ceb24">CEB 24 (classique)</option>
-          <option value="ceb28">CEB 28 (grands ×2)</option>
-          <option value="alea20">Aléatoire 20</option>
-        </select>
-      </div>
-      <div class="row">
-        <label>Nombre de plaques</label>
-        <input type="number" id="opt-nbplq" min="2" max="8" value="6" style="width:52px;">
-      </div>
-      <div class="row">
-        <label>Cible minimum</label>
-        <input type="number" id="opt-tmin" value="101" style="width:74px;">
-      </div>
-      <div class="row">
-        <label>Cible maximum</label>
-        <input type="number" id="opt-tmax" value="999" style="width:74px;">
-      </div>
-      <div class="row">
-        <label>Cible forcément atteignable</label>
-        <input type="checkbox" id="opt-exact" checked style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
-      </div>
-    </div>
-
-    <!-- Onglet 2 : Temps & Scores -->
-    <div class="opt-tab-pane" id="opt-pane-temps">
-      <div class="opts-section">TEMPS</div>
-      <div class="row">
-        <label>Temps limite / tirage (s)</label>
-        <input type="number" id="opt-time" value="45" style="width:60px;">
-      </div>
-      <div class="row" id="row-timeout">
-        <label>Timeout global compét. (s)</label>
-        <input type="number" id="opt-timeout" value="120" style="width:60px;">
-        <span style="font-size:.7rem;color:var(--text-dim);">(warning)</span>
-      </div>
-
-      <div class="opts-section" style="margin-top:8px;">SCORES</div>
-      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">In time — Exact / ±1-3 / &gt;3</div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <input type="number" id="opt-si0"  value="10"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-        <input type="number" id="opt-si13" value="7"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-        <input type="number" id="opt-si4"  value="-5"  style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-      </div>
-      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">Out of time — Exact / ±1-3 / &gt;3</div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <input type="number" id="opt-so0"  value="5"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-        <input type="number" id="opt-so13" value="2"   style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-        <input type="number" id="opt-so4"  value="-10" style="width:52px;background:var(--bg-hdr);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:.88rem;">
-      </div>
-
-      <div class="opts-section" style="margin-top:8px;">SOLVEUR</div>
-      <div class="row">
-        <label>Mode résolution</label>
-        <select id="opt-solve">
-          <option value="complete">Meilleure solution</option>
-          <option value="stop">Première exacte</option>
-          <option value="all">Toutes (récur ≤ 3)</option>
-        </select>
-      </div>
-
-      <div class="opts-section" style="margin-top:8px;">AFFICHAGE</div>
-      <div class="row">
-        <label>Orientation écran</label>
-        <select id="opt-orientation">
-          <option value="auto">Automatique</option>
-          <option value="portrait">Portrait forcé</option>
-          <option value="landscape">Paysage autorisé</option>
-        </select>
-      </div>
-      <div class="opts-section" style="margin-top:8px;">RACCOURCIS</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:7px 12px;font-size:.82rem;">🌸 Sylvie</button>
-        <button class="act-btn grey" onclick="resetDefaut()" style="padding:7px 12px;font-size:.82rem;">↺ Défaut</button>
-      </div>
-    </div>
-
-    <div class="modal-actions">
+    <!-- Boutons sticky en bas -->
+    <div style="flex-shrink:0;border-top:1px solid var(--border);padding:10px 0 4px;display:flex;gap:8px;justify-content:flex-end;">
       <button class="act-btn green" onclick="saveOptions()">Appliquer</button>
       <button class="act-btn red"   onclick="closeModal('modal-options')">Annuler</button>
     </div>
@@ -593,7 +598,7 @@ function evaluate(playerResult){
   const diff=Math.abs(playerResult-state.target);
   const tbl=inTime?cfg.scoreInTime:cfg.scoreOutTime;
   const pts=diff===0?tbl[0]:diff<=3?tbl[1]:tbl[2];
-  if(cfg.modeJeu==='comp')state.score+=pts;
+  state.score+=pts; // Score actif dans tous les modes
   state.validated=true;
   state.history.push({num:state.roundNum,plaques:[...state.plaques],target:state.target,result:playerResult,diff,pts,inTime,elapsed:+sec.toFixed(1)});
   if(cfg.modeJeu==='comp'&&cfg.partieNum>0&&state.roundNum>=cfg.nbTirages)setTimeout(openFinPartie,400);
@@ -1202,7 +1207,7 @@ function saveOptions(){
   cfg.entrainement=(newMode==='solveur');
   cfg.modeJeu=newMode;cfg.partieNum=np;
   cfg.orientation=document.getElementById('opt-orientation')?document.getElementById('opt-orientation').value:'auto';
-  _applyOrientation(cfg.orientation);
+  initPWA(); // Régénère le manifest avec la nouvelle orientation
   cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
   cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
   const modeChanged=newMode!==oldMode||np!==oldPartie;
@@ -1215,9 +1220,9 @@ function saveOptions(){
     document.getElementById('lbl-score').textContent=0;
     newGame();
   } else {
-    // Rien de fondamental changé : on laisse la partie en cours telle quelle
-    // (le guard de newGame() s'appliquerait de toute façon)
+    // Paramètres changés mais même mode : on garde le score, on relance juste un tirage
     setStatus('Options appliquées.');
+    newGame();
   }
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1397,6 +1402,7 @@ function initPWA(){
       version: CEB_VERSION,
       start_url:'./',
       display:'standalone',
+      orientation:cfg.orientation==='portrait'?'portrait':'any',
       background_color:'#1e3a52',
       theme_color:'#1e3a52',
       icons:[
@@ -1490,6 +1496,8 @@ function restoreSession(){
     const raw=localStorage.getItem(SESSION_KEY);if(!raw)return false;
     const s=JSON.parse(raw);if(!s.state||!s.cfg)return false;
     Object.assign(cfg,s.cfg);
+    // Fallback pour les sessions sans orientation sauvée
+    if(!cfg.orientation)cfg.orientation='auto';
     state.plaques=s.state.plaques||[];state.target=s.state.target||0;state.score=s.state.score||0;
     state.roundNum=s.state.roundNum||0;state.validated=s.state.validated??true;
     state.history=s.state.history||[];state.startTime=s.state.startTime||Date.now();
@@ -1514,25 +1522,12 @@ function _restoreUI(){
   if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
   else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
-function _applyOrientation(o){
-  let el=document.getElementById('style-orientation');
-  if(!el){el=document.createElement('style');el.id='style-orientation';document.head.appendChild(el);}
-  if(o==='portrait'){
-    el.textContent='@media(orientation:landscape){body{display:none;}#orient-warn{display:flex!important;}}';
-    let w=document.getElementById('orient-warn');
-    if(!w){w=document.createElement('div');w.id='orient-warn';
-      w.style.cssText='display:none;position:fixed;inset:0;background:#1e3a52;color:#f5a623;font-size:1.2rem;font-weight:700;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:20px;';
-      w.innerHTML='📱 Tourne ton téléphone<br>en mode portrait';document.body.appendChild(w);}
-  } else {
-    el.textContent='';
-  }
-}
 function setTheme(mode){
   document.body.classList.remove('theme-libre','theme-comp','theme-solveur');
   document.body.classList.add(mode==='comp'?'theme-comp':mode==='solveur'?'theme-solveur':'theme-libre');
   _updateModeInfo();
 }
-window.onload=()=>{initPWA();setTheme(cfg.modeJeu);_applyOrientation(cfg.orientation||'auto');if(restoreSession()){setTheme(cfg.modeJeu);_restoreUI();}else newGame();};
+window.onload=()=>{if(restoreSession()){setTheme(cfg.modeJeu);initPWA();_restoreUI();}else{initPWA();setTheme(cfg.modeJeu);newGame();}};
 </script>
 </body>
 </html>
