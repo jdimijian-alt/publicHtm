@@ -19,7 +19,7 @@
 /* Thèmes selon mode */
 body.theme-libre   {--bg:#3a6186;--bg-card:#4a7399;--bg-hdr:#1e3a52;--bg-sub:#2e5070;}
 body.theme-comp    {--bg:#5a2030;--bg-card:#6a3040;--bg-hdr:#3a0a1a;--bg-sub:#4a1525;}
-body.theme-solveur {--bg:#2a3a4a;--bg-card:#3a4a5a;--bg-hdr:#1a2a3a;--bg-sub:#253545;}
+body.theme-solveur {--bg:#9a8a00;--bg-card:#8a7a00;--bg-hdr:#5a4a00;--bg-sub:#7a6a00;}
 *{box-sizing:border-box;margin:0;padding:0;}
 button,input,select{touch-action:manipulation;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -40,7 +40,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 .plq-btn.selected{border-color:var(--yellow);background:var(--btn-plq-sel);}
 .plq-btn.used{background:var(--btn-used);color:var(--text-dim);cursor:default;border-color:transparent;}
 .plq-btn:disabled{opacity:.5;cursor:default;}
-.cur-op{background:var(--bg-hdr);border:2px solid var(--yellow);border-radius:8px;padding:10px 16px;min-height:52px;font-size:1.8rem;font-weight:700;color:var(--yellow);text-align:center;letter-spacing:2px;}
+.cur-op{background:var(--bg-hdr);border:2px solid var(--yellow);border-radius:8px;padding:10px 16px;height:56px;font-size:1.8rem;font-weight:700;color:var(--yellow);text-align:center;letter-spacing:2px;}
 .op-row{display:flex;align-items:center;gap:10px;}
 .op-btn{font-family:inherit;font-size:1.2rem;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;width:52px;height:44px;cursor:pointer;transition:transform .1s;}
 .op-btn:hover{transform:scale(1.06);}
@@ -63,7 +63,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 .sol-line.exact{color:var(--green);}
 .status{text-align:center;font-size:.85rem;color:var(--text-dim);padding:4px 0;min-height:20px;}
 /* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg-hdr);color:var(--text);border-radius:10px;padding:12px 20px;font-size:.92rem;font-weight:600;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:200;max-width:90vw;transition:transform .3s ease,opacity .3s ease;opacity:0;pointer-events:none;white-space:pre-line;}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg-hdr);color:var(--text);border-radius:10px;padding:12px 20px;font-size:.92rem;font-weight:600;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:200;max-width:90vw;transition:transform .3s ease,opacity .3s ease;opacity:0;pointer-events:none;white-space:pre-line;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .toast.green{border-left:5px solid var(--green);}
 .toast.orange{border-left:5px solid var(--accent2);}
@@ -153,7 +153,10 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
   </div>
 
   <div class="hist">
-    <div class="hist-title">Calculs :</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <div class="hist-title" style="margin-bottom:0;">Calculs :</div>
+      <button onclick="onEffacerTout()" title="Tout effacer" style="background:transparent;border:none;color:var(--text-dim);font-size:.85rem;cursor:pointer;padding:2px 6px;border-radius:4px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">🗑</button>
+    </div>
     <div id="hist-lines"></div>
   </div>
 
@@ -248,10 +251,6 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
         <input type="number" id="opt-timeout" value="120" style="width:60px;">
         <span style="font-size:.7rem;color:var(--text-dim);">(warning)</span>
       </div>
-      <div class="row">
-        <label>Reprise auto résultat préc.</label>
-        <input type="checkbox" id="opt-reprise" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;">
-      </div>
 
       <div class="opts-section" style="margin-top:8px;">SCORES</div>
       <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;">In time — Exact / ±1-3 / &gt;3</div>
@@ -277,6 +276,15 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
         </select>
       </div>
 
+      <div class="opts-section" style="margin-top:8px;">AFFICHAGE</div>
+      <div class="row">
+        <label>Orientation écran</label>
+        <select id="opt-orientation">
+          <option value="auto">Automatique</option>
+          <option value="portrait">Portrait forcé</option>
+          <option value="landscape">Paysage autorisé</option>
+        </select>
+      </div>
       <div class="opts-section" style="margin-top:8px;">RACCOURCIS</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="act-btn" onclick="modeSylvie()" style="background:#9b59b6;color:#fff;padding:7px 12px;font-size:.82rem;">🌸 Sylvie</button>
@@ -486,7 +494,7 @@ const cfg={
   modeJeu:'libre', tirageMode:'ceb24', solveMode:'complete',
   nbPlaques:6, targetMin:101, targetMax:999,
   timeLimit:45, globalTimeout:120, partieNum:0, nbTirages:30,
-  exactOnly:true, repriseAuto:true, entrainement:false,
+  exactOnly:true, repriseAuto:true, entrainement:false, orientation:'auto',
   scoreInTime:[10,7,-5], scoreOutTime:[5,2,-10],
 };
 let state={plaques:[],target:0,best:null,allSols:[],reachable:new Set(),startTime:0,score:0,roundNum:0,validated:true,history:[]};
@@ -536,7 +544,7 @@ function evaluate(playerResult){
 //
 //  phase : 1=attente op1 | 2=op1 choisi | 3=op1+oper choisis
 // ═══════════════════════════════════════════════
-let phase=1, currentOp1=null, currentOper=null;
+let phase=1, currentOp1=null, currentOper=null, currentOp2=null;
 let calcSteps=[], plaqueBtns=[], plaqueActive=[], plaqueVals=[];
 let timerId=null, globalTimerId=null, elapsed=0, lastSolver=null;
 
@@ -658,7 +666,14 @@ function refreshHist(){
   }
 }
 function setStatus(t){document.getElementById('lbl-status').textContent=t;}
-function setCurOp(t){document.getElementById('cur-op').textContent=t;}
+function setCurOp(t){const el=document.getElementById('cur-op');el.textContent=t;}
+function setCurOpPhase4(op1,oper,op2){
+  const el=document.getElementById('cur-op');
+  el.innerHTML=
+    `<span style="color:var(--yellow)">${op1}</span>`+
+    `<span style="color:var(--accent2);margin:0 10px;text-decoration:underline;">${oper}</span>`+
+    `<span style="color:var(--blue);text-decoration:underline dotted;">${op2}</span>`;
+}
 function _opLbl(op){return op==='X'?'×':op;}
 
 // ═══════════════════════════════════════════════
@@ -687,6 +702,33 @@ function onPlaque(idx){
     if(currentOp1)plaqueBtns[currentOp1.idx].classList.remove('selected');
     currentOp1={idx,val};plaqueBtns[idx].classList.add('selected');
     setCurOp(`${val}  ?  …`);setStatus(`${val} sélectionné — choisis un opérateur.`);
+  }else if(phase===4){
+    if(idx===currentOp1.idx)return;
+    if(!plaqueActive[idx])return;
+    // Restaure l'ancien op2
+    plaqueActive[currentOp2.idx]=true;
+    if(plaqueBtns[currentOp2.idx]){plaqueBtns[currentOp2.idx].disabled=false;plaqueBtns[currentOp2.idx].classList.remove('used');}
+    // Valide avec le nouveau op2
+    const chk4=checkOp(currentOp1.val,currentOper,plaqueVals[idx]);
+    if(!chk4.ok){_showToast(chk4.err,'red');return;}
+    plaqueActive[currentOp1.idx]=false;
+    if(plaqueBtns[currentOp1.idx]){plaqueBtns[currentOp1.idx].disabled=true;plaqueBtns[currentOp1.idx].classList.remove('selected');plaqueBtns[currentOp1.idx].classList.add('used');}
+    plaqueActive[idx]=false;
+    if(plaqueBtns[idx]){plaqueBtns[idx].disabled=true;plaqueBtns[idx].classList.add('used');}
+    const res4=chk4.res,resIdx4=plaqueVals.length;
+    plaqueVals.push(res4);plaqueActive.push(true);_addResultBtn(resIdx4,res4);
+    calcSteps.push({op1Val:currentOp1.val,op1Idx:currentOp1.idx,oper:currentOper,op2Val:plaqueVals[idx],op2Idx:idx,res:res4,resIdx:resIdx4});
+    refreshHist();_clearOpBtns();currentOp2=null;
+    if(res4===state.target&&!state.validated){
+      stopTimer();stopGlobalTimeout();
+      const r=evaluate(res4);
+      if(!r.error){document.getElementById('lbl-score').textContent=r.total;setStatus(`🎉 COMPTE EST BON ! ${r.msg}`);_showToast(`🎉 Compte est bon !\n${r.msg}`,'green',4000);document.getElementById('btn-resoudre').disabled=false;updateNouveauBtn();}
+      _resetPhase();saveSession();return;
+    }
+    saveSession();
+    if(cfg.repriseAuto){currentOp1={idx:resIdx4,val:res4};plaqueBtns[resIdx4].classList.add('selected');phase=2;setCurOp(`${res4}  ?  …`);setStatus(`Reprise : ${res4} — choisis un opérateur.`);}
+    else _resetPhase();
+    return;
   }else if(phase===3){
     // Clic sur op1 → annulation
     if(idx===currentOp1.idx){
@@ -727,13 +769,20 @@ function onPlaque(idx){
 }
 
 function onOperator(sym,btn){
-  if(phase!==2&&phase!==3)return;
+  if(phase!==2&&phase!==3&&phase!==4)return;
   _clearOpBtns();if(btn)btn.classList.add('active');
-  currentOper=sym;phase=3;
-  setCurOp(`${currentOp1.val}  ${_opLbl(sym)}  …`);setStatus(`${currentOp1.val} ${_opLbl(sym)} … — choisis la 2e plaque.`);
+  currentOper=sym;
+  if(phase===4){
+    setCurOpPhase4(currentOp1.val, _opLbl(sym), currentOp2.val);
+    setStatus('Opérateur changé — ⌫ pour effacer op2 ou clique une plaque.');
+  } else {
+    phase=3;
+    setCurOp(`${currentOp1.val}  ${_opLbl(sym)}  …`);
+    setStatus(`${currentOp1.val} ${_opLbl(sym)} … — choisis la 2e plaque.`);
+  }
 }
 function _clearOpBtns(){document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('active'));}
-function _resetPhase(){currentOp1=currentOper=null;phase=1;setCurOp('');_clearOpBtns();setStatus('Sélectionne une plaque.');}
+function _resetPhase(){currentOp1=currentOper=currentOp2=null;phase=1;setCurOp('');_clearOpBtns();setStatus('Sélectionne une plaque.');}
 
 // ─────────────────────────────────────────────
 //  ⌫ EFFACEMENT GRANULAIRE
@@ -756,10 +805,46 @@ let _backPhase=null;
 
 function onEffacer(){
   // ── Calcul en cours ──────────────────────────
+  if(phase===4){
+    // Révision : ⌫ efface op2, repasse phase 3
+    currentOp2=null;phase=3;
+    setCurOp(`${currentOp1.val}  ${_opLbl(currentOper)}  …`);
+    setStatus('Op2 effacé — choisis la 2e plaque.');
+    _backPhase=null;return;
+  }
   if(phase===2){
     // Annule op1 sélectionné
     plaqueBtns[currentOp1.idx].classList.remove('selected');
-    currentOp1=null;phase=1;setCurOp('');setStatus('Sélectionne une plaque.');_backPhase=null;return;
+    currentOp1=null;_backPhase=null;
+    // Si une ligne précédente existe, la remonter directement
+    if(calcSteps.length>0){
+      const prev=calcSteps[calcSteps.length-1];
+      // Supprime le bouton résultat de la ligne précédente
+      if(plaqueVals.length>state.plaques.length){
+        _removeResultBtn(prev.resIdx);
+        plaqueVals.splice(prev.resIdx,1);
+        plaqueActive.splice(prev.resIdx,1);
+      }
+      // Restaure op2
+      plaqueActive[prev.op2Idx]=true;
+      if(plaqueBtns[prev.op2Idx]){plaqueBtns[prev.op2Idx].disabled=false;plaqueBtns[prev.op2Idx].classList.remove('used');}
+      // Restaure op1
+      plaqueActive[prev.op1Idx]=true;
+      if(plaqueBtns[prev.op1Idx]){plaqueBtns[prev.op1Idx].disabled=false;plaqueBtns[prev.op1Idx].classList.remove('used');plaqueBtns[prev.op1Idx].classList.add('selected');}
+      currentOp1={idx:prev.op1Idx,val:prev.op1Val};
+      currentOper=prev.oper;
+      _markOpBtn(prev.oper);
+      phase=3;
+      // Affiche op1 oper op2 dans cur-op
+      currentOp2={idx:prev.op2Idx,val:prev.op2Val};
+      phase=4;
+      setCurOpPhase4(prev.op1Val, _opLbl(prev.oper), prev.op2Val);
+      setStatus('Révision — ⌫ efface op2, clic opérateur le change, clic plaque remplace op2.');
+      calcSteps.pop();refreshHist();saveSession();
+      _backPhase=null;return;
+    }
+    // Pas de ligne précédente : retour phase 1 simple
+    phase=1;setCurOp('');setStatus('Sélectionne une plaque.');return;
   }
   if(phase===3){
     // Annule opérateur (garde op1)
@@ -811,9 +896,34 @@ function onEffacer(){
   }
 
   if(_backPhase==='oper'){
-    // Annule op1 → retour phase 1, prêt pour une nouvelle ligne ou démontage précédent
+    // Annule op1 : démarque op1
     if(plaqueBtns[currentOp1.idx])plaqueBtns[currentOp1.idx].classList.remove('selected');
-    currentOp1=null;phase=1;setCurOp('');_backPhase=null;
+    currentOp1=null;_backPhase=null;
+    // Si une ligne précédente existe, l'afficher immédiatement avec op2 visible
+    if(calcSteps.length>0){
+      const prev=calcSteps[calcSteps.length-1];
+      // Supprime le bouton résultat de la ligne précédente
+      if(plaqueVals.length>state.plaques.length){_removeResultBtn(prev.resIdx);plaqueVals.splice(prev.resIdx,1);plaqueActive.splice(prev.resIdx,1);}
+      // Restaure op2 de la ligne précédente
+      plaqueActive[prev.op2Idx]=true;
+      if(plaqueBtns[prev.op2Idx]){plaqueBtns[prev.op2Idx].disabled=false;plaqueBtns[prev.op2Idx].classList.remove('used');}
+      // Restaure op1 de la ligne précédente
+      plaqueActive[prev.op1Idx]=true;
+      if(plaqueBtns[prev.op1Idx]){plaqueBtns[prev.op1Idx].disabled=false;plaqueBtns[prev.op1Idx].classList.remove('used');plaqueBtns[prev.op1Idx].classList.add('selected');}
+      currentOp1={idx:prev.op1Idx,val:prev.op1Val};
+      currentOper=prev.oper;
+      _markOpBtn(prev.oper);
+      phase=3;
+      // Affiche op1 oper op2 dans cur-op
+      currentOp2={idx:prev.op2Idx,val:prev.op2Val};
+      phase=4;
+      setCurOpPhase4(prev.op1Val, _opLbl(prev.oper), prev.op2Val);
+      setStatus('Révision — ⌫ efface op2, clic opérateur le change, clic plaque remplace op2.');
+      calcSteps.pop();refreshHist();saveSession();
+      _backPhase=null;return;
+    }
+    // Pas de ligne précédente : retour phase 1
+    phase=1;setCurOp('');_clearOpBtns();
     setStatus('⌫ op1 effacé — sélectionne une plaque.');return;
   }
 }
@@ -909,6 +1019,23 @@ function newGame(){
     setStatus('Sélectionne une plaque pour commencer !');
   },10);
 }
+function onEffacerTout(){
+  if(!calcSteps.length){setStatus('Rien à effacer.');return;}
+  // Remet toutes les plaques actives, vide l'historique
+  calcSteps=[];_backPhase=null;
+  // Supprime tous les boutons résultats
+  while(plaqueVals.length>state.plaques.length){
+    plaqueActive.pop();plaqueVals.pop();
+    _removeResultBtn(plaqueVals.length);
+  }
+  // Réactive toutes les plaques initiales
+  for(let i=0;i<state.plaques.length;i++){
+    plaqueActive[i]=true;
+    if(plaqueBtns[i]){plaqueBtns[i].disabled=false;plaqueBtns[i].classList.remove('used','selected');}
+  }
+  refreshHist();_resetPhase();saveSession();
+  setStatus('Calculs effacés — recommence !');
+}
 function _buildEntryPlaques(nb,keep=false){
   const row=document.getElementById('entry-plq-row');
   const old=keep?[...row.querySelectorAll('input')].map(i=>i.value):[];
@@ -958,13 +1085,13 @@ function openOptions(){
   document.getElementById('opt-nbtirages').value=cfg.nbTirages;
   document.getElementById('opt-solve').value=cfg.solveMode;
   document.getElementById('opt-exact').checked=cfg.exactOnly;
-  document.getElementById('opt-reprise').checked=cfg.repriseAuto;
   document.getElementById('opt-si0').value=cfg.scoreInTime[0];
   document.getElementById('opt-si13').value=cfg.scoreInTime[1];
   document.getElementById('opt-si4').value=cfg.scoreInTime[2];
   document.getElementById('opt-so0').value=cfg.scoreOutTime[0];
   document.getElementById('opt-so13').value=cfg.scoreOutTime[1];
   document.getElementById('opt-so4').value=cfg.scoreOutTime[2];
+  if(document.getElementById('opt-orientation'))document.getElementById('opt-orientation').value=cfg.orientation||'auto';
   const modeRadioId=cfg.modeJeu==='comp'?'opt-mode-comp':cfg.modeJeu==='solveur'?'opt-mode-solveur':'opt-mode-libre';
   document.getElementById(modeRadioId).checked=true;
   _syncOptUI();
@@ -1005,9 +1132,10 @@ function saveOptions(){
   cfg.globalTimeout=parseInt(document.getElementById('opt-timeout').value)||120;
   cfg.nbTirages=parseInt(document.getElementById('opt-nbtirages').value)||30;
   cfg.exactOnly=document.getElementById('opt-exact').checked;
-  cfg.repriseAuto=document.getElementById('opt-reprise').checked;
   cfg.entrainement=(newMode==='solveur');
   cfg.modeJeu=newMode;cfg.partieNum=np;
+  cfg.orientation=document.getElementById('opt-orientation')?document.getElementById('opt-orientation').value:'auto';
+  _applyOrientation(cfg.orientation);
   cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
   cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
   const modeChanged=newMode!==oldMode||np!==oldPartie;
@@ -1035,8 +1163,10 @@ function _updateModeInfo(){
   const el=document.getElementById('lbl-modeinfo');if(!el)return;
   if(cfg.modeJeu==='comp'&&cfg.partieNum>0)
     el.textContent=`🔴 Compétition #${cfg.partieNum}`;
+  else if(cfg.modeJeu==='solveur')
+    el.textContent='⬜ Solveur';
   else
-    el.textContent='';
+    el.textContent='🔵 Partie libre';
 }
 
 // ═══════════════════════════════════════════════
@@ -1046,7 +1176,7 @@ function modeSylvie(){
   document.getElementById('opt-tirage').value='alea20';document.getElementById('opt-nbplq').value='5';
   document.getElementById('opt-tmin').value='26';document.getElementById('opt-tmax').value='100';
   document.getElementById('opt-nbtirages').value='10';document.getElementById('opt-time').value='60';
-  document.getElementById('opt-exact').checked=true;document.getElementById('opt-reprise').checked=true;
+  document.getElementById('opt-exact').checked=true;
   document.getElementById('opt-solve').value='complete';
   document.getElementById('opt-partie').value='0';document.getElementById('opt-mode-libre').checked=true;
   _syncOptUI();setStatus('Mode Sylvie prêt — clique sur Appliquer.');
@@ -1056,7 +1186,7 @@ function resetDefaut(){
   document.getElementById('opt-tmin').value='101';document.getElementById('opt-tmax').value='999';
   document.getElementById('opt-nbtirages').value='30';document.getElementById('opt-time').value='45';
   document.getElementById('opt-timeout').value='120';document.getElementById('opt-exact').checked=true;
-  document.getElementById('opt-reprise').checked=true;
+
   document.getElementById('opt-solve').value='complete';document.getElementById('opt-partie').value='0';
   document.getElementById('opt-mode-libre').checked=true;_syncOptUI();
 }
@@ -1078,9 +1208,19 @@ function openFinPartie(){
   div.appendChild(frag);document.getElementById('modal-fin').classList.add('open');
 }
 function nouvellePartie(){
-  closeModal('modal-fin');clearSession();rng=null;cfg.partieNum=0;
+  closeModal('modal-fin');
+  // Remet à zéro mais SANS lancer newGame : oblige à choisir une graine
+  clearSession();rng=null;cfg.partieNum=0;
   state.score=0;state.roundNum=0;state.history=[];state.validated=true;
-  document.getElementById('lbl-score').textContent=0;newGame();
+  document.getElementById('lbl-score').textContent=0;
+  setTheme(cfg.modeJeu);
+  _updateModeInfo();
+  // Ouvre les options sur l'onglet Partie pour forcer le choix d'une graine
+  openOptions();
+  // Bascule sur l'onglet Partie & Plaques
+  const btn=document.querySelector('.opt-tab-btn');
+  switchOptTab('opt-pane-partie', btn);
+  _showToast('Choisis ou tire une nouvelle graine 🎲','orange',4000);
 }
 function nouvelleGraine(){
   closeModal('modal-fin');clearSession();rng=null;
@@ -1302,12 +1442,25 @@ function _restoreUI(){
   if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
   else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
+function _applyOrientation(o){
+  let el=document.getElementById('style-orientation');
+  if(!el){el=document.createElement('style');el.id='style-orientation';document.head.appendChild(el);}
+  if(o==='portrait'){
+    el.textContent='@media(orientation:landscape){body{display:none;}#orient-warn{display:flex!important;}}';
+    let w=document.getElementById('orient-warn');
+    if(!w){w=document.createElement('div');w.id='orient-warn';
+      w.style.cssText='display:none;position:fixed;inset:0;background:#1e3a52;color:#f5a623;font-size:1.2rem;font-weight:700;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:20px;';
+      w.innerHTML='📱 Tourne ton téléphone<br>en mode portrait';document.body.appendChild(w);}
+  } else {
+    el.textContent='';
+  }
+}
 function setTheme(mode){
   document.body.classList.remove('theme-libre','theme-comp','theme-solveur');
   document.body.classList.add(mode==='comp'?'theme-comp':mode==='solveur'?'theme-solveur':'theme-libre');
   _updateModeInfo();
 }
-window.onload=()=>{initPWA();setTheme(cfg.modeJeu);if(restoreSession()){setTheme(cfg.modeJeu);_restoreUI();}else newGame();};
+window.onload=()=>{initPWA();setTheme(cfg.modeJeu);_applyOrientation(cfg.orientation||'auto');if(restoreSession()){setTheme(cfg.modeJeu);_restoreUI();}else newGame();};
 </script>
 </body>
 </html>
