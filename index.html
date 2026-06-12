@@ -102,6 +102,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
   <h1>LE COMPTE EST BON <span style="font-size:.6rem;font-weight:400;opacity:.7;letter-spacing:1px;">by J.Dimijian + Claude</span></h1>
   <div class="hdr-right">
     <span id="hdr-version" style="font-size:.7rem;color:var(--text-dim);align-self:center;margin-right:4px;"></span>
+    <button class="act-btn grey" onclick="openAbout()" style="padding:8px 12px;" title="À propos">ℹ️</button>
     <button class="act-btn grey" onclick="openStats()" style="padding:8px 12px;">📊</button>
     <button class="act-btn grey" onclick="openOptions()">Options</button>
   </div>
@@ -171,6 +172,72 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 </main>
 
 <div id="toast" class="toast"></div>
+
+<!-- ═══ À PROPOS ═══ -->
+<div class="modal-overlay" id="modal-about">
+  <div class="modal" style="max-width:520px;width:95%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;">
+    <h2 style="flex-shrink:0;">ℹ️ À propos</h2>
+    <div style="flex:1;overflow-y:auto;min-height:0;font-size:.88rem;line-height:1.6;">
+
+      <div style="text-align:center;padding:12px 0 16px;">
+        <div style="font-size:2rem;font-weight:900;color:var(--accent2);letter-spacing:2px;">LE COMPTE EST BON</div>
+        <div id="about-version" style="font-size:.8rem;color:var(--text-dim);margin-top:4px;"></div>
+      </div>
+
+      <div style="background:var(--bg-sub);border-radius:8px;padding:12px 16px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">LE JEU</div>
+        À partir de 6 plaques tirées aléatoirement, atteins le nombre cible en utilisant
+        les quatre opérations arithmétiques&nbsp;(+, −, ×, /). Chaque plaque ne peut être
+        utilisée qu'une seule fois.
+      </div>
+
+      <div style="background:var(--bg-sub);border-radius:8px;padding:12px 16px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:8px;">MODES DE JEU</div>
+        <div style="margin-bottom:6px;"><span style="color:#7ab4e0;font-weight:700;">🔵 Partie libre</span> — Tirages illimités, pas de score, Résoudre toujours accessible.</div>
+        <div style="margin-bottom:6px;"><span style="color:#c06070;font-weight:700;">🔴 Compétition</span> — Graine fixe, N tirages, score calculé selon résultat et temps.</div>
+        <div><span style="color:var(--text-dim);font-weight:700;">⬜ Solveur</span> — Saisie libre des plaques et de la cible, résolution automatique.</div>
+      </div>
+
+      <div style="background:var(--bg-sub);border-radius:8px;padding:12px 16px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">RÈGLES DE CALCUL</div>
+        <div style="margin-bottom:4px;">✓ Toutes les opérations doivent donner un résultat entier positif ≥ 1</div>
+        <div style="margin-bottom:4px;">✓ La soustraction A − B est autorisée uniquement si A &gt; B</div>
+        <div style="margin-bottom:4px;">✓ La division A / B est autorisée uniquement si A est divisible par B</div>
+        <div>✓ Chaque plaque ne peut être utilisée qu'une seule fois</div>
+      </div>
+
+      <div style="background:var(--bg-sub);border-radius:8px;padding:12px 16px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">GÉNÉRATEUR ALÉATOIRE</div>
+        Le tirage utilise le générateur pseudo-aléatoire de la calculatrice <strong>HP-11C</strong>,
+        implémenté en BigInt pour une fidélité exacte au programme original.
+        Une graine fixe garantit la reproductibilité d'une partie.
+      </div>
+
+      <div style="background:var(--bg-sub);border-radius:8px;padding:12px 16px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:8px;">CRÉDITS</div>
+        <div style="margin-bottom:4px;">
+          <span style="color:var(--text-med);">Concept &amp; logique originale</span><br>
+          Joseph Dimijian — programme ABAP/SAP, 2011
+        </div>
+        <div style="margin-bottom:4px;">
+          <span style="color:var(--text-med);">Portage web</span><br>
+          Joseph Dimijian + Claude (Anthropic), 2024–2025
+        </div>
+        <div>
+          <span style="color:var(--text-med);">Contact</span><br>
+          <a href="mailto:jdimijian@yahoo.fr" style="color:var(--blue);">jdimijian@yahoo.fr</a>
+        </div>
+      </div>
+
+      <div style="text-align:center;font-size:.72rem;color:var(--text-dim);padding:8px 0 4px;">
+        © Joseph Dimijian — Tous droits réservés
+      </div>
+    </div>
+    <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;text-align:right;">
+      <button class="act-btn red" onclick="closeModal('modal-about')">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ OPTIONS (2 onglets) ═══ -->
 <div class="modal-overlay" id="modal-options">
@@ -1401,6 +1468,11 @@ function renderStatsModes(st){
   for(const[g,d]of gr)html+=_statRow(`Graine ${g}`,`Meilleur : ${d.meilleurScore>=0?'+':''}${d.meilleurScore} (${d.parties} partie(s))`,'var(--accent2)');
   if(!gr.length)html+='<p style="color:var(--text-dim);padding:12px">Aucune partie avec graine fixe.</p>';
   document.getElementById('st-modes').innerHTML=html;
+}
+function openAbout(){
+  const el=document.getElementById('about-version');
+  if(el)el.textContent=`Version ${CEB_VERSION} — Fichier HTML autonome, PWA installable`;
+  document.getElementById('modal-about').classList.add('open');
 }
 function openStats(){const st=loadStats();renderStatsGlobal(st);renderStatsParties(st);renderStatsModes(st);showTab('st-global','modal-stats');document.getElementById('modal-stats').classList.add('open');}
 
