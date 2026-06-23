@@ -22,6 +22,8 @@ body.theme-comp    {--bg:#5a2030;--bg-card:#6a3040;--bg-hdr:#3a0a1a;--bg-sub:#4a
 body.theme-solveur {--bg:#6a5c00;--bg-card:#5a4e00;--bg-hdr:#3a3200;--bg-sub:#504400;}
 *{box-sizing:border-box;margin:0;padding:0;}
 button,input,select{touch-action:manipulation;}
+body{-webkit-user-select:none;user-select:none;}
+input{-webkit-user-select:text;user-select:text;} /* sauf les champs de saisie */
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 header{background:var(--bg-hdr);display:flex;align-items:center;justify-content:space-between;padding:10px 20px;}
 header h1{font-size:1.2rem;font-weight:700;letter-spacing:2px;}
@@ -35,7 +37,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 .plq-title{font-size:.8rem;color:var(--text-dim);margin-bottom:6px;}
 .plq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:6px;}
 .plq-btn-ghost{background:transparent;border:2px dashed var(--border);border-radius:6px;height:48px;opacity:.35;pointer-events:none;}
-.plq-btn{font-family:inherit;font-size:1.1rem;font-weight:700;background:var(--btn-plq);color:#fff;border:2px solid transparent;border-radius:6px;height:48px;width:100%;cursor:pointer;transition:transform .1s,background .15s,border-color .1s;}
+.plq-btn{font-family:inherit;font-size:1.1rem;font-weight:700;background:var(--btn-plq);color:#fff;border:2px solid transparent;border-radius:6px;height:48px;width:100%;cursor:pointer;transition:transform .1s,background .15s,border-color .1s;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .plq-btn:hover:not(:disabled){background:var(--btn-plq-sel);transform:scale(1.04);}
 .plq-btn.selected{border-color:var(--yellow);background:var(--btn-plq-sel);}
 .plq-btn.used{background:var(--btn-used);color:var(--text-dim);cursor:default;border-color:transparent;}
@@ -1092,19 +1094,14 @@ function newGame(){
   },10);
 }
 function onEffacerTout(){
-  if(!calcSteps.length){setStatus('Rien à effacer.');return;}
-  // Remet toutes les plaques actives, vide l'historique
+  if(!calcSteps.length&&plaqueVals.length===state.plaques.length){
+    setStatus('Rien à effacer.');return;
+  }
+  // Reset complet : reconstruire la grille depuis zéro
   calcSteps=[];_backPhase=null;
-  // Supprime tous les boutons résultats
-  while(plaqueVals.length>state.plaques.length){
-    plaqueActive.pop();plaqueVals.pop();
-    _removeResultBtn(plaqueVals.length);
-  }
-  // Réactive toutes les plaques initiales
-  for(let i=0;i<state.plaques.length;i++){
-    plaqueActive[i]=true;
-    if(plaqueBtns[i]){plaqueBtns[i].disabled=false;plaqueBtns[i].classList.remove('used','selected');}
-  }
+  plaqueVals=[...state.plaques];
+  plaqueActive=state.plaques.map(()=>true);
+  renderPlaques(); // reconstruit toute la grille proprement
   refreshHist();_resetPhase();saveSession();
   setStatus('Calculs effacés — recommence !');
 }
