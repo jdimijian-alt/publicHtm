@@ -39,7 +39,9 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 .plq-btn-ghost{background:transparent;border:2px dashed var(--border);border-radius:6px;height:48px;opacity:.35;pointer-events:none;}
 .plq-btn{font-family:inherit;font-size:1.1rem;font-weight:700;background:var(--btn-plq);color:#fff;border:2px solid transparent;border-radius:6px;height:48px;width:100%;cursor:pointer;transition:transform .1s,background .15s,border-color .1s;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .plq-btn:hover:not(:disabled){background:var(--btn-plq-sel);transform:scale(1.04);}
-.plq-btn.selected{border-color:var(--yellow);background:var(--btn-plq-sel);}
+.plq-btn:active:not(:disabled){transform:scale(0.93);filter:brightness(.85);}
+.plq-btn.selected{border-color:var(--yellow);background:var(--btn-plq-sel);transform:scale(0.93);box-shadow:inset 0 3px 6px rgba(0,0,0,0.45);filter:brightness(.85);}
+
 .plq-btn.used{background:var(--btn-used);color:var(--text-dim);cursor:default;border-color:transparent;}
 .plq-btn:disabled{opacity:.5;cursor:default;}
 .cur-op{background:var(--bg-hdr);border:2px solid var(--yellow);border-radius:8px;padding:10px 16px;height:56px;font-size:1.8rem;font-weight:700;color:var(--yellow);text-align:center;letter-spacing:2px;}
@@ -377,10 +379,12 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
 <div class="modal-overlay" id="modal-sol">
   <div class="modal" style="max-width:520px;width:95%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;">
     <h2 style="flex-shrink:0;">💡 Meilleure solution</h2>
-    <div id="modal-sol-info" style="font-size:1.3rem;font-weight:700;margin-bottom:8px;flex-shrink:0;"></div>
+    <div id="modal-sol-info" style="font-size:1.3rem;font-weight:700;margin-bottom:6px;flex-shrink:0;"></div>
+    <div id="modal-sol-tirage" style="font-size:.85rem;color:var(--text-med);margin-bottom:8px;flex-shrink:0;"></div>
     <div style="flex:1;overflow-y:auto;min-height:0;padding:4px 0;" id="modal-sol-lines"></div>
     <div id="modal-sol-meta" style="font-size:.75rem;color:var(--text-dim);margin-top:10px;flex-shrink:0;"></div>
-    <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;display:flex;gap:8px;justify-content:flex-end;">
+    <div style="flex-shrink:0;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="act-btn grey" onclick="copierSolution()">📋 Copier</button>
       <button class="act-btn blue" onclick="openDetail()" id="modal-sol-detail">Détail…</button>
       <button class="act-btn red"  onclick="closeModal('modal-sol')">Fermer</button>
     </div>
@@ -1038,12 +1042,34 @@ function showSolution(sol,solver,ms){
   const color=sol&&sol.diff===0?'var(--green)':'var(--accent2)';
   document.getElementById('modal-sol-info').textContent=info;
   document.getElementById('modal-sol-info').style.color=color;
+  const tirEl=document.getElementById('modal-sol-tirage');
+  if(tirEl)tirEl.textContent=`Plaques : ${state.plaques.join('  ')}  →  ${state.target}`;
   document.getElementById('modal-sol-meta').textContent=
     `Résolu en ${ms.toFixed(0)} ms  |  ${solver.allSols.length} solution(s) exacte(s)  |  ${solver._ops} op.`;
   document.getElementById('modal-sol').classList.add('open');
   setStatus(`Résolu en ${ms.toFixed(0)} ms — ${info} — ${solver.allSols.length} solution(s)`);
 }
 function hideSolution(){document.getElementById('modal-sol').classList.remove('open');lastSolver=null;}
+function copierSolution(){
+  if(!lastSolver||!lastSolver.best)return;
+  const tirage=`Plaques : ${state.plaques.join('  ')}  →  ${state.target}`;
+  const diff=lastSolver.best.diff===0?'Compte exact !':'Écart : '+lastSolver.best.diff;
+  const steps=lastSolver.best.steps.map(s=>`  ${s}`).join('\n');
+  const txt=`${tirage}\n${diff}\n${steps}`;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt)
+      .then(()=>_showToast('📋 Copié !','green',2000))
+      .catch(()=>_fallbackCopy(txt));
+  }else{_fallbackCopy(txt);}
+}
+function _fallbackCopy(txt){
+  const ta=document.createElement('textarea');
+  ta.value=txt;ta.style.cssText='position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');_showToast('📋 Copié !','green',2000);}
+  catch{_showToast('Impossible de copier','red',2000);}
+  document.body.removeChild(ta);
+}
 
 // ═══════════════════════════════════════════════
 //  NOUVEAU TIRAGE
