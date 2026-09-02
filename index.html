@@ -20,6 +20,40 @@
 body.theme-libre   {--bg:#3a6186;--bg-card:#4a7399;--bg-hdr:#1e3a52;--bg-sub:#2e5070;}
 body.theme-comp    {--bg:#5a2030;--bg-card:#6a3040;--bg-hdr:#3a0a1a;--bg-sub:#4a1525;}
 body.theme-solveur {--bg:#6a5c00;--bg-card:#5a4e00;--bg-hdr:#3a3200;--bg-sub:#504400;}
+
+/* ── Skin Flash (dark gaming) ── */
+body.skin-flash {--bg:#1a1a2e;--bg-card:#16213e;--bg-hdr:#0f0f23;--bg-sub:#1f1f3a;
+  --accent:#ec4899;--accent2:#06b6d4;--green:#10b981;--blue:#818cf8;
+  --grey:#374151;--text:#f0f0ff;--text-med:#a5b4fc;--text-dim:#6366f1;
+  --border:#2d2d5a;--yellow:#fbbf24;--btn-plq:#7c3aed;--btn-plq-sel:#6d28d9;--btn-used:#1e1e3a;}
+body.skin-flash .plq-btn{background:linear-gradient(135deg,#7c3aed,#06b6d4);}
+body.skin-flash .plq-btn:hover:not(:disabled){background:linear-gradient(135deg,#6d28d9,#0891b2);}
+body.skin-flash .plq-btn.selected{background:linear-gradient(135deg,#6d28d9,#0891b2);border-color:#fbbf24;}
+body.skin-flash .plq-btn.used{background:#1e1e3a;}
+body.skin-flash .op-btn{background:linear-gradient(135deg,#ec4899,#f97316);}
+body.skin-flash .op-btn.active{background:linear-gradient(135deg,#be185d,#c2410c);outline-color:#fbbf24;}
+body.skin-flash header{background:linear-gradient(90deg,#0f0f23,#1a1a3e);border-bottom:1px solid #6366f1;}
+body.skin-flash .cible-val{color:#ec4899;}
+body.skin-flash .hist-line{color:#06b6d4;}
+body.skin-flash .cur-op{border-color:#7c3aed;color:#fbbf24;background:#0f0f23;}
+body.skin-flash .sol-line.exact{color:#10b981;}
+
+/* ── Skin Pop (coloré chaud) ── */
+body.skin-pop {--bg:#0f172a;--bg-card:#1e293b;--bg-hdr:#020617;--bg-sub:#1e293b;
+  --accent:#f97316;--accent2:#fbbf24;--green:#34d399;--blue:#38bdf8;
+  --grey:#334155;--text:#f8fafc;--text-med:#94a3b8;--text-dim:#64748b;
+  --border:#1e293b;--yellow:#fbbf24;--btn-plq:#059669;--btn-plq-sel:#047857;--btn-used:#1e293b;}
+body.skin-pop .plq-btn{background:linear-gradient(135deg,#059669,#0284c7);}
+body.skin-pop .plq-btn:hover:not(:disabled){background:linear-gradient(135deg,#047857,#0369a1);}
+body.skin-pop .plq-btn.selected{background:linear-gradient(135deg,#047857,#0369a1);border-color:#fbbf24;}
+body.skin-pop .plq-btn.used{background:#1e293b;}
+body.skin-pop .op-btn{background:linear-gradient(135deg,#f97316,#fbbf24);color:#0f172a;}
+body.skin-pop .op-btn.active{background:linear-gradient(135deg,#ea580c,#f59e0b);outline-color:#fbbf24;}
+body.skin-pop header{background:linear-gradient(90deg,#020617,#0f172a);border-bottom:2px solid #f97316;}
+body.skin-pop .cible-val{color:#fbbf24;}
+body.skin-pop .hist-line{color:#fbbf24;}
+body.skin-pop .cur-op{border-color:#f97316;color:#fbbf24;background:#020617;}
+body.skin-pop .sol-line.exact{color:#34d399;}
 *{box-sizing:border-box;margin:0;padding:0;}
 button,input,select{touch-action:manipulation;}
 body{-webkit-user-select:none;user-select:none;}
@@ -290,6 +324,15 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
             <option value="auto">Automatique</option>
             <option value="portrait">Portrait forcé</option>
             <option value="landscape">Paysage autorisé</option>
+          </select>
+        </div>
+        <div class="opts-section" style="margin-top:8px;">THÈME VISUEL</div>
+        <div class="row">
+          <label>Apparence</label>
+          <select id="opt-skin" onchange="previewSkin(this.value)">
+            <option value="classique">🔵 Classique</option>
+            <option value="flash">⚡ Flash</option>
+            <option value="pop">🌅 Pop</option>
           </select>
         </div>
         <div class="opts-section" style="margin-top:8px;">RACCOURCIS</div>
@@ -572,7 +615,7 @@ const cfg={
   modeJeu:'libre', tirageMode:'ceb24', solveMode:'complete',
   nbPlaques:6, targetMin:101, targetMax:999,
   timeLimit:45, globalTimeout:120, partieNum:0, nbTirages:30,
-  exactOnly:true, repriseAuto:true, entrainement:false, orientation:'auto',
+  exactOnly:true, repriseAuto:true, entrainement:false, orientation:'auto', skin:'classique',
   scoreInTime:[10,7,-5], scoreOutTime:[5,2,-10],
 };
 let state={plaques:[],target:0,best:null,allSols:[],reachable:new Set(),startTime:0,score:0,roundNum:0,validated:true,history:[]};
@@ -1187,6 +1230,7 @@ function openOptions(){
   document.getElementById('opt-so13').value=cfg.scoreOutTime[1];
   document.getElementById('opt-so4').value=cfg.scoreOutTime[2];
   if(document.getElementById('opt-orientation'))document.getElementById('opt-orientation').value=cfg.orientation||'auto';
+  if(document.getElementById('opt-skin'))document.getElementById('opt-skin').value=cfg.skin||'classique';
   const modeRadioId=cfg.modeJeu==='comp'?'opt-mode-comp':cfg.modeJeu==='solveur'?'opt-mode-solveur':'opt-mode-libre';
   document.getElementById(modeRadioId).checked=true;
   _syncOptUI();
@@ -1230,6 +1274,8 @@ function saveOptions(){
   cfg.entrainement=(newMode==='solveur');
   cfg.modeJeu=newMode;cfg.partieNum=np;
   cfg.orientation=document.getElementById('opt-orientation')?document.getElementById('opt-orientation').value:'auto';
+  cfg.skin=document.getElementById('opt-skin')?document.getElementById('opt-skin').value:'classique';
+  applySkin(cfg.skin);
   initPWA(); // Régénère le manifest avec la nouvelle orientation
   cfg.scoreInTime=[parseInt(document.getElementById('opt-si0').value),parseInt(document.getElementById('opt-si13').value),parseInt(document.getElementById('opt-si4').value)];
   cfg.scoreOutTime=[parseInt(document.getElementById('opt-so0').value),parseInt(document.getElementById('opt-so13').value),parseInt(document.getElementById('opt-so4').value)];
@@ -1248,7 +1294,11 @@ function saveOptions(){
     newGame();
   }
 }
-function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeModal(id){
+  // Si on ferme les options sans appliquer, restaure le skin sauvegardé
+  if(id==='modal-options')applySkin(cfg.skin||'classique');
+  document.getElementById(id).classList.remove('open');
+}
 function updateNouveauBtn(){
   const locked=cfg.modeJeu==='comp'&&cfg.partieNum>0&&!state.validated&&state.plaques.length>0;
   const btn=document.getElementById('btn-nouveau');btn.disabled=locked;btn.title=locked?'Validez votre résultat avant de continuer':'';
@@ -1521,6 +1571,7 @@ function restoreSession(){
     Object.assign(cfg,s.cfg);
     // Fallback pour les sessions sans orientation sauvée
     if(!cfg.orientation)cfg.orientation='auto';
+    if(!cfg.skin)cfg.skin='classique';
     state.plaques=s.state.plaques||[];state.target=s.state.target||0;state.score=s.state.score||0;
     state.roundNum=s.state.roundNum||0;state.validated=s.state.validated??true;
     state.history=s.state.history||[];state.startTime=s.state.startTime||Date.now();
@@ -1545,12 +1596,21 @@ function _restoreUI(){
   if(!state.validated){startTimer(true);setStatus('Partie restaurée — continue !');}
   else{document.getElementById('lbl-timer').textContent='—';setStatus('Partie restaurée — valide ou lance un nouveau tirage.');}
 }
+function applySkin(skin){
+  document.body.classList.remove('skin-flash','skin-pop');
+  if(skin==='flash')document.body.classList.add('skin-flash');
+  else if(skin==='pop')document.body.classList.add('skin-pop');
+}
+function previewSkin(skin){
+  // Prévisualise le skin sans sauvegarder
+  applySkin(skin);
+}
 function setTheme(mode){
   document.body.classList.remove('theme-libre','theme-comp','theme-solveur');
   document.body.classList.add(mode==='comp'?'theme-comp':mode==='solveur'?'theme-solveur':'theme-libre');
   _updateModeInfo();
 }
-window.onload=()=>{if(restoreSession()){setTheme(cfg.modeJeu);initPWA();_restoreUI();}else{initPWA();setTheme(cfg.modeJeu);newGame();}};
+window.onload=()=>{if(restoreSession()){applySkin(cfg.skin||'classique');setTheme(cfg.modeJeu);initPWA();_restoreUI();}else{initPWA();applySkin(cfg.skin||'classique');setTheme(cfg.modeJeu);newGame();}};
 </script>
 </body>
 </html>
