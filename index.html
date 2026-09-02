@@ -194,7 +194,7 @@ main{max-width:680px;margin:0 auto;padding:16px;display:flex;flex-direction:colu
   <div class="hist">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
       <div class="hist-title" style="margin-bottom:0;">Calculs :</div>
-      <button onclick="onEffacerTout()" title="Tout effacer" style="background:var(--bg-sub);border:1px solid var(--border);color:var(--accent);font-size:1.1rem;cursor:pointer;padding:3px 10px;border-radius:6px;line-height:1;" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='var(--bg-sub)';this.style.color='var(--accent)'">🗑</button>
+      <button onclick="onEffacerTout()" title="Tout effacer" style="background:var(--bg-sub);border:1px solid var(--border);color:var(--accent);font-size:1.3rem;cursor:pointer;padding:4px 14px;border-radius:6px;line-height:1;font-weight:700;" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='var(--bg-sub)';this.style.color='var(--accent)'">🗑</button>
     </div>
     <div id="hist-lines"></div>
   </div>
@@ -1167,11 +1167,12 @@ function onEffacerTout(){
     setStatus('Rien à effacer.');return;
   }
   // Reset complet : reconstruire la grille depuis zéro
+  _resetPhase(); // d'abord réinitialiser phase/currentOp1/Op2 avant de détruire les boutons
   calcSteps=[];_backPhase=null;
   plaqueVals=[...state.plaques];
   plaqueActive=state.plaques.map(()=>true);
   renderPlaques(); // reconstruit toute la grille proprement
-  refreshHist();_resetPhase();saveSession();
+  refreshHist();saveSession();
   setStatus('Calculs effacés — recommence !');
 }
 function _buildEntryPlaques(nb,keep=false){
@@ -1297,6 +1298,14 @@ function saveOptions(){
 function closeModal(id){
   // Si on ferme les options sans appliquer, restaure le skin sauvegardé
   if(id==='modal-options')applySkin(cfg.skin||'classique');
+  // Si on ferme fin de partie sans choisir → bascule en mode libre
+  if(id==='modal-fin'){
+    if(cfg.modeJeu==='comp'&&cfg.partieNum>0){
+      cfg.modeJeu='libre';cfg.partieNum=0;rng=null;
+      setTheme('libre');_updateModeInfo();
+      _showToast('Partie terminée — basculement en mode libre.','orange',3000);
+    }
+  }
   document.getElementById(id).classList.remove('open');
 }
 function updateNouveauBtn(){
@@ -1336,7 +1345,9 @@ function resetDefaut(){
   document.getElementById('opt-mode-libre').checked=true;_syncOptUI();
 }
 function openFinPartie(){
-  stopTimer();stopGlobalTimeout();recordPartie();
+  stopTimer();stopGlobalTimeout();
+  state.validated=true; // bloque tout evaluate() ultérieur
+  recordPartie();
   const h=state.history,tot=state.score,moy=h.length?(tot/h.length).toFixed(1):0,gagne=h.filter(e=>e.diff===0).length;
   document.getElementById('fin-graine').textContent=`Partie ${cfg.partieNum||'aléatoire'} — ${h.length} tirages`;
   document.getElementById('fin-score').textContent=`${tot>0?'+':''}${tot} pts`;
