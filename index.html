@@ -151,10 +151,9 @@ main{max-width:680px;margin:0 auto;padding:10px 16px 84px;display:flex;flex-dire
 .stack-cur .st-edit{cursor:pointer;}
 .stack-cur .st-edit:active{opacity:.6;}
 .stack-cur .st-op2:empty::before,.stack-cur .st-oper:empty::before{content:'·';opacity:.35;}
-#cur-row-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed var(--border);}
-#cur-line{flex:0 1 auto;min-width:0;overflow-x:auto;}
-#cur-line:empty::before{content:'';}
-#cur-row-wrap .op-btn.back{width:44px;height:38px;}
+#cur-row-wrap{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed var(--border);}
+#cur-line{flex:1;}
+#cur-row-wrap .op-btn.back{flex-shrink:0;width:44px;height:38px;}
 .op-row{display:flex;align-items:center;gap:10px;}
 .op-btn{font-family:inherit;font-size:1.2rem;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;width:52px;height:44px;cursor:pointer;transition:transform .1s;}
 .op-btn:hover{transform:scale(1.06);}
@@ -892,29 +891,24 @@ function renderStack(){
     const s=calcSteps[i];
     hist.innerHTML+=_rowHTML(s.op1Val,_opLbl(s.oper),s.op2Val,String(s.res),'',false);
   }
-  // Ligne en cours (séparée)
+  // Ligne en cours — toujours affichée (cases vides si rien en cours)
   const corr=_isCorrection();
-  const enCours=(phase===2||phase===3||phase===4)&&currentOp1;
-  if(enCours){
-    const o1cls=_op1Propose?'st-op1 st-propose':'st-op1';
-    const o1=`<span class="${o1cls}">${currentOp1.val}</span>`;
-    const op=currentOper?_opLbl(currentOper):'';
-    const o2=(corr&&currentOp2)?currentOp2.val:'';
-    let resTxt='';
-    if(corr&&currentOp1&&currentOper&&currentOp2){
-      const chk=checkOp(currentOp1.val,currentOper,currentOp2.val);
-      resTxt=chk.ok?chk.res:'—';
-    }
-    cur.innerHTML=`<div class="stack-row stack-cur">`+
-      o1+
-      `<span class="st-oper${corr?' st-edit':''}" ${corr?'onclick="editCaseOper()"':''}>${op}</span>`+
-      `<span class="st-op2${corr?' st-edit':''}" ${corr?'onclick="editCaseOp2()"':''}>${o2}</span>`+
-      `<span class="st-eq">${resTxt!==''?'=':''}</span>`+
-      `<span class="st-res">${resTxt}</span>`+
-    `</div>`;
-  }else{
-    cur.innerHTML='';
+  const o1cls=(_op1Propose?'st-op1 st-propose':'st-op1');
+  const o1txt=currentOp1?currentOp1.val:'';
+  const optxt=currentOper?_opLbl(currentOper):'';
+  const o2txt=(corr&&currentOp2)?currentOp2.val:'';
+  let resTxt='';
+  if(corr&&currentOp1&&currentOper&&currentOp2){
+    const chk=checkOp(currentOp1.val,currentOper,currentOp2.val);
+    resTxt=chk.ok?chk.res:'—';
   }
+  cur.innerHTML=`<div class="stack-row stack-cur">`+
+    `<span class="${o1cls}">${o1txt}</span>`+
+    `<span class="st-oper${corr?' st-edit':''}" ${corr?'onclick="editCaseOper()"':''}>${optxt}</span>`+
+    `<span class="st-op2${corr?' st-edit':''}" ${corr?'onclick="editCaseOp2()"':''}>${o2txt}</span>`+
+    `<span class="st-eq">${resTxt!==''?'=':''}</span>`+
+    `<span class="st-res">${resTxt}</span>`+
+  `</div>`;
 }
 function setStatus(t){document.getElementById('lbl-status').textContent=t;}
 function setCurOp(t){renderStack();}
